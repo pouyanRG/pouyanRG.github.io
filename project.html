@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pouyan | Projects</title>
+    <!-- فونت‌ها -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    
+<style>
+    /* -----------------------------------------------------------
+       تنظیمات پایه (مشابه صفحات قبل)
+    ----------------------------------------------------------- */
+    :root {
+        --bg-color: #050507;
+        --text-color: #ffffff;
+        --text-muted: #94a3b8;
+        --accent-color: #6366f1;
+        --accent-glow: rgba(99, 102, 241, 0.4);
+        --secondary-accent: #ec4899;
+        --glass-bg: rgba(255, 255, 255, 0.03);
+        --glass-border: rgba(255, 255, 255, 0.08);
+        --nav-height: 70px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; cursor: none; }
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        overflow-x: hidden;
+        line-height: 1.6;
+    }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-color); }
+    ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
+
+    /* نشانگر موس */
+    .cursor-dot, .cursor-outline {
+        position: fixed; top: 0; left: 0; border-radius: 50%; z-index: 9999; pointer-events: none; mix-blend-mode: difference;
+    }
+    .cursor-dot { width: 8px; height: 8px; background-color: white; transform: translate(-50%, -50%); }
+    .cursor-outline { width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.5); transition: all 0.1s ease-out; transform: translate(-50%, -50%); }
+    body.hovering .cursor-outline { width: 70px; height: 70px; background-color: rgba(255, 255, 255, 0.1); border-color: transparent; backdrop-filter: blur(2px); }
+    @media (max-width: 768px) { * { cursor: auto; } .cursor-dot, .cursor-outline { display: none; } }
+
+    /* پس‌زمینه ذرات */
+    #particles-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.8; }
+
+    /* نوار ناوبری */
+    .main-navigation {
+        position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height);
+        display: flex; justify-content: space-between; align-items: center;
+        z-index: 1000; background: rgba(5, 5, 7, 0.8); backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--glass-border); padding: 0 20px;
+    }
+    .logo { font-weight: 800; font-size: 1.5rem; color: #fff; text-decoration: none; letter-spacing: 2px; }
+    .logo span { color: var(--accent-color); }
+    .nav-btn {
+        padding: 8px 20px; background: transparent; border: 1px solid var(--accent-color);
+        color: var(--accent-color); border-radius: 20px; text-decoration: none;
+        font-weight: 600; transition: 0.3s;
+    }
+    .nav-btn:hover { background: var(--accent-color); color: #fff; box-shadow: 0 0 15px var(--accent-glow); }
+
+    /* محتوای اصلی */
+    .container { max-width: 1200px; margin: 100px auto 50px; padding: 0 20px; }
+    .page-header { text-align: center; margin-bottom: 60px; }
+    .page-title { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; margin-bottom: 15px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .page-subtitle { color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+
+    /* شبکه پروژه‌ها */
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+    }
+    .project-card {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: var(--transition-smooth);
+        position: relative;
+        group: project;
+    }
+    .project-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--accent-color);
+        box-shadow: 0 15px 30px -10px var(--accent-glow);
+    }
+    .project-image {
+        width: 100%;
+
+        background: #1a1a2e;
+        position: relative;
+        overflow: hidden;
+    }
+    .project-image img {
+        width: 100%;
+        height: 100%;
+        object-fit:c;
+        transition: transform 0.5s ease;
+    }
+    .project-card:hover .project-image img { transform: scale(1.1); }
+    
+    .project-content { padding: 25px; }
+    .project-category {
+        font-size: 0.8rem;
+        color: var(--accent-color);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+    .project-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: #fff;
+    }
+    .project-desc {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    .project-link {
+        display: inline-block;
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+        border-bottom: 2px solid var(--secondary-accent);
+        padding-bottom: 2px;
+        transition: 0.3s;
+    }
+    .project-link:hover { color: var(--secondary-accent); }
+
+    /* حالت خالی */
+    .empty-state { text-align: center; color: var(--text-muted); padding: 50px; font-size: 1.2rem; }
+</style>
+</head>
+<body>
+    <!-- بوم نقاشی -->
+    <canvas id="particles-canvas"></canvas>
+    
+    <!-- نشانگر موس -->
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
+
+    <!-- نوار ناوبری -->
+    <nav class="main-navigation">
+        <a href="portfolio.html" class="logo hover-trigger">POUYAN<span>.</span></a>
+        <a href="portfolio.html" class="nav-btn hover-trigger">Back to Portfolio</a>
+    </nav>
+
+    <!-- محتوای اصلی -->
+    <div class="container">
+        <div class="page-header reveal">
+            <h1 class="page-title">My Projects</h1>
+            <p class="page-subtitle">مجموعه‌ای از بهترین کارهای سه بعدی و موشن گرافیک من. اینجا جایی است که ایده‌ها به واقعیت تبدیل می‌شوند.</p>
+        </div>
+
+        <div class="projects-grid" id="projectsContainer">
+            <!-- پروژه‌ها توسط جاوااسکریپت یا دستی اضافه می‌شوند -->
+            
+            <!-- پروژه نمونه ۱ -->
+            <div class="project-card reveal hover-trigger">
+                <div class="project-image">
+                    <img src="img/Fightgram.jpg" alt="">        </div>
+                <div class="project-content">
+                    <div class="project-category">3D Modeling</div>
+                    <h3 class="project-title">Jensenex X Gran Berlinetta</h3>
+                    <p class="project-desc"></p>
+                    <a href="Fightgram.html" class="project-link">مشاهده جزئیات &rarr;</a>
+                </div>
+            </div>
+
+            <!-- پروژه نمونه ۲ -->
+            <div class="project-card reveal hover-trigger">
+                <div class="project-image">
+                    <img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D8%AC%D9%86%DA%AF%D9%86%D8%AF%D9%87-f16-768x432.jpg?v=1714755770" alt="Project 2">
+                </div>
+                <div class="project-content">
+                    <div class="project-category">Aviation Design</div>
+                    <h3 class="project-title">F-16 Fighting Falcon</h3>
+                    <p class="project-desc">مدل‌سازی سه بعدی جنگنده F-16 با تمرکز بر آیرودینامیک و بافت فلزی بدنه.</p>
+                    <a href="#" class="project-link">مشاهده جزئیات &rarr;</a>
+                </div>
+            </div>
+
+            <!-- پروژه نمونه ۳ -->
+            <div class="project-card reveal hover-trigger">
+                <div class="project-image">
+                    <img src="https://mwallpaper.ir/wp-content/uploads/2022/01/%D8%A8%DA%A9-%DA%AF%D8%B1%D8%A7%D9%86%D8%AF-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%85%D8%A7%D8%B4%DB%8C%D9%86-740Li-1536x960.jpeg?v=1642542440" alt="Project 3">
+                </div>
+                <div class="project-content">
+                    <div class="project-category">Product Visualization</div>
+                    <h3 class="project-title">BMW Grand Computer</h3>
+                    <p class="project-desc">ترکیب عناصر مدرن با محصولات لوکس برای خلق تصاویری جذاب و تجاری.</p>
+                    <a href="#" class="project-link">مشاهده جزئیات &rarr;</a>
+                </div>
+            </div>
+
+            <!-- پروژه نمونه ۴ -->
+            <div class="project-card reveal hover-trigger">
+                <div class="project-image">
+                    <img src="https://mwallpaper.ir/wp-content/uploads/2023/01/%D9%88%D8%A7%D9%84%D9%BE%DB%8C%D9%BE%D8%B1-%D9%84%D8%A7%D9%85%D8%A8%D9%88%D8%B1%DA%AF%DB%8C%D9%86%DB%8C-%D8%A8%D8%A7-%DA%A9%DB%8C%D9%81%DB%8C%D8%AA-4K-1536x864.jpg?v=1674508029" alt="Project 4">
+                </div>
+                <div class="project-content">
+                    <div class="project-category">Motion Graphics</div>
+                    <h3 class="project-title">Abstract Lamp Concept</h3>
+                    <p class="project-desc">طراحی مفهومی چراغ‌های مدرن با استفاده از موشن گرافیک و انیمیشن‌های نرم.</p>
+                    <a href="#" class="project-link">مشاهده جزئیات &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // -----------------------------------------------------------
+        // 1. مدیریت نشانگر موس
+        // -----------------------------------------------------------
+        const cursorDot = document.querySelector('[data-cursor-dot]');
+        const cursorOutline = document.querySelector('[data-cursor-outline]');
+        const hoverTriggers = document.querySelectorAll('.hover-trigger, a, button, input');
+
+        window.addEventListener('mousemove', function (e) {
+            cursorDot.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+            cursorOutline.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+        });
+
+        hoverTriggers.forEach(trigger => {
+            trigger.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            trigger.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
+
+        // -----------------------------------------------------------
+        // 2. انیمیشن اسکرول (Scroll Reveal)
+        // -----------------------------------------------------------
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            const elementVisible = 150;
+            revealElements.forEach((reveal) => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('active');
+                }
+            });
+        };
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll();
+
+        // -----------------------------------------------------------
+        // 3. اسکریپت پس‌زمینه ذرات (Particles)
+        // -----------------------------------------------------------
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.speedY = Math.random() * 1 - 0.5;
+                this.color = 'rgba(255, 255, 255, 0.4)';
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
+                if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.height * canvas.width) / 12000;
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        });
+
+        initParticles();
+        animateParticles();
+    </script>
+</body>
+</html>

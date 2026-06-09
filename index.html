@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pouyan | Projects</title>
+    <meta name="description" content="Pouyan - Creative 3D Designer & Motion Graphics Artist Portfolio">
+    <title>Pouyan | 3D Designer Portfolio</title>
     <!-- فونت‌ها -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
-    
 <style>
     /* -----------------------------------------------------------
-       تنظیمات پایه (مشابه صفحات قبل)
+       تنظیمات پایه و متغیرها
     ----------------------------------------------------------- */
     :root {
         --bg-color: #050507;
@@ -23,214 +23,273 @@
         --secondary-accent: #ec4899;
         --glass-bg: rgba(255, 255, 255, 0.03);
         --glass-border: rgba(255, 255, 255, 0.08);
+        --card-width: clamp(280px, 85vw, 550px);
         --nav-height: 70px;
+        --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; cursor: none; }
-    body {
-        font-family: 'Inter', sans-serif;
-        background-color: var(--bg-color);
-        color: var(--text-color);
-        overflow-x: hidden;
-        line-height: 1.6;
-    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-color); overflow-x: hidden; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    
+    /* Scrollbar */
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: var(--bg-color); }
     ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
 
-    /* نشانگر موس */
-    .cursor-dot, .cursor-outline {
-        position: fixed; top: 0; left: 0; border-radius: 50%; z-index: 9999; pointer-events: none; mix-blend-mode: difference;
-    }
+    /* Custom Cursor */
+    .cursor-dot, .cursor-outline { position: fixed; top: 0; left: 0; border-radius: 50%; z-index: 9999; pointer-events: none; mix-blend-mode: difference; will-change: transform; }
     .cursor-dot { width: 8px; height: 8px; background-color: white; transform: translate(-50%, -50%); }
-    .cursor-outline { width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.5); transition: all 0.1s ease-out; transform: translate(-50%, -50%); }
+    .cursor-outline { width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.5); transition: width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s, transform 0.1s ease-out; transform: translate(-50%, -50%); }
     body.hovering .cursor-outline { width: 70px; height: 70px; background-color: rgba(255, 255, 255, 0.1); border-color: transparent; backdrop-filter: blur(2px); }
     @media (max-width: 768px) { * { cursor: auto; } .cursor-dot, .cursor-outline { display: none; } }
 
-    /* پس‌زمینه ذرات */
+    /* Particles Background */
     #particles-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.8; }
 
-    /* نوار ناوبری */
-    .main-navigation {
-        position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height);
-        display: flex; justify-content: space-between; align-items: center;
-        z-index: 1000; background: rgba(5, 5, 7, 0.8); backdrop-filter: blur(20px);
-        border-bottom: 1px solid var(--glass-border); padding: 0 20px;
-    }
-    .logo { font-weight: 800; font-size: 1.5rem; color: #fff; text-decoration: none; letter-spacing: 2px; }
+    /* Navigation */
+    .main-navigation { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height); padding: 0 20px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; background: rgba(5, 5, 7, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border); transition: var(--transition-smooth); }
+    .nav-left { display: flex; align-items: center; gap: 15px; }
+    .project-btn { padding: 8px 18px; background: transparent; border: 1px solid var(--accent-color); color: var(--accent-color); border-radius: 20px; font-weight: 600; font-size: 0.85rem; text-decoration: none; transition: var(--transition-smooth); white-space: nowrap; }
+    .project-btn:hover { background: var(--accent-color); color: #fff; box-shadow: 0 0 15px var(--accent-glow); }
+    .logo { font-weight: 800; font-size: 1.5rem; letter-spacing: 2px; color: #fff; text-transform: uppercase; position: relative; text-decoration: none; }
     .logo span { color: var(--accent-color); }
-    .nav-btn {
-        padding: 8px 20px; background: transparent; border: 1px solid var(--accent-color);
-        color: var(--accent-color); border-radius: 20px; text-decoration: none;
-        font-weight: 600; transition: 0.3s;
+    .nav-links { display: flex; gap: 25px; list-style: none; align-items: center; }
+    .nav-link { text-decoration: none; color: var(--text-muted); font-weight: 500; font-size: 0.9rem; transition: var(--transition-smooth); position: relative; padding: 5px 0; white-space: nowrap; }
+    .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 0; background: linear-gradient(90deg, var(--accent-color), var(--secondary-accent)); transition: width 0.3s ease; }
+    .nav-link:hover { color: #fff; }
+    .nav-link:hover::after { width: 100%; }
+    .mobile-menu-btn { display: none; flex-direction: column; gap: 6px; background: none; border: none; z-index: 1002; padding: 5px; }
+    .bar { width: 28px; height: 2px; background-color: white; transition: var(--transition-smooth); }
+    @media (max-width: 900px) {
+        .nav-links { position: fixed; top: 0; right: -100%; width: 100%; height: 100vh; background: rgba(5, 5, 7, 0.98); backdrop-filter: blur(30px); flex-direction: column; justify-content: center; align-items: center; transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1); z-index: 1001; gap: 35px; }
+        .nav-links.active { right: 0; }
+        .mobile-menu-btn { display: flex; }
+        .nav-link { font-size: 1.6rem; }
+        .project-btn { font-size: 1.1rem; padding: 12px 30px; }
+        .mobile-menu-btn.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .mobile-menu-btn.active .bar:nth-child(2) { opacity: 0; }
+        .mobile-menu-btn.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
     }
-    .nav-btn:hover { background: var(--accent-color); color: #fff; box-shadow: 0 0 15px var(--accent-glow); }
 
-    /* محتوای اصلی */
-    .container { max-width: 1200px; margin: 100px auto 50px; padding: 0 20px; }
-    .page-header { text-align: center; margin-bottom: 60px; }
-    .page-title { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; margin-bottom: 15px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .page-subtitle { color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+    /* Hero Section */
+    .hero-section { min-height: 100vh; display: flex; justify-content: center; align-items: center; perspective: 1200px; position: relative; padding-top: var(--nav-height); overflow: hidden; padding-left: 15px; padding-right: 15px; }
+    .hero-content { text-align: center; z-index: 10; width: 100%; max-width: 1200px; }
+    .greeting { font-size: 1rem; color: var(--accent-color); margin-bottom: 15px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; opacity: 0; animation: fadeInDown 1s ease forwards 0.5s; }
+    .main-title { font-size: clamp(2.5rem, 8vw, 7rem); font-weight: 900; line-height: 1; margin-bottom: 25px; background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; opacity: 0; animation: fadeInUp 1s ease forwards 0.8s; }
+    .tilt-card { width: var(--card-width); min-height: 350px; margin: 40px auto; background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01)); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 25px; padding: 35px 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); transform-style: preserve-3d; transform: rotateX(0) rotateY(0); transition: transform 0.1s ease-out; opacity: 0; animation: fadeIn 1.5s ease forwards 1.2s; position: relative; overflow: hidden; }
+    .tilt-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.15), transparent 50%); opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1; }
+    .tilt-card:hover::before { opacity: 1; }
+    .card-content { transform: translateZ(60px); position: relative; z-index: 2; }
+    .card-title-en { font-size: clamp(1.3rem, 4vw, 1.8rem); font-weight: 700; margin-bottom: 12px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+    .card-desc-en { font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.6; max-width: 90%; }
+    .divider { width: 50px; height: 3px; background: linear-gradient(90deg, transparent, var(--accent-color), transparent); margin: 15px auto; border-radius: 2px; }
+    .card-title-fa { font-family: 'Vazirmatn', sans-serif; font-size: 1.2rem; font-weight: 700; color: #c7d2fe; margin-bottom: 8px; }
+    .card-desc-fa { font-family: 'Vazirmatn', sans-serif; font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.8; }
 
-    /* شبکه پروژه‌ها */
-    .projects-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 30px;
-    }
-    .project-card {
-        background: var(--glass-bg);
-        border: 1px solid var(--glass-border);
-        border-radius: 20px;
-        overflow: hidden;
-        transition: var(--transition-smooth);
-        position: relative;
-        group: project;
-    }
-    .project-card:hover {
-        transform: translateY(-10px);
-        border-color: var(--accent-color);
-        box-shadow: 0 15px 30px -10px var(--accent-glow);
-    }
-    .project-image {
-        width: 100%;
+    /* Services */
+    .section-padding { padding: 80px 15px; position: relative; }
+    .section-header { text-align: center; margin-bottom: 50px; }
+    .section-title { font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 800; margin-bottom: 15px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
+    .service-card { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 30px 20px; border-radius: 20px; transition: var(--transition-smooth); position: relative; overflow: hidden; }
+    .service-card:hover { transform: translateY(-10px); border-color: var(--accent-color); box-shadow: 0 10px 30px -10px var(--accent-glow); }
+    .service-icon { font-size: 2.2rem; margin-bottom: 18px; color: var(--accent-color); }
+    .service-title { font-size: 1.3rem; margin-bottom: 12px; font-weight: 700; }
+    .service-desc { color: var(--text-muted); font-size: 0.9rem; }
 
-        background: #1a1a2e;
-        position: relative;
-        overflow: hidden;
-    }
-    .project-image img {
-        width: 100%;
-        height: 100%;
-        object-fit:c;
-        transition: transform 0.5s ease;
-    }
-    .project-card:hover .project-image img { transform: scale(1.1); }
-    
-    .project-content { padding: 25px; }
-    .project-category {
-        font-size: 0.8rem;
-        color: var(--accent-color);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 10px;
-        font-weight: 700;
-    }
-    .project-title {
-        font-size: 1.4rem;
-        font-weight: 700;
-        margin-bottom: 10px;
-        color: #fff;
-    }
-    .project-desc {
-        color: var(--text-muted);
-        font-size: 0.95rem;
-        line-height: 1.6;
-        margin-bottom: 20px;
-    }
-    .project-link {
-        display: inline-block;
-        color: #fff;
-        text-decoration: none;
-        font-weight: 600;
-        border-bottom: 2px solid var(--secondary-accent);
-        padding-bottom: 2px;
-        transition: 0.3s;
-    }
-    .project-link:hover { color: var(--secondary-accent); }
+    /* Gallery */
+    .gallery-section { padding: 60px 0; overflow: hidden; position: relative; background: linear-gradient(to bottom, transparent, #0a0a0e); }
+    .marquee-container { display: flex; width: 100%; overflow: hidden; margin-bottom: 30px; mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); }
+    .marquee-content { display: flex; gap: 20px; animation: scroll 50s linear infinite; }
+    .marquee-content.reverse { animation-direction: reverse; animation-duration: 60s; }
+    .marquee-item { width: clamp(250px, 35vw, 350px); height: clamp(160px, 22vw, 220px); border-radius: 14px; overflow: hidden; position: relative; flex-shrink: 0; border: 1px solid var(--glass-border); transition: var(--transition-smooth); }
+    .marquee-item:hover { transform: scale(1.05); z-index: 2; border-color: var(--accent-color); box-shadow: 0 0 20px var(--accent-glow); }
+    .marquee-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+    .marquee-item:hover img { transform: scale(1.1); }
+    @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-    /* حالت خالی */
-    .empty-state { text-align: center; color: var(--text-muted); padding: 50px; font-size: 1.2rem; }
+    /* Contact Form */
+    .contact-section { background: radial-gradient(circle at center, #1a1a2e 0%, #050507 70%); }
+    .contact-container { max-width: 600px; margin: 0 auto; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 35px 25px; backdrop-filter: blur(20px); }
+    .form-group { margin-bottom: 18px; }
+    .form-input { width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); border-radius: 10px; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.95rem; transition: var(--transition-smooth); }
+    .form-input:focus { outline: none; border-color: var(--accent-color); background: rgba(0, 0, 0, 0.5); }
+    .submit-btn { width: 100%; padding: 14px; background: linear-gradient(90deg, var(--accent-color), var(--secondary-accent)); border: none; border-radius: 10px; color: white; font-weight: 700; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; transition: var(--transition-smooth); position: relative; overflow: hidden; }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -5px var(--accent-glow); }
+    .char-count { font-size: 0.75rem; color: var(--text-muted); display: block; margin-top: 5px; text-align: right; }
+    .char-count.error { color: #ef4444; }
+    .char-count.success { color: var(--accent-color); }
+
+    /* Footer */
+    footer { padding: 30px 20px; text-align: center; border-top: 1px solid var(--glass-border); color: var(--text-muted); font-size: 0.85rem; }
+
+    /* Animations */
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-40px); } to { opacity: 1; transform: translateY(0); } }
+    .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 480px) {
+        :root { --nav-height: 60px; }
+        .logo { font-size: 1.2rem; }
+        .project-btn { padding: 6px 12px; font-size: 0.75rem; }
+        .tilt-card { min-height: 300px; padding: 25px 18px; margin: 30px auto; }
+        .section-padding { padding: 60px 12px; }
+        .contact-container { padding: 25px 18px; }
+    }
 </style>
 </head>
 <body>
-    <!-- بوم نقاشی -->
     <canvas id="particles-canvas"></canvas>
-    
-    <!-- نشانگر موس -->
     <div class="cursor-dot" data-cursor-dot></div>
     <div class="cursor-outline" data-cursor-outline></div>
-
-    <!-- نوار ناوبری -->
+    
     <nav class="main-navigation">
-        <a href="portfolio.html" class="logo hover-trigger">POUYAN<span>.</span></a>
-        <a href="portfolio.html" class="nav-btn hover-trigger">Back to Portfolio</a>
+        <div class="nav-left">
+            <a href="./project.html" class="project-btn hover-trigger">Projects</a>
+            <a href="#" class="logo">POUYAN<span>.</span></a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#hero" class="nav-link hover-trigger">Home</a></li>
+            <li><a href="#services" class="nav-link hover-trigger">Services</a></li>
+            <li><a href="#gallery" class="nav-link hover-trigger">Works</a></li>
+            <li><a href="#contact" class="nav-link hover-trigger">Contact</a></li>
+        </ul>
+        <button class="mobile-menu-btn hover-trigger" aria-label="Toggle Menu">
+            <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+        </button>
     </nav>
 
-    <!-- محتوای اصلی -->
-    <div class="container">
-        <div class="page-header reveal">
-            <h1 class="page-title">My Projects</h1>
-            <p class="page-subtitle">مجموعه‌ای از بهترین کارهای سه بعدی و موشن گرافیک من. اینجا جایی است که ایده‌ها به واقعیت تبدیل می‌شوند.</p>
-        </div>
-
-        <div class="projects-grid" id="projectsContainer">
-            <!-- پروژه‌ها توسط جاوااسکریپت یا دستی اضافه می‌شوند -->
-            
-            <!-- پروژه نمونه ۱ -->
-            <div class="project-card reveal hover-trigger">
-                <div class="project-image">
-                    <img src="./img/Fightgram.jpg" alt="">        </div>
-                <div class="project-content">
-                    <div class="project-category">3D Modeling</div>
-                    <h3 class="project-title">Jensenex X Gran Berlinetta</h3>
-                    <p class="project-desc"></p>
-                    <a href="Fightgram.html" class="project-link">مشاهده جزئیات &rarr;</a>
-                </div>
-            </div>
-
-            <!-- پروژه نمونه ۲ -->
-            <div class="project-card reveal hover-trigger">
-                <div class="project-image">
-                    <img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D8%AC%D9%86%DA%AF%D9%86%D8%AF%D9%87-f16-768x432.jpg?v=1714755770" alt="Project 2">
-                </div>
-                <div class="project-content">
-                    <div class="project-category">Aviation Design</div>
-                    <h3 class="project-title">F-16 Fighting Falcon</h3>
-                    <p class="project-desc">مدل‌سازی سه بعدی جنگنده F-16 با تمرکز بر آیرودینامیک و بافت فلزی بدنه.</p>
-                    <a href="#" class="project-link">مشاهده جزئیات &rarr;</a>
-                </div>
-            </div>
-
-            <!-- پروژه نمونه ۳ -->
-            <div class="project-card reveal hover-trigger">
-                <div class="project-image">
-                    <img src="https://mwallpaper.ir/wp-content/uploads/2022/01/%D8%A8%DA%A9-%DA%AF%D8%B1%D8%A7%D9%86%D8%AF-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%85%D8%A7%D8%B4%DB%8C%D9%86-740Li-1536x960.jpeg?v=1642542440" alt="Project 3">
-                </div>
-                <div class="project-content">
-                    <div class="project-category">Product Visualization</div>
-                    <h3 class="project-title">BMW Grand Computer</h3>
-                    <p class="project-desc">ترکیب عناصر مدرن با محصولات لوکس برای خلق تصاویری جذاب و تجاری.</p>
-                    <a href="#" class="project-link">مشاهده جزئیات &rarr;</a>
-                </div>
-            </div>
-
-            <!-- پروژه نمونه ۴ -->
-            <div class="project-card reveal hover-trigger">
-                <div class="project-image">
-                    <img src="https://mwallpaper.ir/wp-content/uploads/2023/01/%D9%88%D8%A7%D9%84%D9%BE%DB%8C%D9%BE%D8%B1-%D9%84%D8%A7%D9%85%D8%A8%D9%88%D8%B1%DA%AF%DB%8C%D9%86%DB%8C-%D8%A8%D8%A7-%DA%A9%DB%8C%D9%81%DB%8C%D8%AA-4K-1536x864.jpg?v=1674508029" alt="Project 4">
-                </div>
-                <div class="project-content">
-                    <div class="project-category">Motion Graphics</div>
-                    <h3 class="project-title">Abstract Lamp Concept</h3>
-                    <p class="project-desc">طراحی مفهومی چراغ‌های مدرن با استفاده از موشن گرافیک و انیمیشن‌های نرم.</p>
-                    <a href="#" class="project-link">مشاهده جزئیات &rarr;</a>
+    <section id="hero" class="hero-section">
+        <div class="hero-content">
+            <div class="greeting">HELLO WORLD</div>
+            <h1 class="main-title">I'M POUYAN</h1>
+            <div class="tilt-card" id="tiltCard">
+                <div class="card-content">
+                    <div class="card-title-en">Creative 3D Designer</div>
+                    <p class="card-desc-en">Passionate about crafting bold, immersive, and memorable projects.</p>
+                    <div class="divider"></div>
+                    <div class="card-title-fa">طراح سه بعدی خلاق</div>
+                    <p class="card-desc-fa">متخصص در خلق پروژه‌های جسورانه و به یاد ماندنی.</p>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <section id="services" class="section-padding">
+        <div class="section-header reveal">
+            <h2 class="section-title">My Services</h2>
+            <p style="color: var(--text-muted);">خدمات تخصصی من برای ارتقای کسب‌وکار شما</p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card reveal hover-trigger">
+                <div class="service-icon">🧊</div>
+                <h3 class="service-title">3D Modeling</h3>
+                <p class="service-desc">خلق مدل‌های سه بعدی با جزئیات بالا.</p>
+            </div>
+            <div class="service-card reveal hover-trigger">
+                <div class="service-icon">✨</div>
+                <h3 class="service-title">Motion Graphics</h3>
+                <p class="service-desc">طراحی موشن گرافیک و انیمیشن.</p>
+            </div>
+            <div class="service-card reveal hover-trigger">
+                <div class="service-icon">🎨</div>
+                <h3 class="service-title">Rendering</h3>
+                <p class="service-desc">رندرینگ فوتورئالیستیک با نورپردازی سینمایی.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="gallery-section">
+        <div class="marquee-container">
+            <div class="marquee-content">
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D8%B9%DA%A9%D8%B3-%D9%BE%D8%B1%D9%88%D9%81%D8%A7%DB%8C%D9%84-%D8%AE%D9%84%D8%A8%D8%A7%D9%86-%D8%AC%D8%AA-%D8%AC%D9%86%DA%AF%D9%86%D8%AF%D9%87-768x432.jpg?v=1772821181" alt="Work 1"></div>
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D9%88%D8%A7%D9%84%D9%BE%DB%8C%D9%BE%D8%B1-%D9%87%D9%88%D8%A7%D9%BE%DB%8C%D9%85%D8%A7%DB%8C-%D8%B4%DA%A9%D8%A7%D8%B1%DB%8C-F-22-768x512.jpg?v=1757542283" alt="Work 2"></div>
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D9%87%D9%88%D8%A7%D9%BE%DB%8C%D9%85%D8%A7%DB%8C-%D8%AC%D9%86%DA%AF%D9%86%D8%AF%D9%87-%D8%B3%D9%88%D8%AE%D9%88-34-%D8%B1%D9%88%D8%B3%DB%8C-768x512.jpg?v=1772821187" alt="Work 3"></div>
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/Lockheed-Martin-F16-768x432.jpg?v=1772821189" alt="Work 4"></div>
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D8%AC%D9%86%DA%AF%D9%86%D8%AF%D9%87-%D9%87%D8%A7%DB%8C-f16-%D8%A8%D8%B1-%D9%81%D8%B1%D8%A7%D8%B2-%D8%A7%D8%A8%D8%B1%D9%87%D8%A7-768x480.jpg?v=1714755775" alt="Work 5"></div>
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D8%AC%D9%86%DA%AF%D9%86%D8%AF%D9%87-f16-768x432.jpg?v=1714755770" alt="Work 6"></div>
+                <!-- Tkrar -->
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D8%B9%DA%A9%D8%B3-%D9%BE%D8%B1%D9%88%D9%81%D8%A7%DB%8C%D9%84-%D8%AE%D9%84%D8%A8%D8%A7%D9%86-%D8%AC%D8%AA-%D8%AC%D9%86%DA%AF%D9%86%D8%AF%D9%87-768x432.jpg?v=1772821181" alt="Work 1"></div>
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D9%88%D8%A7%D9%84%D9%BE%DB%8C%D9%BE%D8%B1-%D9%87%D9%88%D8%A7%D9%BE%DB%8C%D9%85%D8%A7%DB%8C-%D8%B4%DA%A9%D8%A7%D8%B1%DB%8C-F-22-768x512.jpg?v=1757542283" alt="Work 2"></div>
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D9%87%D9%88%D8%A7%D9%BE%DB%8C%D9%85%D8%A7%DB%8C-%D8%AC%D9%86%DA%AF%D9%86%D8%AF%D9%87-%D8%B3%D9%88%D8%AE%D9%88-34-%D8%B1%D9%88%D8%B3%DB%8C-768x512.jpg?v=1772821187" alt="Work 3"></div>
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/Lockheed-Martin-F16-768x432.jpg?v=1772821189" alt="Work 4"></div>
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D8%AC%D9%86%DA%AF%D9%86%D8%AF%D9%87-%D9%87%D8%A7%DB%8C-f16-%D8%A8%D8%B1-%D9%81%D8%B1%D8%A7%D8%B2-%D8%A7%D8%A8%D8%B1%D9%87%D8%A7-768x480.jpg?v=1714755775" alt="Work 5"></div>
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D8%AC%D9%86%DA%AF%D9%86%D8%AF%D9%87-f16-768x432.jpg?v=1714755770" alt="Work 6"></div>
+            </div>
+        </div>
+        <div class="marquee-container">
+            <div class="marquee-content reverse">
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2024/10/%D8%AC%D9%86%D8%B3%DB%8C%D8%B3-X-Gran-Berlinetta-%D9%86%D8%A7%D8%B1%D9%86%D8%AC%DB%8C-768x432.jpg?v=1729021739" alt="3D 1"></div>
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2023/01/%D9%88%D8%A7%D9%84%D9%BE%DB%8C%D9%BE%D8%B1-%D9%84%D8%A7%D9%85%D8%A8%D9%88%D8%B1%DA%AF%DB%8C%D9%86%DB%8C-%D8%A8%D8%A7-%DA%A9%DB%8C%D9%81%DB%8C%D8%AA-4K-1536x864.jpg?v=1674508029" alt="3D 2"></div>
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2023/01/%D8%B9%DA%A9%D8%B3-%D8%A8%D8%A7%DA%A9%DB%8C%D9%81%DB%8C%D8%AA-%D9%84%D8%A7%D9%85%D8%A8%D9%88%D8%B1%DA%AF%DB%8C%D9%86%DB%8C-%D8%A8%D8%A7-%D8%AA%D9%85-%D8%B5%D9%88%D8%B1%D8%AA%DB%8C-1536x864.jpg?v=1674507674" alt="3D 3"></div>
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2022/01/%D8%A8%DA%A9-%DA%AF%D8%B1%D8%A7%D9%86%D8%AF-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%85%D8%A7%D8%B4%DB%8C%D9%86-740Li-1536x960.jpeg?v=1642542440" alt="3D 4"></div>
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2022/04/%D8%B9%DA%A9%D8%B3-%D9%85%D8%A7%D8%B4%DB%8C%D9%86-%D9%85%D8%B1%D8%B3%D8%AF%D8%B3-%D8%A8%D9%86%D8%B2-%D8%B2%D8%B1%D8%AF-%D8%B1%D9%86%DA%AF-%D8%A8%D8%A7-%DA%A9%DB%8C%D9%81%DB%8C%D8%AA-4K-768x432.jpg?v=1649099065" alt="3D 5"></div>
+                <!-- Tkrar -->
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2024/10/%D8%AC%D9%86%D8%B3%DB%8C%D8%B3-X-Gran-Berlinetta-%D9%86%D8%A7%D8%B1%D9%86%D8%AC%DB%8C-768x432.jpg?v=1729021739" alt="3D 1"></div>
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2023/01/%D9%88%D8%A7%D9%84%D9%BE%DB%8C%D9%BE%D8%B1-%D9%84%D8%A7%D9%85%D8%A8%D9%88%D8%B1%DA%AF%DB%8C%D9%86%DB%8C-%D8%A8%D8%A7-%DA%A9%DB%8C%D9%81%DB%8C%D8%AA-4K-1536x864.jpg?v=1674508029" alt="3D 2"></div>
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2023/01/%D8%B9%DA%A9%D8%B3-%D8%A8%D8%A7%DA%A9%DB%8C%D9%81%DB%8C%D8%AA-%D9%84%D8%A7%D9%85%D8%A8%D9%88%D8%B1%DA%AF%DB%8C%D9%86%DB%8C-%D8%A8%D8%A7-%D8%AA%D9%85-%D8%B5%D9%88%D8%B1%D8%AA%DB%8C-1536x864.jpg?v=1674507674" alt="3D 3"></div>
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2022/01/%D8%A8%DA%A9-%DA%AF%D8%B1%D8%A7%D9%86%D8%AF-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%85%D8%A7%D8%B4%DB%8C%D9%86-740Li-1536x960.jpeg?v=1642542440" alt="3D 4"></div>
+                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2022/04/%D8%B9%DA%A9%D8%B3-%D9%85%D8%A7%D8%B4%DB%8C%D9%86-%D9%85%D8%B1%D8%B3%D8%AF%D8%B3-%D8%A8%D9%86%D8%B2-%D8%B2%D8%B1%D8%AF-%D8%B1%D9%86%DA%AF-%D8%A8%D8%A7-%DA%A9%DB%8C%D9%81%DB%8C%D8%AA-4K-768x432.jpg?v=1649099065" alt="3D 5"></div>
+          
+  </div>
+        </div>
+    </section>
+
+    <!-- بخش تماس -->
+    <section id="contact" class="section-padding contact-section">
+        <div class="section-header reveal">
+            <h2 class="section-title">Get In Touch</h2>
+            <p style="color: var(--text-muted);">برای شروع یک پروژه جدید یا ارسال پیام، فرم زیر را پر کنید</p>
+        </div>
+        <div class="contact-container reveal">
+            <form id="messageForm" onsubmit="event.preventDefault(); validateAndSend();">
+                
+                <div class="form-group">
+                    <label for="fullName" style="display:block; margin-bottom:5px; color:var(--text-muted); font-size:0.85rem;">Full Name / نام و نام خانوادگی *</label>
+                    <input type="text" id="fullName" name="fullName" class="form-input hover-trigger" placeholder="Your Full Name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" style="display:block; margin-bottom:5px; color:var(--text-muted); font-size:0.85rem;">Email / ایمیل (اختیاری)</label>
+                    <input type="email" id="email" name="email" class="form-input hover-trigger" placeholder="example@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone" style="display:block; margin-bottom:5px; color:var(--text-muted); font-size:0.85rem;">Phone Number / شماره تلفن *</label>
+                    <input type="tel" id="phone" name="phone" class="form-input hover-trigger" placeholder="+98 912 ..." required pattern="[0-9+ -]{10,}">
+                </div>
+
+                <div class="form-group">
+                    <label for="messageText" style="display:block; margin-bottom:5px; color:var(--text-muted); font-size:0.85rem;">Your Message / متن پیام * (حداقل ۱۵۰ حرف)</label>
+                    <textarea id="messageText" name="messageText" class="form-input hover-trigger" rows="5" placeholder="Write your message here..." required minlength="150"></textarea>
+                    <small id="charCount" class="char-count">0 / 150</small>
+                </div>
+
+                <button type="submit" class="submit-btn hover-trigger">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Pouyan. All Rights Reserved.</p>
+    </footer>
 
     <script>
         // -----------------------------------------------------------
-        // 1. مدیریت نشانگر موس
+        // 1. نشانگر موس سفارشی
         // -----------------------------------------------------------
         const cursorDot = document.querySelector('[data-cursor-dot]');
         const cursorOutline = document.querySelector('[data-cursor-outline]');
-        const hoverTriggers = document.querySelectorAll('.hover-trigger, a, button, input');
-
+        const hoverTriggers = document.querySelectorAll('.hover-trigger, a, button, input, textarea');
+        
         window.addEventListener('mousemove', function (e) {
-            cursorDot.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-            cursorOutline.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+            const posX = e.clientX;
+            const posY = e.clientY;
+            cursorDot.style.transform = `translate(${posX}px, ${posY}px)`;
+            cursorOutline.style.transform = `translate(${posX}px, ${posY}px)`;
         });
 
         hoverTriggers.forEach(trigger => {
@@ -239,7 +298,50 @@
         });
 
         // -----------------------------------------------------------
-        // 2. انیمیشن اسکرول (Scroll Reveal)
+        // 2. منوی موبایل
+        // -----------------------------------------------------------
+        const mobileBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        const navItems = document.querySelectorAll('.nav-link');
+        
+        mobileBtn.addEventListener('click', () => {
+            mobileBtn.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                mobileBtn.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // -----------------------------------------------------------
+        // 3. افکت سه بعدی کارت (Tilt Effect)
+        // -----------------------------------------------------------
+        const card = document.getElementById('tiltCard');
+        const heroSection = document.querySelector('.hero-section');
+        
+        heroSection.addEventListener('mousemove', (e) => {
+            const rect = heroSection.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            const rotateX = y / -25;
+            const rotateY = x / 25;
+            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            
+            const xPercent = (e.clientX / window.innerWidth) * 100;
+            const yPercent = (e.clientY / window.innerHeight) * 100;
+            card.style.setProperty('--mouse-x', `${xPercent}%`);
+            card.style.setProperty('--mouse-y', `${yPercent}%`);
+        });
+
+        heroSection.addEventListener('mouseleave', () => {
+            card.style.transform = `rotateX(0) rotateY(0)`;
+        });
+
+        // -----------------------------------------------------------
+        // 4. انیمیشن اسکرول (Scroll Reveal)
         // -----------------------------------------------------------
         const revealElements = document.querySelectorAll('.reveal');
         const revealOnScroll = () => {
@@ -256,7 +358,7 @@
         revealOnScroll();
 
         // -----------------------------------------------------------
-        // 3. اسکریپت پس‌زمینه ذرات (Particles)
+        // 5. پس‌زمینه ذرات (Particles)
         // -----------------------------------------------------------
         const canvas = document.getElementById('particles-canvas');
         const ctx = canvas.getContext('2d');
@@ -313,6 +415,63 @@
 
         initParticles();
         animateParticles();
+
+                    // -----------------------------------------------------------
+            // 6. منطق فرم و ذخیره‌سازی داده‌ها (بدون هدایت خودکار)
+            // -----------------------------------------------------------
+            const form = document.getElementById('messageForm');
+            const messageInput = document.getElementById('messageText');
+            const charCountDisplay = document.getElementById('charCount');
+
+            // شمارنده کاراکتر
+            messageInput.addEventListener('input', function() {
+                const length = this.value.length;
+                charCountDisplay.textContent = `${length} / 150`;
+                charCountDisplay.className = length < 150 ? 'char-count error' : 'char-count success';
+            });
+
+            function validateAndSend() {
+                const fullName = document.getElementById('fullName').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const message = document.getElementById('messageText').value.trim();
+
+                // بررسی‌ها
+                if (!fullName) { alert('لطفاً نام و نام خانوادگی را وارد کنید.'); return; }
+                if (!phone) { alert('لطفاً شماره تلفن را وارد کنید.'); return; }
+                if (message.length < 150) { 
+                    alert('متن پیام باید حداقل شامل ۱۵۰ کاراکتر باشد.'); 
+                    messageInput.focus(); 
+                    return; 
+                }
+
+                // آماده‌سازی داده‌ها
+                const formData = {
+                    name: fullName,
+                    email: email || 'Not Provided',
+                    phone: phone,
+                    message: message,
+                    timestamp: new Date().toLocaleString('fa-IR')
+                };
+
+                // *** ذخیره در LocalStorage ***
+                let messages = JSON.parse(localStorage.getItem('siteMessages')) || [];
+                messages.push(formData);
+                localStorage.setItem('siteMessages', JSON.stringify(messages));
+
+                // نمایش پیام موفقیت
+                alert('پیام شما با موفقیت ثبت شد!\n\n' + 
+                      `ارسال کننده: ${fullName}\n` +
+                      `شماره: ${phone}\n` +
+                      `زمان: ${formData.timestamp}`);
+
+                // پاک کردن فرم (اختیاری)
+                form.reset();
+                charCountDisplay.textContent = "0 / 150";
+                charCountDisplay.className = 'char-count';
+                
+                // کاربر در همین صفحه می‌ماند و می‌تواند دوباره پیام بدهد
+            }
     </script>
 </body>
 </html>
