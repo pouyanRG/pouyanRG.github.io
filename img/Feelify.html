@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feelify — Premium Mood Check-In</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+:root{
+--bg:#080810;
+--pink:#ff4fd8;
+--purple:#8b5cf6;
+--orange:#ff9f43;
+--glass:rgba(255,255,255,.06);
+--text:#f5f5ff;
+}
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Inter,system-ui,sans-serif;
+background:
+radial-gradient(circle at 20% 20%,rgba(255,79,216,.15),transparent 30%),
+radial-gradient(circle at 80% 70%,rgba(139,92,246,.18),transparent 30%),
+#080810;
+color:var(--text);
+}
+.hero{
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:60px 24px;
+}
+.wrap{
+max-width:1200px;
+width:100%;
+display:grid;
+grid-template-columns:1.1fr 1fr;
+gap:50px;
+align-items:center;
+}
+.logo{
+font-size:5rem;
+font-weight:900;
+background:linear-gradient(90deg,var(--purple),var(--pink),var(--orange));
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+.tag{
+font-size:1.3rem;
+opacity:.85;
+}
+.card{
+background:var(--glass);
+backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,.08);
+border-radius:30px;
+padding:28px;
+box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+.phone{
+height:650px;
+border-radius:40px;
+background:linear-gradient(180deg,#141421,#0d0d18);
+border:1px solid rgba(255,255,255,.1);
+padding:30px;
+position:relative;
+overflow:hidden;
+}
+.mood-ring{
+width:220px;
+height:220px;
+margin:auto;
+border-radius:50%;
+background:conic-gradient(var(--purple),var(--pink),var(--orange),var(--purple));
+display:flex;
+align-items:center;
+justify-content:center;
+}
+.mood-ring span{
+width:180px;height:180px;border-radius:50%;
+background:#101018;display:flex;align-items:center;justify-content:center;
+font-size:5rem;
+}
+.features{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+margin-top:25px;
+}
+.feature{
+padding:18px;
+border-radius:18px;
+background:rgba(255,255,255,.04);
+}
+.btn{
+display:inline-block;
+padding:16px 28px;
+border-radius:999px;
+background:linear-gradient(90deg,var(--purple),var(--pink));
+color:white;
+text-decoration:none;
+font-weight:700;
+margin-top:20px;
+}
+.stats{
+display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;
+}
+.stats div{
+background:rgba(255,255,255,.05);
+padding:12px 18px;border-radius:16px;
+}
+@media(max-width:900px){
+.wrap{grid-template-columns:1fr}
+.logo{font-size:3.5rem}
+.phone{height:500px}
+}
+</style>
+</head>
+<body>
+<section class="hero">
+<div class="wrap">
+<div>
+<div class="logo">Feelify</div>
+<p class="tag">Check In. Understand. Grow.</p>
+
+<div class="features">
+<div class="feature"><i class="fa-solid fa-face-smile"></i> Mood Check-In</div>
+<div class="feature"><i class="fa-solid fa-chart-line"></i> Insights</div>
+<div class="feature"><i class="fa-solid fa-brain"></i> AI Analysis</div>
+<div class="feature"><i class="fa-solid fa-lock"></i> Private & Secure</div>
+</div>
+
+<div class="stats">
+<div>Daily Tracking</div>
+<div>AI Trends</div>
+<div>Mood History</div>
+</div>
+
+<a class="btn" href="#app">Launch Feelify</a>
+</div>
+
+<div class="card">
+<div class="phone">
+<h2>Hi Alex 👋</h2>
+<p>How are you feeling today?</p>
+<div class="mood-ring"><span>😊</span></div>
+<h2 style="text-align:center">Good</h2>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Original application preserved below -->
+<div id="app">
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mood check-in - AI Enhanced</title>
+    <!-- فونت وزیرمتن -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <!-- آیکون‌ها -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* =================== متغیرها و تنظیمات پایه =================== */
+        :root {
+            --bg: #0f0f17;
+            --card-bg: rgba(18, 18, 24, 0.85);
+            --primary-color: #6c5ce7;
+            --secondary-color: #00cec9;
+            --accent-cyan: #00f0ff;
+            --accent-pink: #ff2fa8;
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-color: #dbe7ff;
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            /* رنگ‌های مودها */
+            --color-awful: #ff4757;
+            --color-bad: #ffa502;
+            --color-meh: #eccc68;
+            --color-good: #2ed573;
+            --color-rad: #1e90ff;
+            /* تنظیمات رسپانسیو فونت */
+            --font-size-base: clamp(0.9rem, 2vw, 1.1rem);
+            --font-size-h1: clamp(1.5rem, 4vw, 2.5rem);
+            --font-size-h2: clamp(1.2rem, 3vw, 1.8rem);
+        }
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+        }
+        body {
+            margin: 0;
+            font-family: 'Vazirmatn', 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            /* پس‌زمینه پویا */
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(108, 92, 231, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 206, 201, 0.1) 0%, transparent 40%);
+        }
+
+        /* =================== نوار بالایی (Navbar) =================== */
+        .navbar {
+            width: 100%;
+            display: flex;
+            justify-content: space-between; /* توزیع فضا */
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(15, 15, 23, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--glass-border);
+            transition: padding 0.3s ease;
+        }
+        
+        /* کانتینر دکمه‌ها */
+        .header-controls {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: flex-end; /* دکمه‌ها سمت چپ (چون RTL است) */
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            border: 1px solid var(--glass-border);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        .nav-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* =================== کانتینر اصلی =================== */
+        #app-container {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            position: relative;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+
+        /* =================== کارت‌ها =================== */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(12px);
+            width: 100%;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(108, 92, 231, 0.1), transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        h2, h1, h3 {
+            text-align: center;
+            margin: 0 0 15px 0;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+        h1 { font-size: var(--font-size-h1); }
+        h2 { font-size: var(--font-size-h2); }
+        h3 { font-size: 1.2rem; }
+
+        /* =================== انتخاب حال و هوا (Mood Selector) =================== */
+        .mood-selector {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            width: 100%;
+        }
+        .mood-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--input-bg);
+            border: 1px solid transparent;
+            border-radius: 16px;
+            padding: 15px 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            color: var(--text-color);
+            min-height: 90px;
+        }
+        .mood-option:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        .mood-option.active {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.02);
+        }
+        .mood-option .emoji {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+            transition: transform 0.3s;
+        }
+        .mood-option:hover .emoji {
+            transform: scale(1.2);
+        }
+        .mood-option .label {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* =================== تگ‌ها (Tags) =================== */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            min-height: 50px;
+        }
+        .tag {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tag:hover {
+            border-color: var(--accent-cyan);
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .tag.selected {
+            background: var(--accent-cyan);
+            color: #0f0f17;
+            border-color: var(--accent-cyan);
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+        }
+
+        /* =================== ورودی متن و دکمه‌ها =================== */
+        textarea {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            color: var(--text-color);
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+        }
+        .btn, .primary-btn {
+            padding: 16px 32px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+        .btn {
+            background: linear-gradient(135deg, var(--primary-color), #a29bfe);
+            color: white;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+            margin-top: 10px;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.5);
+        }
+        .primary-btn {
+            background: var(--accent-cyan);
+            color: #0f0f17;
+        }
+        .primary-btn:hover {
+            background: #fff;
+            box-shadow: 0 0 20px var(--accent-cyan);
+        }
+
+        /* =================== بخش تاریخچه و هوش مصنوعی =================== */
+        #history-section, #ai-section {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 25px;
+            animation: slideDown 0.4s ease-out;
+        }
+
+        /* استایل‌های اختصاصی AI */
+        .ai-dashboard {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        .ai-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+        }
+        .ai-card h4 {
+            margin: 0 0 10px 0;
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ai-insight-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #dfe6e9;
+        }
+        .highlight-positive { color: var(--color-good); font-weight: bold; }
+        .highlight-negative { color: var(--color-bad); font-weight: bold; }
+        
+        /* نمودار خطی ساده با SVG */
+        .line-chart-container {
+            width: 100%;
+            height: 150px;
+            margin-top: 10px;
+            position: relative;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        svg.line-chart {
+            width: 100%;
+            height: 100%;
+        }
+        .chart-line {
+            fill: none;
+            stroke: var(--accent-pink);
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .chart-dot {
+            fill: var(--bg);
+            stroke: var(--accent-pink);
+            stroke-width: 2;
+        }
+
+        /* =================== نمودار و لیست تاریخچه =================== */
+        .chart-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .chart-container {
+            position: relative;
+            width: 220px;
+            height: 220px;
+        }
+        svg.pie-chart {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+            border-radius: 50%;
+        }
+        .chart-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: #b2bec3;
+            background: rgba(255,255,255,0.03);
+            padding: 5px 12px;
+            border-radius: 12px;
+        }
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            box-shadow: 0 0 5px currentColor;
+        }
+        .history-list {
+            width: 100%;
+            max-height: 400px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-right: 5px;
+        }
+        .history-list::-webkit-scrollbar { width: 6px; }
+        .history-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+        .history-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        .history-item {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-right: 5px solid transparent;
+            transition: transform 0.2s;
+        }
+        .history-item:hover {
+            transform: translateX(-5px);
+            background: rgba(255,255,255,0.06);
+        }
+        .history-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .history-date {
+            font-size: 0.8rem;
+            color: #636e72;
+        }
+        .history-mood {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .history-note {
+            font-size: 0.85rem;
+            color: #b2bec3;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        /* =================== کلاس‌های کمکی و انیمیشن =================== */
+        .hidden { display: none !important; }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* =================== Toast Notification =================== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(150px);
+            background: #2d3436;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease;
+            border: 1px solid var(--glass-border);
+            font-size: 0.95rem;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .toast.success { border-left: 5px solid #00b894; }
+        .toast.error { border-left: 5px solid #d63031; }
+        .loading-icon {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        
+        /* =================== مدیا کوئری‌ها =================== */
+        @media (max-width: 479px) {
+            .mood-selector {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .mood-option {
+                min-height: 70px;
+                padding: 10px;
+                flex-direction: row;
+                justify-content: flex-start;
+                gap: 15px;
+            }
+            .mood-option .emoji {
+                font-size: 2rem;
+                margin-bottom: 0;
+            }
+            .mood-option .label {
+                font-size: 1rem;
+            }
+        }
+        @media (min-width: 480px) {
+            .mood-selector {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            #app-container {
+                padding: 30px;
+            }
+        }
+        @media (min-width: 768px) {
+            .navbar {
+                padding: 15px 40px;
+            }
+            .mood-selector {
+                grid-template-columns: repeat(5, 1fr);
+            }
+            .mood-option {
+                padding: 20px;
+                flex-direction: column;
+                justify-content: center;
+            }
+            .mood-option .emoji {
+                margin-bottom: 8px;
+            }
+            .card {
+                padding: 40px;
+            }
+            .ai-dashboard {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (min-width: 1024px) {
+            body {
+                background-size: cover;
+            }
+            #app-container {
+                max-width: 1000px;
+            }
+            .nav-btn {
+                padding: 10px 24px;
+                font-size: 0.95rem;
+            }
+            .history-list {
+                max-height: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <!-- حذف بخش پروفایل و آواتار -->
+        <div class="header-controls">
+            <button id="ai-btn" class="nav-btn" onclick="toggleSection('ai-section')">
+                <i class="fas fa-robot"></i> AI Analysis
+            </button>
+            <button id="history-btn" class="nav-btn" onclick="toggleSection('history-section')">
+                <i class="fas fa-history"></i> History
+            </button>
+        </div>
+    </div>
+
+    <div id="app-container">
+        <!-- بخش هوش مصنوعی -->
+        <section id="ai-section" class="hidden">
+            <h3><i class="fas fa-brain"></i> تحلیل هوش مصنوعی</h3>
+            <div class="ai-dashboard">
+                <!-- کارت ۱: نمودار روند -->
+                <div class="ai-card">
+                    <h4>روند تغییرات خلق‌وخو</h4>
+                    <div class="line-chart-container" id="line-chart-container">
+                        <!-- SVG توسط جاوااسکریپت پر می‌شود -->
+                    </div>
+                    <p class="ai-insight-text" id="trend-insight">داده کافی برای تحلیل روند وجود ندارد.</p>
+                </div>
+
+                <!-- کارت ۲: چرخه‌ها و روزها -->
+                <div class="ai-card">
+                    <h4>تحلیل روزهای هفته</h4>
+                    <p class="ai-insight-text" id="day-insight">در حال بررسی الگوهای هفتگی...</p>
+                </div>
+
+                <!-- کارت ۳: محرک‌ها -->
+                <div class="ai-card">
+                    <h4>شناسایی محرک‌ها (Triggers)</h4>
+                    <p class="ai-insight-text" id="trigger-insight">هنوز تگ کافی برای تحلیل ثبت نشده است.</p>
+                </div>
+
+                <!-- کارت ۴: تحلیل متنی -->
+                <div class="ai-card">
+                    <h4>تحلیل احساسات متن</h4>
+                    <p class="ai-insight-text" id="nlp-insight">سیستم در حال یادگیری از متن‌های شماست...</p>
+                </div>
+
+                <!-- کارت ۵: پیشنهادات -->
+                <div class="ai-card" style="grid-column: 1 / -1;">
+                    <h4><i class="fas fa-lightbulb"></i> پیشنهاد عملی</h4>
+                    <p class="ai-insight-text" id="action-insight">برای دریافت پیشنهادات شخصی‌سازی شده، کمی بیشتر ثبت کنید.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- بخش تاریخچه -->
+        <section id="history-section" class="hidden">
+            <h3>Mood History</h3>
+            <div class="chart-wrapper">
+                <div class="chart-container">
+                    <svg id="mood-chart" class="pie-chart" viewBox="0 0 32 32">
+                        <circle r="16" cx="16" cy="16" fill="rgba(255,255,255,0.05)" />
+                    </svg>
+                </div>
+                <div class="chart-legend" id="chart-legend"></div>
+            </div>
+            <div class="history-list" id="history-list"></div>
+        </section>
+
+        <!-- کارت ۱: انتخاب کلی -->
+        <div class="card" id="card1">
+            <div class="content">
+                <h2 id="greeting-text">How are you feeling?</h2>
+                <section class="mood-wrapper">
+                    <div class="mood-selector" role="radiogroup" aria-label="انتخاب حال و هوا">
+                        <button class="mood-option" onclick="selectMood('rad', 'Awesome')" id="mood-rad" aria-label="حال عالی">
+                            <span class="emoji">🤩</span>
+                            <span class="label">Awesome</span>
+                        </button>
+                        <button class="mood-option" onclick="selectMood('good', 'Good')" id="mood-good" aria-label="حال خوب">
+                            <span class="emoji">🙂</span>
+                            <span class="label">Good</span>
+                        </button>
+                        <button class="mood-option" onclick="selectMood('meh', 'Fine')" id="mood-meh" aria-label="حال معمولی">
+                            <span class="emoji">😐</span>
+                            <span class="label">Fine</span>
+                        </button>
+                        <button class="mood-option" onclick="selectMood('bad', 'Bad')" id="mood-bad" aria-label="حال بد">
+                            <span class="emoji">😔</span>
+                            <span class="label">Bad</span>
+                        </button>
+                        <button class="mood-option" onclick="selectMood('awful', 'Terrible')" id="mood-awful" aria-label="حال خیلی بد">
+                            <span class="emoji">😫</span>
+                            <span class="label">Terrible</span>
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- دکمه نکست -->
+        <button id="next-btn" class="btn hidden" onclick="goToCard2()">NEXT <i class="fas fa-arrow-right"></i></button>
+
+        <!-- کارت ۲: جزئیات -->
+        <div class="card hidden" id="card2">
+            <div class="content">
+                <h1>Which emotions best describe how you feel?</h1>
+                <div id="dynamic-tags-container" class="tags-container"></div>
+                <textarea id="note-input" rows="3" placeholder="یادداشت کوتاه... (اختیاری)"></textarea>
+                <button class="primary-btn" id="save-btn" onclick="saveEntry()">
+                    <span class="btn-text">SAVE ENTRY</span>
+                    <i class="fas fa-spinner fa-spin loading-icon hidden"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- اعلان (Toast) -->
+    <div id="toast" class="toast">
+        <i class="fas fa-info-circle"></i>
+        <span id="toast-message">پیام سیستم</span>
+    </div>
+
+    <script>
+        // ================= متغیرهای سراسری =================
+        let currentMood = null;
+        let selectedTags = [];
+        const moodConfig = {
+            'awful': { label: 'Terrible', color: 'var(--color-awful)', value: 1 },
+            'bad':   { label: 'Bad',       color: 'var(--color-bad)',   value: 2 },
+            'meh':   { label: 'Fine',      color: 'var(--color-meh)',   value: 3 },
+            'good':  { label: 'Good',      color: 'var(--color-good)',  value: 4 },
+            'rad':   { label: 'Awesome',   color: 'var(--color-rad)',   value: 5 }
+        };
+
+        // ================= لود اولیه =================
+        document.addEventListener('DOMContentLoaded', () => {
+            updateGreeting();
+        });
+
+        // ================= مدیریت بخش‌ها =================
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const isHidden = section.classList.contains('hidden');
+            
+            // مدیریت کلاس active دکمه‌ها
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            if(isHidden) {
+                if(sectionId === 'ai-section') document.getElementById('ai-btn').classList.add('active');
+                if(sectionId === 'history-section') document.getElementById('history-btn').classList.add('active');
+            }
+
+            // بستن همه بخش‌های باز دیگر
+            document.getElementById('ai-section').classList.add('hidden');
+            document.getElementById('history-section').classList.add('hidden');
+            
+            if (isHidden) {
+                section.classList.remove('hidden');
+                section.classList.add('fade-in');
+                if (sectionId === 'history-section') {
+                    renderHistory();
+                } else if (sectionId === 'ai-section') {
+                    runAIAnalysis();
+                }
+            }
+        }
+
+        // ================= منطق کارت اول =================
+        function selectMood(mood, label) {
+            currentMood = { mood, label };
+            document.querySelectorAll('.mood-option').forEach(el => {
+                el.classList.remove('active');
+                el.setAttribute('aria-pressed', 'false');
+            });
+            const activeBtn = document.getElementById(`mood-${mood}`);
+            activeBtn.classList.add('active');
+            activeBtn.setAttribute('aria-pressed', 'true');
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.classList.remove('hidden');
+            nextBtn.classList.add('fade-in');
+        }
+
+        // ================= منطق کارت دوم =================
+        function goToCard2() {
+            if (!currentMood) return;
+            document.getElementById('card1').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+            const card2 = document.getElementById('card2');
+            card2.classList.remove('hidden');
+            card2.classList.add('fade-in');
+            generateTags(currentMood.mood);
+        }
+
+        function generateTags(moodKey) {
+            const container = document.getElementById('dynamic-tags-container');
+            container.innerHTML = '';
+            selectedTags = [];
+            let tagsList = [];
+            if (moodKey === 'rad' || moodKey === 'good') {
+                tagsList = ['Joyful', 'hopeful', 'amazed', 'relieved', 'confident', 'content', 'satisfied', 'happy', 'passionate', 'enthusiastic', 'excited', 'brave', 'proud', 'calm', 'curious', 'grateful', 'ورزش', 'پیاده‌روی'];
+            } else if (moodKey === 'meh') {
+                tagsList = ['calm', 'Relaxed', 'peaceful', 'relieved', 'indifferent', 'Satisfied', 'خواب', 'استراحت'];
+            } else if (moodKey === 'bad' || moodKey === 'awful') {
+                tagsList = ['sad', 'angry', 'annoyed', 'scared', 'tired', 'depressed', 'lonely', 'Stressed', 'guilty', 'بیماری', 'تنهایی', 'شلوغی'];
+            }
+            tagsList.forEach(tagText => {
+                const btn = document.createElement('button');
+                btn.className = 'tag';
+                btn.innerText = tagText;
+                btn.onclick = () => toggleTag(btn, tagText);
+                container.appendChild(btn);
+            });
+        }
+
+        function toggleTag(element, text) {
+            element.classList.toggle('selected');
+            if (selectedTags.includes(text)) {
+                selectedTags = selectedTags.filter(t => t !== text);
+            } else {
+                selectedTags.push(text);
+            }
+        }
+
+        // ================= ذخیره نهایی =================
+        function saveEntry() {
+            if (!currentMood) {
+                showToast('لطفاً ابتدا یک حالت را انتخاب کنید.', 'error');
+                return;
+            }
+            const btn = document.getElementById('save-btn');
+            const btnText = btn.querySelector('.btn-text');
+            const loader = btn.querySelector('.loading-icon');
+            btn.disabled = true;
+            btnText.classList.add('hidden');
+            loader.classList.remove('hidden');
+
+            setTimeout(() => {
+                const noteInput = document.getElementById('note-input');
+                const note = noteInput.value;
+                const now = new Date();
+                const date = new Intl.DateTimeFormat('fa-IR', { dateStyle: 'short' }).format(now);
+                const time = new Intl.DateTimeFormat('fa-IR', { timeStyle: 'short' }).format(now);
+                
+                // ذخیره روز هفته برای تحلیل AI
+                const dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'long' });
+
+                const entry = {
+                    id: Date.now(),
+                    date: date,
+                    time: time,
+                    dayOfWeek: dayOfWeek, // اضافه شده
+                    timestamp: now.getTime(), // اضافه شده برای مرتب‌سازی
+                    mood: currentMood,
+                    tags: selectedTags,
+                    note: note
+                };
+                try {
+                    let history = JSON.parse(localStorage.getItem('moodHistory')) || [];
+                    history.unshift(entry);
+                    localStorage.setItem('moodHistory', JSON.stringify(history));
+                    showToast('حال شما با موفقیت ثبت شد ✅');
+                    resetForm();
+                } catch (e) {
+                    showToast('خطا: حافظه مرورگر پر شده است.', 'error');
+                } finally {
+                    btn.disabled = false;
+                    btnText.classList.remove('hidden');
+                    loader.classList.add('hidden');
+                }
+            }, 800);
+        }
+
+        function resetForm() {
+            document.getElementById('card2').classList.add('hidden');
+            document.getElementById('card1').classList.remove('hidden');
+            document.getElementById('card1').classList.add('fade-in');
+            currentMood = null;
+            selectedTags = [];
+            document.getElementById('note-input').value = '';
+            document.querySelectorAll('.mood-option').forEach(el => {
+                el.classList.remove('active');
+                el.setAttribute('aria-pressed', 'false');
+            });
+        }
+
+        // ================= منطق تاریخچه و نمودار =================
+        function renderHistory() {
+            const history = JSON.parse(localStorage.getItem('moodHistory')) || [];
+            const listContainer = document.getElementById('history-list');
+            const chartSvg = document.getElementById('mood-chart');
+            const legendContainer = document.getElementById('chart-legend');
+            listContainer.innerHTML = '';
+            chartSvg.innerHTML = '<circle r="16" cx="16" cy="16" fill="rgba(255,255,255,0.05)" />';
+            legendContainer.innerHTML = '';
+
+            if (history.length === 0) {
+                listContainer.innerHTML = '<div style="text-align:center; color:#636e72; padding:30px; font-size:1.1rem;">هنوز موردی ثبت نشده است.</div>';
+                return;
+            }
+
+            // محاسبه آمار
+            const counts = { 'awful': 0, 'bad': 0, 'meh': 0, 'good': 0, 'rad': 0 };
+            history.forEach(item => {
+                if (counts[item.mood.mood] !== undefined) {
+                    counts[item.mood.mood]++;
+                }
+            });
+            const total = history.length;
+            let cumulativePercent = 0;
+            const sortedMoods = ['awful', 'bad', 'meh', 'good', 'rad'];
+
+            sortedMoods.forEach(key => {
+                const count = counts[key];
+                if (count > 0) {
+                    const percent = count / total;
+                    const dashArray = 2 * Math.PI * 16;
+                    const dashOffset = dashArray * (1 - percent);
+                    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    circle.setAttribute("r", "16");
+                    circle.setAttribute("cx", "16");
+                    circle.setAttribute("cy", "16");
+                    circle.setAttribute("fill", "transparent");
+                    circle.setAttribute("stroke", moodConfig[key].color);
+                    circle.setAttribute("stroke-width", "32");
+                    circle.setAttribute("stroke-dasharray", `${dashArray * percent} ${dashArray}`);
+                    circle.setAttribute("stroke-dashoffset", -dashArray * cumulativePercent);
+                    chartSvg.appendChild(circle);
+
+                    const legendItem = document.createElement('div');
+                    legendItem.className = 'legend-item';
+                    legendItem.innerHTML = `
+                        <div class="legend-color" style="background:${moodConfig[key].color}"></div>
+                        <span>${moodConfig[key].label}: ${Math.round(percent * 100)}%</span>
+                    `;
+                    legendContainer.appendChild(legendItem);
+                    cumulativePercent += percent;
+                }
+            });
+
+            // رندر لیست
+            history.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.style.borderRightColor = moodConfig[item.mood.mood].color;
+                div.innerHTML = `
+                    <div class="history-info">
+                        <span class="history-mood" style="color:${moodConfig[item.mood.mood].color}">${item.mood.label}</span>
+                        <span class="history-date">${item.date} - ${item.time}</span>
+                        ${item.note ? `<span class="history-note">${item.note}</span>` : ''}
+                    </div>
+                    <div style="font-size:1.5rem;">${getEmoji(item.mood.mood)}</div>
+                `;
+                listContainer.appendChild(div);
+            });
+        }
+
+        function getEmoji(moodKey) {
+            const map = {
+                'rad': '🤩', 'good': '🙂', 'meh': '😐', 'bad': '😔', 'awful': '😫'
+            };
+            return map[moodKey] || '';
+        }
+
+        // ================= منطق هوش مصنوعی (AI) =================
+        function runAIAnalysis() {
+            const history = JSON.parse(localStorage.getItem('moodHistory')) || [];
+            
+            // ۱. تحلیل روند (Trend Analysis)
+            renderLineChart(history);
+
+            // ۲. تحلیل روزهای هفته (Day Cycle)
+            analyzeDayOfWeek(history);
+
+            // ۳. تحلیل محرک‌ها (Triggers)
+            analyzeTriggers(history);
+
+            // ۴. تحلیل متن (NLP)
+            analyzeNLP(history);
+
+            // ۵. پیشنهادات (Actionable Insights)
+            generateInsights(history);
+        }
+
+        function renderLineChart(history) {
+            const container = document.getElementById('line-chart-container');
+            const insightText = document.getElementById('trend-insight');
+            container.innerHTML = '';
+
+            if (history.length < 2) {
+                insightText.innerText = "برای رسم نمودار به حداقل ۲ ثبت نیاز داریم.";
+                return;
+            }
+
+            // مرتب‌سازی بر اساس زمان (قدیمی به جدید)
+            const sortedHistory = [...history].sort((a, b) => a.timestamp - b.timestamp).slice(-14); // آخر ۱۴ مورد
+            
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            const padding = 10;
+            
+            // ایجاد SVG
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("class", "line-chart");
+            svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+            // محاسبه نقاط
+            const points = sortedHistory.map((entry, index) => {
+                const x = padding + (index / (sortedHistory.length - 1)) * (width - 2 * padding);
+                // مقدار مود بین ۱ تا ۵ است. تبدیل به ارتفاع نمودار
+                const moodValue = moodConfig[entry.mood.mood].value;
+                const y = height - padding - ((moodValue - 1) / 4) * (height - 2 * padding);
+                return { x, y, mood: entry.mood.mood };
+            });
+
+            // رسم خط
+            let pathD = `M ${points[0].x} ${points[0].y}`;
+            points.slice(1).forEach(p => {
+                pathD += ` L ${p.x} ${p.y}`;
+            });
+
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", pathD);
+            path.setAttribute("class", "chart-line");
+            svg.appendChild(path);
+
+            // رسم نقاط
+            points.forEach(p => {
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circle.setAttribute("cx", p.x);
+                circle.setAttribute("cy", p.y);
+                circle.setAttribute("r", 4);
+                circle.setAttribute("class", "chart-dot");
+                svg.appendChild(circle);
+            });
+
+            container.appendChild(svg);
+
+            // تحلیل ساده صعودی یا نزولی
+            const firstVal = moodConfig[sortedHistory[0].mood.mood].value;
+            const lastVal = moodConfig[sortedHistory[sortedHistory.length-1].mood.mood].value;
+            if (lastVal > firstVal + 0.5) {
+                insightText.innerHTML = "روند کلی شما <span class='highlight-positive'>صعودی</span> است. به نظر می‌رسد شرایطتان بهتر شده است.";
+            } else if (lastVal < firstVal - 0.5) {
+                insightText.innerHTML = "روند کلی شما <span class='highlight-negative'>نزولی</span> است. پیشنهاد می‌کنم استراحت بیشتری داشته باشید.";
+            } else {
+                insightText.innerText = "خلق‌وخوی شما نسبت به گذشته ثابت و پایدار بوده است.";
+            }
+        }
+
+        function analyzeDayOfWeek(history) {
+            const insightText = document.getElementById('day-insight');
+            if (history.length < 5) {
+                insightText.innerText = "اطلاعات ناکافی برای تحلیل روزهای هفته.";
+                return;
+            }
+
+            const dayStats = {};
+            history.forEach(h => {
+                const day = h.dayOfWeek;
+                if (!dayStats[day]) dayStats[day] = { sum: 0, count: 0 };
+                dayStats[day].sum += moodConfig[h.mood.mood].value;
+                dayStats[day].count++;
+            });
+
+            let bestDay = null;
+            let worstDay = null;
+            let maxAvg = -1;
+            let minAvg = 10;
+
+            for (const [day, data] of Object.entries(dayStats)) {
+                const avg = data.sum / data.count;
+                if (avg > maxAvg) { maxAvg = avg; bestDay = day; }
+                if (avg < minAvg) { minAvg = avg; worstDay = day; }
+            }
+
+            if (bestDay && worstDay) {
+                // ترجمه ساده روزها برای نمایش
+                const dayMap = { "Saturday": "شنبه", "Sunday": "یکشنبه", "Monday": "دوشنبه", "Tuesday": "سه‌شنبه", "Wednesday": "چهارشنبه", "Thursday": "پنج‌شنبه", "Friday": "جمعه" };
+                insightText.innerHTML = `بهترین روز شما معمولاً <b>${dayMap[bestDay] || bestDay}</b> و سخت‌ترین روز <b>${dayMap[worstDay] || worstDay}</b> است.`;
+            }
+        }
+
+        function analyzeTriggers(history) {
+            const insightText = document.getElementById('trigger-insight');
+            const tagCounts = {};
+            
+            history.forEach(h => {
+                h.tags.forEach(tag => {
+                    if (!tagCounts[tag]) tagCounts[tag] = 0;
+                    tagCounts[tag]++;
+                });
+            });
+
+            // تبدیل به آرایه و مرتب‌سازی
+            const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
+            
+            if (sortedTags.length === 0) {
+                insightText.innerText = "هنوز تگی برای تحلیل ثبت نشده است.";
+                return;
+            }
+
+            const topTag = sortedTags[0];
+            // بررسی اینکه آیا این تگ معمولاً با حال خوب همراه است یا بد؟
+            // اینجا یک تحلیل ساده انجام می‌دهیم
+            let tagMoodSum = 0;
+            let tagMoodCount = 0;
+            history.forEach(h => {
+                if(h.tags.includes(topTag[0])) {
+                    tagMoodSum += moodConfig[h.mood.mood].value;
+                    tagMoodCount++;
+                }
+            });
+            const avgMood = tagMoodSum / tagMoodCount;
+
+            let sentiment = "خنثی";
+            if (avgMood >= 4) sentiment = "مثبت";
+            else if (avgMood <= 2) sentiment = "منفی";
+
+            insightText.innerHTML = `شما بیشتر از همه با تگ <b>"${topTag[0]}"</b> یادداشت کرده‌اید. این عامل معمولاً دارای اثر <b>${sentiment}</b> بر روحیه شماست.`;
+        }
+
+        function analyzeNLP(history) {
+            const insightText = document.getElementById('nlp-insight');
+            const notes = history.map(h => h.note).filter(n => n && n.trim().length > 0);
+            
+            if (notes.length === 0) {
+                insightText.innerText = "متنی برای تحلیل وجود ندارد.";
+                return;
+            }
+
+            // لیست کلمات کلیدی ساده (فارسی و انگلیسی)
+            const positiveWords = ['خوب', 'عالی', 'خوشحال', 'راضی', 'good', 'great', 'happy', 'love', 'خوشبخت', 'موفقیت', 'آرامش'];
+            const negativeWords = ['بد', 'ناراحت', 'غم', 'تنهایی', 'bad', 'sad', 'angry', 'tired', 'استرس', 'مشکل', 'خسته', 'درد'];
+
+            let posCount = 0;
+            let negCount = 0;
+
+            notes.forEach(note => {
+                const lowerNote = note.toLowerCase();
+                positiveWords.forEach(word => { if (lowerNote.includes(word)) posCount++; });
+                negativeWords.forEach(word => { if (lowerNote.includes(word)) negCount++; });
+            });
+
+            if (posCount > negCount) {
+                insightText.innerHTML = "تحلیل متن‌ها نشان می‌دهد که شما اغلب از کلمات <span class='highlight-positive'>مثبت و امیدوارکننده</span> استفاده می‌کنید.";
+            } else if (negCount > posCount) {
+                insightText.innerHTML = "تحلیل متن‌ها نشان می‌دهد که تمرکز شما بیشتر بر چالش‌ها و کلمات <span class='highlight-negative'>منفی</span> بوده است.";
+            } else {
+                insightText.innerText = "لحن نوشتاری شما متعادل به نظر می‌رسد.";
+            }
+        }
+
+        function generateInsights(history) {
+            const insightText = document.getElementById('action-insight');
+            
+            if (history.length < 3) {
+                insightText.innerText = "برای ارائه پیشنهاد هوشمند، لطفاً حداقل ۳ ثبت انجام دهید.";
+                return;
+            }
+
+            // بررسی ۳ ثبت آخر
+            const recent = history.slice(0, 3);
+            const avgRecent = recent.reduce((acc, curr) => acc + moodConfig[curr.mood.mood].value, 0) / 3;
+
+            let suggestion = "";
+
+            if (avgRecent <= 2) {
+                suggestion = "به نظر می‌رسد چند روز اخیر سخت بوده است. پیشنهاد می‌کنم یک <b>پیاده‌روی کوتاه</b> انجام دهید یا با یک دوست صحبت کنید.";
+            } else if (avgRecent >= 4) {
+                suggestion = "انرژی شما بالاست! این زمان خوبی برای <b>شروع یک پروژه جدید</b> یا یادگیری یک مهارت است.";
+            } else {
+                suggestion = "روند شما نرمال است. حفظ <b>ثبات</b> در خواب و تغذیه می‌تواند به بهبود بیشتر کمک کند.";
+            }
+
+            // بررسی تگ ورزش
+            const hasExercise = recent.some(h => h.tags.includes('ورزش') || h.tags.includes('پیاده‌روی'));
+            if (avgRecent < 3 && !hasExercise) {
+                suggestion += " همچنین داده‌ها نشان می‌دهد که روزهایی که ورزش نکرده‌اید، حالتان کمی پایین‌تر است.";
+            }
+
+            insightText.innerHTML = suggestion;
+        }
+
+        // ================= ابزارها =================
+        function updateGreeting() {
+            const hour = new Date().getHours();
+            const greetingEl = document.getElementById('greeting-text');
+            let text = "How are you feeling?";
+            if (hour < 12) text = "Good Morning! How are you?";
+            else if (hour < 18) text = "Good Afternoon! How are you?";
+            else text = "Good Evening! How are you?";
+            greetingEl.innerText = text;
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const msgSpan = document.getElementById('toast-message');
+            const icon = toast.querySelector('i');
+            msgSpan.innerText = message;
+            toast.className = `toast show ${type}`;
+            icon.className = type === 'error' ? 'fas fa-exclamation-circle' : 'fas fa-check-circle';
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
+
+</div>
+
+</body>
+</html>
