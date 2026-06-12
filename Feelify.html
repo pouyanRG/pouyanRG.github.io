@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>پایش هوشمند خلق‌وخو | Mood Check-in AI</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* =================== متغیرها و استایل‌های پایه =================== */
+        :root {
+            --bg: #0b0b12;
+            --card-bg: rgba(20, 20, 31, 0.75);
+            --primary-color: #6c5ce7;
+            --secondary-color: #00cec9;
+            --accent-cyan: #00f0ff;
+            --accent-pink: #ff2fa8;
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-color: #e2e8f0;
+            --input-bg: rgba(255, 255, 255, 0.04);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+            
+            /* رنگ‌های اختصاصی وضعیت‌ها */
+            --color-awful: #ff4757;
+            --color-bad: #ffa502;
+            --color-meh: #eccc68;
+            --color-good: #2ed573;
+            --color-rad: #1e90ff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Vazirmatn', sans-serif;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 15% 15%, rgba(108, 92, 231, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 85% 85%, rgba(0, 206, 201, 0.12) 0%, transparent 50%);
+            background-attachment: fixed;
+            padding-bottom: 110px; /* افزایش فضا برای نوار ناوبری شناور و جزیره‌ای جدید */
+        }
+
+
+
+        /* =================== نوار ناوبری پایین جدید (Floating Island Bar) =================== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 480px;
+            height: 70px;
+            background: rgba(20, 20, 35, 0.85);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+            padding: 0 10px;
+        }
+
+        .bottom-nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            position: relative;
+            width: 60px;
+            height: 60px;
+            transition: color 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* دکمه اکشن مرکزی برجسته (FAB Dock) */
+        .bottom-nav-btn.fab-dock {
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, var(--primary-color), #8ca1ff);
+            color: white;
+            border-radius: 50%;
+            position: relative;
+            top: -20px;
+            transform: none;
+            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.5), 0 0 0 6px rgba(11, 11, 18, 0.6);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .bottom-nav-btn.fab-dock:hover, .bottom-nav-btn.fab-dock.active {
+            top: -25px;
+            scale: 1.05;
+            box-shadow: 0 15px 30px rgba(108, 92, 231, 0.7), 0 0 0 8px rgba(11, 11, 18, 0.8);
+            color: white;
+        }
+
+        .bottom-nav-btn i {
+            font-size: 1.4rem;
+            z-index: 2;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        /* حذف متن طبق استایل مینیمال بر اساس آیکون */
+        .bottom-nav-btn span {
+            display: none;
+        }
+
+        /* اندیکاتور فعال حبابی شکل پشت آیکون‌ها (به جز دکمه مرکزی) */
+        .bottom-nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 45px;
+            height: 45px;
+            background: rgba(0, 240, 255, 0.15);
+            border-radius: 50%;
+            z-index: 1;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .bottom-nav-btn.fab-dock::before {
+            display: none; /* دکمه مرکزی خودش استایل حباب را دارد */
+        }
+
+        /* انیمیشن جهش و فعال شدن حباب */
+        .bottom-nav-btn.active {
+            color: var(--accent-cyan);
+        }
+
+        .bottom-nav-btn.active:not(.fab-dock) {
+            transform: translateY(-4px);
+        }
+
+        .bottom-nav-btn.active:not(.fab-dock) i {
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+        }
+
+        .bottom-nav-btn.active::before {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+        }
+
+        /* =================== کانتینر اصلی =================== */
+        #app-container {
+            width: 100%;
+            max-width: 750px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-top: 15px;
+            margin-bottom: 50px;
+        }
+
+        /* =================== استایل کارت‌ها =================== */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(20px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+        }
+
+        .card-header h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 25px;
+            color: #fff;
+        }
+
+        /* =================== انتخاب‌گر مودها =================== */
+        .mood-selector {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            width: 100%;
+        }
+
+        .mood-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 15px 5px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            color: var(--text-color);
+        }
+
+        .mood-option:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .mood-option.active {
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* رنگ‌های اختصاصی اکتیو دکمه‌ها */
+        .mood-option.active#mood-rad { background: var(--color-rad); box-shadow: 0 8px 20px rgba(30, 144, 255, 0.4); }
+        .mood-option.active#mood-good { background: var(--color-good); box-shadow: 0 8px 20px rgba(46, 213, 115, 0.4); }
+        .mood-option.active#mood-meh { background: var(--color-meh); box-shadow: 0 8px 20px rgba(236, 204, 104, 0.4); color: #111; }
+        .mood-option.active#mood-bad { background: var(--color-bad); box-shadow: 0 8px 20px rgba(255, 165, 2, 0.4); }
+        .mood-option.active#mood-awful { background: var(--color-awful); box-shadow: 0 8px 20px rgba(255, 71, 87, 0.4); }
+
+        .mood-option .emoji {
+            font-size: 2.3rem;
+            margin-bottom: 8px;
+            transition: transform 0.2s;
+        }
+
+        .mood-option:hover .emoji {
+            transform: scale(1.15);
+        }
+
+        .mood-option .label {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* =================== تگ‌ها و ساختار کارت دوم =================== */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .tag {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tag:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .tag.selected {
+            background: var(--accent-cyan);
+            color: #0b0b12;
+            border-color: var(--accent-cyan);
+            font-weight: 700;
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+        }
+
+        textarea {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 15px;
+            color: var(--text-color);
+            font-family: inherit;
+            resize: none;
+            min-height: 110px;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.25);
+        }
+
+        /* دکمه‌ها */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 28px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #8ca1ff);
+            color: white;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 92, 231, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* =================== دشبورد هوش مصنوعی =================== */
+        .ai-dashboard {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .ai-card {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .ai-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .ai-card h4 {
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ai-insight-text {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: #cbd5e1;
+        }
+
+        .highlight-positive { color: var(--color-good); font-weight: 700; }
+        .highlight-negative { color: var(--color-awful); font-weight: 700; }
+
+        /* استایل اختصاصی چارت خطی */
+        .line-chart-container {
+            width: 100%;
+            height: 140px;
+            margin-bottom: 12px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 10px;
+        }
+
+        svg.line-chart {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .chart-line {
+            fill: none;
+            stroke: var(--accent-pink);
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .chart-dot {
+            fill: var(--bg);
+            stroke: var(--accent-pink);
+            stroke-width: 2.5;
+        }
+
+        /* =================== بخش تاریخچه و نمودار دایره‌ای =================== */
+        .chart-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+            background: rgba(255,255,255,0.01);
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .chart-container {
+            width: 160px;
+            height: 160px;
+        }
+
+        svg.pie-chart {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .chart-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            background: rgba(255,255,255,0.03);
+            padding: 6px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .legend-color {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            max-height: 450px;
+            overflow-y: auto;
+            padding-left: 5px;
+        }
+
+        .history-item {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            padding: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-right: 5px solid transparent;
+            border-left: 1px solid var(--glass-border);
+            transition: transform 0.2s;
+        }
+
+        .history-item:hover {
+            transform: scale(1.01);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .history-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .history-mood {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .history-date {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .history-note {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            margin-top: 4px;
+            background: rgba(0,0,0,0.15);
+            padding: 6px 12px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        /* =================== انیمیشن‌ها و کلاس‌های کمکی =================== */
+        .hidden { display: none !important; }
+        
+        .fade-in {
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 105px; /* تنظیم لوکیشن برای عدم تداخل با نوار ناوبری جزیره‌ای */
+            right: 50%;
+            transform: translateX(50%) translateY(150px);
+            background: #1e1e2f;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            border: 1px solid var(--glass-border);
+            font-size: 0.9rem;
+        }
+
+        .toast.show {
+            transform: translateX(50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success { border-right: 4px solid var(--color-good); }
+        .toast.error { border-right: 4px solid var(--color-awful); }
+
+        /* =================== مدیا کوئری‌ها (Responsive) =================== */
+        @media (max-width: 600px) {
+            .mood-selector {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .ai-dashboard {
+                grid-template-columns: 1fr;
+            }
+            .card {
+                padding: 20px;
+            }
+            .bottom-nav {
+                bottom: 15px;
+                width: calc(100% - 30px);
+                padding: 0 15px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .mood-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+    <div id="app-container">
+        
+        <div class="card" id="card1">
+            <div class="card-header">
+                <h2 id="greeting-text">امروز حال و احوالت چطوره؟</h2>
+            </div>
+            <div class="mood-selector" role="radiogroup">
+                <button class="mood-option" onclick="selectMood('rad')" id="mood-rad">
+                    <span class="emoji">🤩</span>
+                    <span class="label">عالی</span>
+                </button>
+                <button class="mood-option" onclick="selectMood('good')" id="mood-good">
+                    <span class="emoji">🙂</span>
+                    <span class="label">خوب</span>
+                </button>
+                <button class="mood-option" onclick="selectMood('meh')" id="mood-meh">
+                    <span class="emoji">😐</span>
+                    <span class="label">معمولی</span>
+                </button>
+                <button class="mood-option" onclick="selectMood('bad')" id="mood-bad">
+                    <span class="emoji">😔</span>
+                    <span class="label">بد</span>
+                </button>
+                <button class="mood-option" onclick="selectMood('awful')" id="mood-awful">
+                    <span class="emoji">😫</span>
+                    <span class="label">داغون</span>
+                </button>
+            </div>
+            <div id="next-btn-container" class="hidden" style="margin-top: 25px; text-align: left;">
+                <button class="btn btn-primary" onclick="goToCard2()">مرحله بعد <i class="fas fa-chevron-left"></i></button>
+            </div>
+        </div>
+
+        <div class="card hidden" id="card2">
+            <div class="card-header">
+                <h2>چه احساسات یا وضعیت‌هایی رو تجربه می‌کنی؟</h2>
+            </div>
+            <div id="dynamic-tags-container" class="tags-container"></div>
+            <textarea id="note-input" placeholder="اگر دوست داری کمی درباره دلیلت بنویس... (اختیاری)"></textarea>
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="backToCard1()"><i class="fas fa-chevron-right"></i> بازگشت</button>
+                <button class="btn btn-primary" id="save-btn" onclick="saveEntry()">ثبت نهایی وضعیت</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="ai-container" class="hidden" style="width: 100%; max-width: 750px; padding: 20px; margin-top: 15px; margin-bottom: 50px;">
+        <section id="ai-section" class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-robot"></i> تحلیل الگوهای روحی شما</h2>
+            </div>
+            <div class="ai-dashboard">
+                <div class="ai-card full-width">
+                    <h4><i class="fas fa-chart-line"></i> روند تغییرات خُلق</h4>
+                    <div class="line-chart-container" id="line-chart-container"></div>
+                    <p class="ai-insight-text" id="trend-insight">داده کافی برای تحلیل روند وجود ندارد.</p>
+                </div>
+                <div class="ai-card">
+                    <h4><i class="fas fa-calendar-day"></i> تحلیل روزهای هفته</h4>
+                    <p class="ai-insight-text" id="day-insight">در حال بررسی الگوهای هفتگی...</p>
+                </div>
+                <div class="ai-card">
+                    <h4><i class="fas fa-bolt"></i> شناسایی محرک‌ها (Triggers)</h4>
+                    <p class="ai-insight-text" id="trigger-insight">هنوز تگ کافی برای تحلیل ثبت نشده است.</p>
+                </div>
+                <div class="ai-card full-width">
+                    <h4><i class="fas fa-comment-alt"></i> تحلیل لحن یادداشت‌ها</h4>
+                    <p class="ai-insight-text" id="nlp-insight">سیستم در حال یادگیری از واژگان شماست...</p>
+                </div>
+                <div class="ai-card full-width" style="border-color: rgba(0, 240, 255, 0.2);">
+                    <h4><i class="fas fa-lightbulb" style="color: var(--accent-cyan)"></i> توصیه خودمراقبتی هوشمند</h4>
+                    <p class="ai-insight-text" id="action-insight">برای دریافت پیشنهادات شخصی‌سازی شده، ثبتی‌های خود را افزایش دهید.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="history-container" class="hidden" style="width: 100%; max-width: 750px; padding: 20px; margin-top: 15px; margin-bottom: 50px;">
+        <section id="history-section" class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-history"></i> تاریخچه وضعیت‌ها</h2>
+            </div>
+            <div class="chart-wrapper">
+                <div class="chart-container">
+                    <svg id="mood-chart" class="pie-chart" viewBox="0 0 32 32">
+                        <circle r="16" cx="16" cy="16" fill="rgba(255,255,255,0.05)" />
+                    </svg>
+                </div>
+                <div class="chart-legend" id="chart-legend"></div>
+            </div>
+            <div class="history-list" id="history-list"></div>
+        </section>
+    </div>
+
+    <div class="bottom-nav">
+        <button id="bottom-history-btn" class="bottom-nav-btn" onclick="navigateTo('history')">
+            <i class="fas fa-history"></i>
+            <span>تاریخچه</span>
+        </button>
+        <button id="bottom-home-btn" class="bottom-nav-btn active fab-dock" onclick="navigateTo('home')">
+            <i class="fas fa-home"></i>
+            <span>خانه</span>
+        </button>
+        <button id="bottom-ai-btn" class="bottom-nav-btn" onclick="navigateTo('ai')">
+            <i class="fas fa-chart-pie"></i>
+            <span>آنالیز</span>
+        </button>
+    </div>
+
+    <div id="toast" class="toast">
+        <i class="fas fa-info-circle"></i>
+        <span id="toast-message"></span>
+    </div>
+
+    <script>
+        // ================= متغیرهای سراسری و کانفیگ‌ها =================
+        let currentMood = null;
+        let selectedTags = [];
+        const moodConfig = {
+            'awful': { label: 'داغون', color: 'var(--color-awful)', value: 1, emoji: '😫' },
+            'bad':   { label: 'بد',    color: 'var(--color-bad)',   value: 2, emoji: '😔' },
+            'meh':   { label: 'معمولی', color: 'var(--color-meh)',   value: 3, emoji: '😐' },
+            'good':  { label: 'خوب',   color: 'var(--color-good)',  value: 4, emoji: '🙂' },
+            'rad':   { label: 'عالی',   color: 'var(--color-rad)',   value: 5, emoji: '🤩' }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateGreeting();
+        });
+
+        function updateGreeting() {
+            const hour = new Date().getHours();
+            const greetingEl = document.getElementById('greeting-text');
+            if (hour < 12) greetingEl.innerText = "صبح بخیر! امروز حال و احوالت چطوره Dorset؟";
+            else if (hour < 17) greetingEl.innerText = "ظهر بخیر! امروز حال و احوالت چطوره؟";
+            else greetingEl.innerText = "عصر بخیر! امروز حال و احوالت چطوره؟";
+        }
+
+        // ================= سیستم ناوبری نوار پایینی (Bottom Navigation) =================
+        function navigateTo(target) {
+            // مخفی کردن تمامی بخش‌های اصلی بصورت کامل
+            document.getElementById('app-container').classList.add('hidden');
+            document.getElementById('ai-container').classList.add('hidden');
+            document.getElementById('history-container').classList.add('hidden');
+
+            // حذف کلاس اکتیو از تمام دکمه‌های نوار پایین
+            document.querySelectorAll('.bottom-nav-btn').forEach(btn => btn.classList.remove('active'));
+
+            if (target === 'home') {
+                const homeSection = document.getElementById('app-container');
+                homeSection.classList.remove('hidden');
+                homeSection.classList.add('fade-in');
+                document.getElementById('bottom-home-btn').classList.add('active');
+            } 
+            else if (target === 'ai') {
+                const aiContainer = document.getElementById('ai-container');
+                aiContainer.classList.remove('hidden');
+                aiContainer.classList.add('fade-in');
+                document.getElementById('bottom-ai-btn').classList.add('active');
+                runAIAnalysis();
+            } 
+            else if (target === 'history') {
+                const historyContainer = document.getElementById('history-container');
+                historyContainer.classList.remove('hidden');
+                historyContainer.classList.add('fade-in');
+                document.getElementById('bottom-history-btn').classList.add('active');
+                renderHistory();
+            }
+        }
+
+        // ================= مدیریت بخش‌های Navbar قدیمی (حفظ سازگاری متدها) =================
+        function toggleSection(sectionId) {
+            if (sectionId === 'ai-section') {
+                navigateTo('ai');
+            } else if (sectionId === 'history-section') {
+                navigateTo('history');
+            }
+        }
+
+        // ================= ناوبری کارت‌ها =================
+        function selectMood(mood) {
+            currentMood = mood;
+            document.querySelectorAll('.mood-option').forEach(el => el.classList.remove('active'));
+            document.getElementById(`mood-${mood}`).classList.add('active');
+            
+            const nextContainer = document.getElementById('next-btn-container');
+            nextContainer.classList.remove('hidden');
+            nextContainer.classList.add('fade-in');
+        }
+
+        function goToCard2() {
+            if (!currentMood) return;
+            document.getElementById('card1').classList.add('hidden');
+            document.getElementById('card2').classList.remove('hidden');
+            document.getElementById('card2').classList.add('fade-in');
+            generateTags(currentMood);
+        }
+
+        function backToCard1() {
+            document.getElementById('card2').classList.add('hidden');
+            document.getElementById('card1').classList.remove('hidden');
+            document.getElementById('card1').classList.add('fade-in');
+        }
+
+        function generateTags(moodKey) {
+            const container = document.getElementById('dynamic-tags-container');
+            container.innerHTML = '';
+            selectedTags = [];
+            
+            let tagsList = [];
+            if (moodKey === 'rad' || moodKey === 'good') {
+                tagsList = ['پرانرژی', 'امیدوار', 'آرام', 'موفقیت', 'مستعد', 'شکرگزار', 'ورزش', 'دوستان', 'پیاده‌روی', 'خانواده'];
+            } else if (moodKey === 'meh') {
+                tagsList = ['خنثی', 'خسته و معمولی', 'استراحت', 'کار و درس', 'سرگرمی', 'موسیقی', 'خواب'];
+            } else if (moodKey === 'bad' || moodKey === 'awful') {
+                tagsList = ['مضطرب', 'عصبانی', 'غمگین', 'بی‌حوصله', 'فشار کاری', 'کم‌خوابی', 'تنهایی', 'بیماری', 'بحث و جدل'];
+            }
+
+            tagsList.forEach(tagText => {
+                const btn = document.createElement('button');
+                btn.className = 'tag';
+                btn.innerText = tagText;
+                btn.onclick = () => {
+                    btn.classList.toggle('selected');
+                    if (selectedTags.includes(tagText)) {
+                        selectedTags = selectedTags.filter(t => t !== tagText);
+                    } else {
+                        selectedTags.push(tagText);
+                    }
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        // ================= ذخیره در لوکال استوریج =================
+        function saveEntry() {
+            if (!currentMood) return;
+            
+            const now = new Date();
+            const dateStr = new Intl.DateTimeFormat('fa-IR', { dateStyle: 'short' }).format(now);
+            const timeStr = new Intl.DateTimeFormat('fa-IR', { timeStyle: 'short' }).format(now);
+            const dayIndex = now.getDay(); // ذخیره دقیق روز با ایندکس ۰ تا ۶ برای جلوگیری از تداخل لوکال
+
+            const entry = {
+                id: Date.now(),
+                date: dateStr,
+                time: timeStr,
+                dayIndex: dayIndex,
+                timestamp: now.getTime(),
+                mood: currentMood,
+                tags: selectedTags,
+                note: document.getElementById('note-input').value.trim()
+            };
+
+            let history = JSON.parse(localStorage.getItem('moodHistory')) || [];
+            history.unshift(entry);
+            localStorage.setItem('moodHistory', JSON.stringify(history));
+
+            showToast('حالت روحی شما با موفقیت ثبت شد ✅', 'success');
+            resetForm();
+        }
+
+        function resetForm() {
+            document.getElementById('card2').classList.add('hidden');
+            document.getElementById('card1').classList.remove('hidden');
+            document.getElementById('next-btn-container').classList.add('hidden');
+            document.querySelectorAll('.mood-option').forEach(el => el.classList.remove('active'));
+            document.getElementById('note-input').value = '';
+            currentMood = null;
+            selectedTags = [];
+        }
+
+        // ================= رندر تاریخچه =================
+        function renderHistory() {
+            const history = JSON.parse(localStorage.getItem('moodHistory')) || [];
+            const listContainer = document.getElementById('history-list');
+            const chartSvg = document.getElementById('mood-chart');
+            const legendContainer = document.getElementById('chart-legend');
+            
+            listContainer.innerHTML = '';
+            chartSvg.innerHTML = '';
+            legendContainer.innerHTML = '';
+
+            if (history.length === 0) {
+                listContainer.innerHTML = '<div style="text-align:center; color:#94a3b8; padding:20px;">هنوز هیچ وضعیتی ثبت نشده است.</div>';
+                return;
+            }
+
+            // رسم چارت دایره‌ای وضعیت‌ها
+            const counts = { 'awful': 0, 'bad': 0, 'meh': 0, 'good': 0, 'rad': 0 };
+            history.forEach(item => { if(counts[item.mood] !== undefined) counts[item.mood]++; });
+            
+            let cumulativePercent = 0;
+            const keys = ['awful', 'bad', 'meh', 'good', 'rad'];
+            
+            keys.forEach(key => {
+                const count = counts[key];
+                if (count > 0) {
+                    const percent = count / history.length;
+                    const radius = 14; 
+                    const cx = 16, cy = 16;
+                    const dashArray = 2 * Math.PI * radius;
+                    const dashOffset = dashArray * (1 - percent);
+                    
+                    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    circle.setAttribute("r", radius);
+                    circle.setAttribute("cx", cx);
+                    circle.setAttribute("cy", cy);
+                    circle.setAttribute("fill", "transparent");
+                    circle.setAttribute("stroke", moodConfig[key].color);
+                    circle.setAttribute("stroke-width", "4"); 
+                    circle.setAttribute("stroke-dasharray", `${dashArray * percent} ${dashArray}`);
+                    circle.setAttribute("stroke-dashoffset", -dashArray * cumulativePercent);
+                    chartSvg.appendChild(circle);
+
+                    const legendItem = document.createElement('div');
+                    legendItem.className = 'legend-item';
+                    legendItem.innerHTML = `
+                        <div class="legend-color" style="background:${moodConfig[key].color}"></div>
+                        <span>${moodConfig[key].label}: ${Math.round(percent * 100)}%</span>
+                    `;
+                    legendContainer.appendChild(legendItem);
+                    cumulativePercent += percent;
+                }
+            });
+
+            // ساخت لیست تاریخچه
+            history.forEach(item => {
+                const config = moodConfig[item.mood];
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.style.borderRightColor = config.color;
+                div.innerHTML = `
+                    <div class="history-info">
+                        <span class="history-mood" style="color:${config.color}">${config.label} ${config.emoji}</span>
+                        <span class="history-date">${item.date} ساعت ${item.time}</span>
+                        ${item.tags.length ? `<div style="margin-top:5px;">${item.tags.map(t => `<span class="tag" style="padding:2px 8px; font-size:0.75rem; margin-left:4px; pointer-events:none;">${t}</span>`).join('')}</div>` : ''}
+                        ${item.note ? `<span class="history-note">${item.note}</span>` : ''}
+                    </div>
+                `;
+                listContainer.appendChild(div);
+            });
+        }
+
+        // ================= موتور تحلیل هوش مصنوعی اصلاح‌شده =================
+        function runAIAnalysis() {
+            const history = JSON.parse(localStorage.getItem('moodHistory')) || [];
+            
+            // حل باگ ابعاد صفر چارت خطی در کانتینرهای مخفی با اعمال setTimeout کوتاه
+            setTimeout(() => { renderLineChart(history); }, 50);
+            
+            analyzeDayOfWeek(history);
+            analyzeTriggers(history);
+            analyzeNLP(history);
+            generateInsights(history);
+        }
+
+        function renderLineChart(history) {
+            const container = document.getElementById('line-chart-container');
+            const insightText = document.getElementById('trend-insight');
+            container.innerHTML = '';
+
+            if (history.length < 2) {
+                insightText.innerText = "برای تحلیل روند به حداقل ۲ ثبت اطلاعات نیاز است.";
+                return;
+            }
+
+            const sorted = [...history].sort((a, b) => a.timestamp - b.timestamp).slice(-8); // بررسی ۸ تغییر آخر
+            const width = container.clientWidth || 600;
+            const height = container.clientHeight || 140;
+            const padding = 20;
+
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("class", "line-chart");
+            svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+            const points = sorted.map((entry, index) => {
+                const x = padding + (index / (sorted.length - 1)) * (width - 2 * padding);
+                const val = moodConfig[entry.mood].value;
+                const y = height - padding - ((val - 1) / 4) * (height - 2 * padding);
+                return { x, y };
+            });
+
+            let pathD = `M ${points[0].x} ${points[0].y}`;
+            points.slice(1).forEach(p => { pathD += ` L ${p.x} ${p.y}`; });
+
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", pathD);
+            path.setAttribute("class", "chart-line");
+            svg.appendChild(path);
+
+            points.forEach(p => {
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circle.setAttribute("cx", p.x);
+                circle.setAttribute("cy", p.y);
+                circle.setAttribute("r", "5");
+                circle.setAttribute("class", "chart-dot");
+                svg.appendChild(circle);
+            });
+
+            container.appendChild(svg);
+
+            // تحلیل جهت حرکت روند خُلق
+            const first = moodConfig[sorted[0].mood].value;
+            const last = moodConfig[sorted[sorted.length - 1].mood].value;
+            if (last > first) {
+                insightText.innerHTML = "نمودار بالا نشان‌دهنده یک روند <span class='highlight-positive'>صعودی و رو به بهبود</span> در روزهای اخیر است.";
+            } else if (last < first) {
+                insightText.innerHTML = "نمودار حاکی از روندی <span class='highlight-negative'>نزولی</span> است. پیشنهاد می‌شود کمی از حجم دغدغه‌هایتان بکاهید.";
+            } else {
+                insightText.innerText = "وضعیت روحی شما در بازه اخیر در یک سطح پایدار و متعادل تثبیت شده است.";
+            }
+        }
+
+        function analyzeDayOfWeek(history) {
+            const insightText = document.getElementById('day-insight');
+            if (history.length < 4) {
+                insightText.innerText = "داده‌های ثبت‌شده برای یافتن الگوی روزهای هفته کافی نیست.";
+                return;
+            }
+
+            const dayStats = {};
+            history.forEach(h => {
+                if (h.dayIndex === undefined) return;
+                if (!dayStats[h.dayIndex]) dayStats[h.dayIndex] = { sum: 0, count: 0 };
+                dayStats[h.dayIndex].sum += moodConfig[h.mood].value;
+                dayStats[h.dayIndex].count++;
+            });
+
+            let bestDayIdx = -1, worstDayIdx = -1;
+            let maxAvg = -1, minAvg = 6;
+
+            for (const [dayIdx, data] of Object.entries(dayStats)) {
+                const avg = data.sum / data.count;
+                if (avg > maxAvg) { maxAvg = avg; bestDayIdx = parseInt(dayIdx); }
+                if (avg < minAvg) { minAvg = avg; worstDayIdx = parseInt(dayIdx); }
+            }
+
+            const dayNames = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنج‌شنبه", "جمعه", "شنبه"];
+            if (bestDayIdx !== -1 && worstDayIdx !== -1 && bestDayIdx !== worstDayIdx) {
+                insightText.innerHTML = `بر اساس تحلیل چرخه‌ها، شما معمولاً در روزهای <span class='highlight-positive'>${dayNames[bestDayIdx]}</span> بهترین خُلق و در روزهای <span class='highlight-negative'>${dayNames[worstDayIdx]}</span> چالش‌های بیشتری دارید.`;
+            } else {
+                insightText.innerText = "توزیع کیفیت روحی شما در طول روزهای هفته یکنواخت است.";
+            }
+        }
+
+        function analyzeTriggers(history) {
+            const insightText = document.getElementById('trigger-insight');
+            const tagCounts = {};
+            
+            history.forEach(h => {
+                h.tags.forEach(tag => {
+                    if (!tagCounts[tag]) tagCounts[tag] = { count: 0, sum: 0 };
+                    tagCounts[tag].count++;
+                    tagCounts[tag].sum += moodConfig[h.mood].value;
+                });
+            });
+
+            const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1].count - a[1].count);
+            if (sortedTags.length === 0) {
+                insightText.innerText = "تگی یافت نشد. استفاده از تگ‌ها به شناسایی عوامل محیطی کمک می‌کند.";
+                return;
+            }
+
+            const topTag = sortedTags[0];
+            const avgScore = topTag[1].sum / topTag[1].count;
+            let impact = "خنثی";
+            if (avgScore >= 3.8) impact = "<span class='highlight-positive'>انرژی‌بخش و مثبت</span>";
+            else if (avgScore <= 2.2) impact = "<span class='highlight-negative'>تنش‌زا یا کاهنده انرژی</span>";
+
+            insightText.innerHTML = `بیشترین فراوانی مربوط به عامل یا موقعیت <b>"${topTag[0]}"</b> است که ماهیت اثری ${impact} روی شما دارد.`;
+        }
+
+        function analyzeNLP(history) {
+            const insightText = document.getElementById('nlp-insight');
+            const notes = history.map(h => h.note).filter(n => n && n.length > 1);
+
+            if (notes.length === 0) {
+                insightText.innerText = "یادداشتی ثبت نشده است؛ تحلیل لحن نگارش غیرفعال است.";
+                return;
+            }
+
+            const posWords = ['خوب', 'عالی', 'خوشحال', 'راضی', 'انرژی', 'امید', 'آرامش', 'شکر', 'موفق'];
+            const negWords = ['بد', 'ناراحت', 'خسته', 'استرس', 'اضطراب', 'درد', 'تنها', 'عصبانی', 'مشکل'];
+
+            let posScore = 0, negScore = 0;
+            notes.forEach(note => {
+                posWords.forEach(w => { if (note.includes(w)) posScore++; });
+                negWords.forEach(w => { if (note.includes(w)) negScore++; });
+            });
+
+            if (posScore > negScore) {
+                insightText.innerHTML = "سیستم در یادداشت‌های شما بسامد واژگانی <span class='highlight-positive'>امیدبخش و مثبت</span> بالایی شناسایی کرده است.";
+            } else if (negScore > posScore) {
+                insightText.innerHTML = "لحن متون اخیر متمرکز بر <span class='highlight-negative'>چالش‌ها, خستگی‌ها یا استرس‌ها</span> بوده است.";
+            } else {
+                insightText.innerText = "بیان کتبی شما لحنی کاملاً موازنه شده، توصیفی و پایدار دارد.";
+            }
+        }
+
+        function generateInsights(history) {
+            const insightText = document.getElementById('action-insight');
+            if (history.length < 3) {
+                insightText.innerText = "پس از ثبت دست‌کم ۳ وضعیت، توصیه‌های اختصاصی را در اینجا دریافت خواهید کرد.";
+                return;
+            }
+
+            const recent = history.slice(0, 3);
+            const avg = recent.reduce((sum, item) => sum + moodConfig[item.mood].value, 0) / 3;
+
+            if (avg <= 2.2) {
+                insightText.innerHTML = "باتوجه به خستگی یا افت روحی در روزهای اخیر، توصیه هوش مصنوعی انجام تمرین <b>تنفس مربعی (۴ ثانیه دم، ۴ ثانیه حبس، ۴ ثانیه بازدم)</b> یا تغییر کوتاه دکوراسیون محیط است.";
+            } else if (avg >= 4) {
+                insightText.innerHTML = "سطح اشتیاق و انرژی روحی شما عالی است! بهترین زمان برای مواجهه با کارهای چالش‌برانگیزِ عقب‌افتاده یا ثبت ایده در ژورنال شخصی‌تان است.";
+            } else {
+                insightText.innerHTML = "ریتم روحی شما نرمال است. پایداری در ساعت خواب شبانه و نوشیدن آب کافی می‌تواند ترشح دوپامین را در بهینه‌ترین حالت حفظ کند.";
+            }
+        }
+
+        // ================= سیستم توست ابزارها =================
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const msgSpan = document.getElementById('toast-message');
+            const icon = toast.querySelector('i');
+            
+            msgSpan.innerText = message;
+            toast.className = `toast show ${type}`;
+            icon.className = type === 'error' ? 'fas fa-exclamation-circle' : 'fas fa-check-circle';
+            
+            setTimeout(() => { toast.classList.remove('show'); }, 3500);
+        }
+    </script>
+</body>
+</html>
