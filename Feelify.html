@@ -10,7 +10,7 @@
         /* =================== متغیرها و استایل‌های پایه =================== */
         :root {
             --bg: #0b0b12;
-            --card-bg: rgba(20, 20, 31, 0.75);
+            --card-bg: rgba(47, 47, 88, 0.75);
             --primary-color: #6c5ce7;
             --secondary-color: #00cec9;
             --accent-cyan: #00f0ff;
@@ -22,11 +22,12 @@
             --shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
             
             /* رنگ‌های اختصاصی وضعیت‌ها */
-            --color-awful: #ff4757;
-            --color-bad: #ffa502;
-            --color-meh: #eccc68;
-            --color-good: #2ed573;
-            --color-rad: #1e90ff;
+            --color-awful: #ea010158;
+            --color-bad:hsla(17, 96%, 55%, 0.352);
+            --color-meh: #fff20037;
+            --color-good: #24d86f47;
+            --color-rad: #2889ea58;
+            
         }
 
         * {
@@ -229,10 +230,10 @@
 
         /* رنگ‌های اختصاصی اکتیو دکمه‌ها */
         .mood-option.active#mood-rad { background: var(--color-rad); box-shadow: 0 8px 20px rgba(30, 144, 255, 0.4); }
-        .mood-option.active#mood-good { background: var(--color-good); box-shadow: 0 8px 20px rgba(46, 213, 115, 0.4); }
-        .mood-option.active#mood-meh { background: var(--color-meh); box-shadow: 0 8px 20px rgba(236, 204, 104, 0.4); color: #111; }
-        .mood-option.active#mood-bad { background: var(--color-bad); box-shadow: 0 8px 20px rgba(255, 165, 2, 0.4); }
-        .mood-option.active#mood-awful { background: var(--color-awful); box-shadow: 0 8px 20px rgba(255, 71, 87, 0.4); }
+        .mood-option.active#mood-good { background: var(--color-good); box-shadow: 0 8px 20px rgba(36, 228, 116, 0.4); }
+        .mood-option.active#mood-meh { background: var(--color-meh); box-shadow: 0 8px 20px rgba(232, 255, 25, 0.4); }
+        .mood-option.active#mood-bad { background: var(--color-bad); box-shadow: 0 8px 20px rgba(255, 179, 0, 0.4); }
+        .mood-option.active#mood-awful { background: var(--color-awful); box-shadow: 0 8px 20px rgba(255, 3, 24, 0.531); }
 
         .mood-option .emoji {
             font-size: 2.3rem;
@@ -589,23 +590,23 @@
             </div>
             <div class="mood-selector" role="radiogroup">
                 <button class="mood-option" onclick="selectMood('rad')" id="mood-rad">
-                    <span class="emoji">🤩</span>
+                    <span class="emoji"><img src="smile-beam.png"  style="width: 70px; height: 70px;"></span>
                     <span class="label">عالی</span>
                 </button>
                 <button class="mood-option" onclick="selectMood('good')" id="mood-good">
-                    <span class="emoji">🙂</span>
+                    <span class="emoji"><img src="smile.png"  style="width: 70px; height: 70px;"></span>
                     <span class="label">خوب</span>
                 </button>
                 <button class="mood-option" onclick="selectMood('meh')" id="mood-meh">
-                    <span class="emoji">😐</span>
-                    <span class="label">معمولی</span>
+                    <span class="emoji"><img src="smile-neutral.png" alt="" style="width: 70px; height: 70px;"></span>
+                    <span class="label">خنثی</span>
                 </button>
                 <button class="mood-option" onclick="selectMood('bad')" id="mood-bad">
-                    <span class="emoji">😔</span>
+                    <span class="emoji"><img src="emoji-smiley-sad-face.png" alt="" style="width: 70px; height: 70px;"></span>
                     <span class="label">بد</span>
                 </button>
                 <button class="mood-option" onclick="selectMood('awful')" id="mood-awful">
-                    <span class="emoji">😫</span>
+                    <span class="emoji"><img src="sad-squint.png" alt="" style="width: 70px; height: 70px;"></span>
                     <span class="label">داغون</span>
                 </button>
             </div>
@@ -672,7 +673,7 @@
                 </div>
                 <div class="chart-legend" id="chart-legend"></div>
             </div>
-            <div class="history-list" id="history-list"></div>
+            <div class="\\h%tory-list" id="history-list"></div>
         </section>
     </div>
 
@@ -916,7 +917,7 @@
                 div.style.borderRightColor = config.color;
                 div.innerHTML = `
                     <div class="history-info">
-                        <span class="history-mood" style="color:${config.color}">${config.label} ${config.emoji}</span>
+                        <span class="history-mood" style="color:${config.color}">${config.label}</span>
                         <span class="history-date">${item.date} ساعت ${item.time}</span>
                         ${item.tags.length ? `<div style="margin-top:5px;">${item.tags.map(t => `<span class="tag" style="padding:2px 8px; font-size:0.75rem; margin-left:4px; pointer-events:none;">${t}</span>`).join('')}</div>` : ''}
                         ${item.note ? `<span class="history-note">${item.note}</span>` : ''}
