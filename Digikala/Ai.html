@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ai SHOP</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Vazirmatn Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="images/f0909d6eae7ee548665693cfbe823b078cf70ede_1774984328.png">
+    <style>
+        :root {
+            /* ChatGPT-inspired Palette */
+            --bg-body: #f6f6f6;
+            --primary-color: #10a37f; /* Classic AI Green-ish */
+            --primary-hover: #1a7f64;
+            --surface-light: #ffffff;
+            --surface-dark: #343541;
+            --text-main: #343541;
+            --text-secondary: #555555;
+            --border-color: #e5e5e5;
+            --shadow-soft: 0 1px 2px rgba(0,0,0,0.05);
+            --radius-lg: 12px;
+            --radius-md: 8px;
+            --input-bg: #ffffff;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-body: #343541;
+                --primary-color: #10a37f;
+                --primary-hover: #1a7f64;
+                --surface-light: #444654;
+                --surface-dark: #202123;
+                --text-main: #ececf1;
+                --text-secondary: #d4d4d4;
+                --border-color: #4d4d4f;
+                --shadow-soft: 0 1px 2px rgba(0,0,0,0.2);
+                --input-bg: #40414f;
+            }
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        
+        body {
+            margin: 0; height: 100vh; font-family: 'Vazirmatn', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main); overflow: hidden; display: flex; flex-direction: column;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #aaa; }
+        
+        /* Animations */
+        @keyframes slideUpFade { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        @keyframes pulse-glow { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+        @keyframes ripple { 0% { transform: scale(0.8); opacity: 0.8; } 100% { transform: scale(2); opacity: 0; } }
+
+        /* Layout */
+        #chat-container { display: flex; flex-direction: column; height: 100%; max-width: 100%; margin: 0 auto; width: 100%; position: relative; background: var(--bg-body); }
+        #chat-output { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 24px; scroll-behavior: smooth; }
+        
+        /* Messages - Minimal Style */
+        .message-row { display: flex; width: 100%; animation: slideUpFade 0.3s ease-out; }
+        .message-row.user { justify-content: flex-end; }
+        .message-row.bot { justify-content: flex-start; }
+        
+        .bubble {
+            max-width: 85%; padding: 14px 18px; border-radius: 18px; 
+            font-size: 0.95rem; line-height: 1.6; position: relative; word-wrap: break-word;
+            box-shadow: var(--shadow-soft);
+        }
+        
+        .user .bubble {
+            background: var(--primary-color); color: white; border-bottom-left-radius: 4px;
+        }
+        
+        .bot .bubble {
+            background: transparent; color: var(--text-main); border-bottom-right-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Product Cards - Clean Grid */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 16px; width: 100%; }
+        .product-card {
+            background: var(--surface-light); border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden;
+            cursor: pointer; transition: all 0.2s ease; position: relative;
+            box-shadow: var(--shadow-soft);
+        }
+        .product-card:hover { transform: translateY(-2px); border-color: var(--primary-color); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .product-card img { width: 100%; height: 140px; object-fit: cover; }
+        .product-info { padding: 12px; }
+        .product-title { font-size: 0.85rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px; height: 35px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .product-price { color: var(--primary-color); font-size: 0.9rem; font-weight: 700; }
+        
+        /* Input Area - Modern & Minimal */
+        #input-area {
+            background: var(--bg-body); /* Transparent or matches body */
+            padding: 20px; 
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
+            border-top: 1px solid var(--border-color);
+            display: flex; justify-content: center;
+        }
+        .input-wrapper {
+            background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 12px;
+            padding: 4px; display: flex; align-items: center; width: 100%; max-width: 800px;
+            box-shadow: var(--shadow-soft); transition: all 0.2s;
+        }
+        .input-wrapper:focus-within { border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(16, 163, 127, 0.1); }
+        #userInput { flex: 1; background: transparent; border: none; color: var(--text-main); padding: 12px 16px; font-family: inherit; font-size: 1rem; outline: none; }
+        
+        /* Send Button - Modern Icon */
+        #sendBtn {
+            width: 36px; height: 36px; border-radius: 8px;
+            background: transparent; color: var(--text-secondary);
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; cursor: pointer; border: none;
+        }
+        #sendBtn:hover { background: rgba(16, 163, 127, 0.1); color: var(--primary-color); }
+        #sendBtn:disabled { opacity: 0.5; cursor: default; }
+        #sendBtn i { font-size: 1.1rem; }
+
+        /* AI Status */
+        #ai-status { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 15px 0; gap: 8px; }
+        .orb-container { width: 24px; height: 24px; position: relative; display: flex; justify-content: center; align-items: center; }
+        .orb { width: 100%; height: 100%; border-radius: 50%; background: var(--primary-color); filter: blur(4px); animation: pulse-glow 2s infinite ease-in-out; opacity: 0.6; }
+        .wave { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 1px solid var(--primary-color); opacity: 0; animation: ripple 1.5s infinite linear; }
+        .wave:nth-child(2) { animation-delay: 0.5s; }
+        .wave:nth-child(3) { animation-delay: 1s; }
+
+        /* Modal - Simple Sheet */
+        #productModal { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); justify-content: center; align-items: flex-end; }
+        @media(min-width: 768px) { #productModal { align-items: center; } }
+        .modal-content {
+            background: var(--surface-light); width: 100%; max-width: 500px; max-height: 90vh; border-radius: 16px 16px 0 0;
+            overflow-y: auto; box-shadow: 0 -10px 25px rgba(0,0,0,0.2); animation: slideUpFade 0.3s cubic-bezier(0.16, 1, 0.3, 1); position: relative;
+        }
+        @media(min-width: 768px) { .modal-content { border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); } }
+        .close-modal { position: absolute; top: 12px; left: 12px; background: #f3f4f6; border: none; color: var(--text-main); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; z-index: 10; transition: 0.2s; display: flex; align-items: center; justify-content: center;}
+        .close-modal:hover { background: #e5e7eb; color: var(--primary-color); }
+        
+        /* Suggestions Chips */
+        .suggestion-chip {
+            display: inline-block; background: #f3f4f6; color: var(--text-secondary); border: 1px solid transparent;
+            padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; margin: 4px; cursor: pointer; transition: 0.2s; font-weight: 500;
+        }
+        .suggestion-chip:hover { background: #e5e7eb; border-color: #d1d5db; color: var(--text-main); }
+        
+        /* Header - Minimal */
+        header {
+            background: var(--bg-body); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .header-logo { display: flex; align-items: center; gap: 10px; }
+        .logo-icon { width: 32px; height: 32px; background: var(--primary-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; }
+        .header-title h1 { font-size: 1rem; font-weight: 700; margin: 0; }
+        .header-title span { font-size: 0.75rem; color: var(--text-secondary); }
+        .header-actions { display: flex; gap: 8px; }
+        .icon-btn {
+            width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border-color);
+            background: var(--surface-light); color: var(--text-secondary);
+            display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;
+        }
+        .icon-btn:hover { background: #f3f4f6; color: var(--text-main); }
+        .icon-btn.delete:hover { color: #ef4056; border-color: #fecaca; background: #fef2f2; }
+        .icon-btn.home:hover { color: var(--primary-color); border-color: #dcfce7; background: #f0fdf4; }
+
+        /* Typing Indicator */
+        .typing-dots span {
+            display: inline-block; width: 6px; height: 6px; background: var(--text-secondary); border-radius: 50%; margin: 0 2px;
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+        .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <!-- Header -->
+        <header>
+            <div class="header-logo">
+                <div class="logo-icon"><i class="fas fa-robot text-sm"></i></div>
+                <div class="header-title">
+                    <h1>دستیار خرید</h1>
+                    <span>هوشمند آپادانا</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button onclick="clearChat()" class="icon-btn delete" title="پاک کردن گفتگو" aria-label="پاک کردن تاریخچه">
+                    <i class="fas fa-trash-alt text-xs"></i>
+                </button>
+                <button onclick="window.location.href='DigiKala.html'" class="icon-btn home" title="بازگشت به فروشگاه" aria-label="بازگشت به صفحه اصلی">
+                    <i class="fas fa-home text-xs"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Chat Output -->
+        <div id="chat-output"></div>
+
+        <!-- AI Status -->
+        <div id="ai-status">
+            <div class="orb-container">
+                <div class="orb"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+            </div>
+            <span class="text-xs text-gray-500 font-medium animate-pulse">در حال تحلیل...</span>
+        </div>
+
+        <!-- Input Area -->
+        <div id="input-area">
+            <div class="input-wrapper">
+                <input type="text" id="userInput" placeholder="پیام خود را بنویسید..." autocomplete="off" aria-label="ورودی متن پیام">
+                <button id="sendBtn" aria-label="ارسال پیام">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="productModal" onclick="closeModal(event)" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="close-modal" onclick="closeModalDirect()" aria-label="بستن پنجره"><i class="fas fa-times"></i></button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Web Worker Script -->
+    <script id="ai-worker" type="javascript/worker">
+        // --- DICTIONARIES & CONFIG ---
+        const STOP_WORDS = new Set(['میخوام', 'بده', 'رو', 'است', 'هست', 'که', 'را', 'به', 'از', 'در', 'این', 'یک', 'خواهم', 'می‌خواهم', 'برام', 'برای', 'با', 'و', 'یا', 'های', 'ها', 'تر', 'ترین', 'استفاده', 'کنید', 'کنم', 'کرد', 'شد', 'شوند', 'می‌شود', 'شود', 'دارم', 'دارد', 'چطور', 'چگونه', 'کجا', 'کدام', 'چند', 'قیمت', 'هزینه', 'ریال', 'تومان', 'تومن', 'میلیون', 'هزار', 'لطف', 'لطفا', 'ممنون', 'تشکر', 'سلام', 'خوبی', 'خوبید', 'چطوری']);
+        
+        const SYNONYMS = {
+            'گوشی': ['موبایل', 'تلفن', 'همراه', 'جیبی'],
+            'لپتاپ': ['لپ‌تاپ', 'نوت‌بوک', 'کامپیوتر', 'لپ تاپ'],
+            'تبلت': ['آیپد', 'تب'],
+            'ساعت': ['واچ', 'ساعت هوشمند'],
+            'هدفون': ['هندزفری', 'ایرفون', 'هدفون'],
+            'تلویزیون': ['تیوی', 'tv'],
+            'ارزان': ['ارزون', 'کم‌قیمت', 'اقتصادی', 'مناسب'],
+            'گران': ['گرون', 'لوکس', 'پرچمدار', 'گران‌قیمت'],
+            'خوب': ['عالی', 'عالی', 'بهترین', 'برتر'],
+            'بد': ['ضعیف', 'بی‌کیفیت'],
+            'جدید': ['۲۰۲۴', '2024', 'مدل جدید', 'تازه'],
+            'قدیمی': ['کارکرده', 'دست دوم', 'قدیمی']
+        };
+
+        const INTENTS = {
+            GAMING: ['گیم', 'بازی', 'gaming', 'game', 'ps5', 'ps4', 'xbox', 'استیم'],
+            PHOTOGRAPHY: ['عکس', 'دوربین', 'عکاسی', 'فیلمبرداری', 'سلفی'],
+            WORK: ['کار', 'ادیت', 'طراحی', 'برنامه‌نویسی', 'دفتر', 'اداری'],
+            GIFT: ['هدیه', 'کادو', 'ولنتاین', 'سالگرد', 'تولد'],
+            STUDY: ['درس', 'دانشگاه', 'مدرسه', 'کلاس', 'تحصیل']
+        };
+
+        // --- UTILITIES ---
+        function toEnglishDigits(str) {
+            return str.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+        }
+
+        function tokenize(text) {
+            let clean = text.replace(/[\u200c]/g, ' ').toLowerCase();
+            clean = toEnglishDigits(clean);
+            let tokens = clean.split(/\s+/).filter(t => t.length > 1 && !STOP_WORDS.has(t));
+            
+            let expandedTokens = [...tokens];
+            tokens.forEach(t => {
+                for (let key in SYNONYMS) {
+                    if (SYNONYMS[key].includes(t) || t.includes(key)) {
+                        expandedTokens.push(key);
+                        expandedTokens.push(...SYNONYMS[key]);
+                    }
+                }
+            });
+            return [...new Set(expandedTokens)];
+        }
+
+        function levenshtein(a, b) {
+            const matrix = [];
+            for(let i=0; i<=b.length; i++){ matrix[i] = [i]; }
+            for(let j=0; j<=a.length; j++){ matrix[0][j] = j; }
+            for(let i=1; i<=b.length; i++){
+                for(let j=1; j<=a.length; j++){
+                    if(b.charAt(i-1) == a.charAt(j-1)){
+                        matrix[i][j] = matrix[i-1][j-1];
+                    } else {
+                        matrix[i][j] = Math.min(matrix[i-1][j-1] + 1, Math.min(matrix[i][j-1] + 1, matrix[i-1][j] + 1));
+                    }
+                }
+            }
+            return matrix[b.length][a.length];
+        }
+
+        function parsePrice(text) {
+            let min = 0, max = Infinity;
+            const normalized = toEnglishDigits(text);
+            const regex = /(\d{1,3}(?:,\d{3})*(?:\.\d+)?|\d+(?:\.\d+)?)(?:\s*(میلیون|تومن|تومان|هزار))?/g;
+            let matches = [...normalized.matchAll(regex)];
+            
+            if (matches.length === 0) return { min, max };
+
+            let values = matches.map(m => {
+                let valStr = m[1].replace(/,/g, '');
+                let val = parseFloat(valStr);
+                if (m[2]) {
+                    if (m[2].includes('میلیون')) val *= 1000000;
+                    else if (m[2].includes('هزار')) val *= 1000;
+                }
+                return val;
+            });
+
+            if (normalized.includes('بین') || normalized.includes('تا')) {
+                if (values.length >= 2) {
+                    min = Math.min(...values);
+                    max = Math.max(...values);
+                }
+            } else if (normalized.includes('زیر') || normalized.includes('کمتر') || (normalized.includes('تا') && values.length === 1)) {
+                max = Math.min(...values);
+            } else if (normalized.includes('بالای') || normalized.includes('بیشتر')) {
+                min = Math.max(...values);
+            } else {
+                max = values[0]; 
+            }
+            return { min, max };
+        }
+
+        self.onmessage = function(e) {
+            const { query, products, history } = e.data;
+            
+            const tokens = tokenize(query);
+            const priceRange = parsePrice(query);
+            
+            let detectedIntents = [];
+            for (let key in INTENTS) {
+                if (INTENTS[key].some(intent => query.includes(intent))) {
+                    detectedIntents.push(key);
+                }
+            }
+
+            let scoredProducts = products.map(p => {
+                let score = 0;
+                const pText = `${p.name} ${p.category || ''} ${p.description || ''} ${p.breadcrumb || ''}`.toLowerCase();
+                const pTokens = tokenize(pText);
+
+                tokens.forEach(t => {
+                    if (pText.includes(t)) score += 20;
+                    if (p.name.toLowerCase().includes(t)) score += 50;
+                });
+
+                tokens.forEach(t => {
+                    pTokens.forEach(pt => {
+                        if (t.length > 3 && pt.length > 3) {
+                            const dist = levenshtein(t, pt);
+                            if (dist <= 2) score += 15;
+                        }
+                    });
+                });
+
+                if (detectedIntents.length > 0) {
+                    detectedIntents.forEach(intent => {
+                        if (INTENTS[intent].some(k => pText.includes(k))) score += 30;
+                    });
+                }
+
+                if (query.includes('ارزان') || query.includes('ارزون')) {
+                    score += (100000000 / (p.price + 1)); 
+                }
+                if (query.includes('گران') || query.includes('لوکس')) {
+                    score += (p.price / 1000000);
+                }
+
+                return { ...p, score };
+            });
+
+            let results = scoredProducts
+                .filter(p => p.score > 5)
+                .filter(p => p.price >= priceRange.min && p.price <= priceRange.max)
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 6);
+
+            let suggestion = null;
+            if (results.length === 0 && tokens.length > 0) {
+                let bestMatch = null;
+                let minDistance = 100;
+                
+                products.forEach(p => {
+                    const pNameTokens = tokenize(p.name);
+                    tokens.forEach(t => {
+                        pNameTokens.forEach(pt => {
+                            const d = levenshtein(t, pt);
+                            if (d < minDistance && d < 4) {
+                                minDistance = d;
+                                bestMatch = p.name;
+                            }
+                        });
+                    });
+                });
+                if (bestMatch) suggestion = bestMatch;
+            }
+
+            self.postMessage({ results, suggestion });
+        };
+    </script>
+
+    <!-- Main Application Script -->
+    <script>
+        // --- CONFIG & STATE ---
+        const DB_KEY = 'shopshopProducts';
+        const state = {
+            products: [],
+            history: [],
+            isTyping: false
+        };
+
+        // --- DOM ELEMENTS ---
+        const chatOutput = document.getElementById('chat-output');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const aiStatus = document.getElementById('ai-status');
+
+        // --- WORKER SETUP ---
+        const workerBlob = new Blob([document.getElementById('ai-worker').textContent], { type: "text/javascript" });
+        const worker = new Worker(window.URL.createObjectURL(workerBlob));
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDatabase();
+            initChat();
+        });
+
+        function loadDatabase() {
+            try {
+                const stored = localStorage.getItem(DB_KEY);
+                if (stored) {
+                    state.products = JSON.parse(stored);
+                }
+            } catch (e) {
+                console.error("DB Error", e);
+                state.products = [];
+            }
+        }
+
+        function initChat() {
+            const count = state.products.length;
+            let statusHtml = count > 0 
+                ? `<span class="text-green-600 text-xs block mt-2 font-medium"><i class="fas fa-check-circle ml-1"></i> پایگاه داده متصل (${count.toLocaleString('en-US')} محصول)</span>`
+                : `<span class="text-orange-500 text-xs block mt-2 font-medium"><i class="fas fa-exclamation-triangle ml-1"></i> دیتابیس خالی است.</span>`;
+
+            addBotMessage(`
+                <div class="flex flex-col gap-3">
+                    <ul class="text-sm text-gray-600 list-disc pr-4 space-y-1">
+                        <li>جستجوی نام محصول (مثل: سامسونگ S21)</li>
+                        <li>فیلتر قیمت (مثل: زیر ۵ میلیون)</li>
+                        <li>دسته‌بندی خاص (مثل: لپتاپ گیمینگ)</li>
+                    </ul>
+                    ${statusHtml}
+                    <div class="flex flex-wrap gap-2 mt-2">
+                        <span class="suggestion-chip" onclick="setInput('موبایل')">موبایل</span>
+                        <span class="suggestion-chip" onclick="setInput('لپتاپ')">لپتاپ</span>
+                        <span class="suggestion-chip" onclick="setInput('هدفون بلوتوثی')">هدفون بلوتوثی</span>
+                    </div>
+                </div>
+            `);
+        }
+
+        function setInput(text) {
+            userInput.value = text;
+            sendMessage();
+        }
+
+        function addUserMessage(text) {
+            const div = document.createElement('div');
+            div.className = 'message-row user';
+            div.innerHTML = `<div class="bubble">${text}</div>`;
+            chatOutput.appendChild(div);
+            scrollToBottom();
+        }
+
+        function addBotMessage(htmlContent) {
+            const div = document.createElement('div');
+            div.className = 'message-row bot';
+            div.innerHTML = `<div class="bubble">${htmlContent}</div>`;
+            chatOutput.appendChild(div);
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            chatOutput.scrollTop = chatOutput.scrollHeight;
+        }
+
+        function showLoading() {
+            aiStatus.style.display = 'flex';
+            scrollToBottom();
+        }
+
+        function hideLoading() {
+            aiStatus.style.display = 'none';
+        }
+
+        function sendMessage() {
+            const text = userInput.value.trim();
+            if (!text || state.isTyping) return;
+
+            addUserMessage(text);
+            userInput.value = '';
+            
+            // UI State Management
+            sendBtn.disabled = true;
+            sendBtn.querySelector('i').classList.add('fa-spin');
+            sendBtn.querySelector('i').classList.remove('fa-paper-plane');
+            sendBtn.querySelector('i').classList.add('fa-spinner');
+            
+            showLoading();
+            state.isTyping = true;
+
+            loadDatabase();
+
+            worker.postMessage({
+                query: text,
+                products: state.products,
+                history: state.history
+            });
+            state.history.push({ role: 'user', content: text });
+        }
+
+        // --- WORKER RESPONSE HANDLER ---
+        worker.onmessage = function(e) {
+            hideLoading();
+            state.isTyping = false;
+            
+            // Reset UI State
+            sendBtn.disabled = false;
+            sendBtn.querySelector('i').classList.remove('fa-spinner');
+            sendBtn.querySelector('i').classList.add('fa-paper-plane');
+
+            const { results, suggestion } = e.data;
+
+            if (results.length > 0) {
+                let html = `<p class="mb-4 text-sm text-gray-600 font-medium">نتایج جستجو برای شما:</p>`;
+                html += `<div class="product-grid">`;
+                results.forEach(p => {
+                    const imgUrl = (p.image && p.image.length > 10) ? p.image : `https://picsum.photos/seed/${p.id}/300/300`;
+                    
+                    html += `
+                        <div class="product-card" onclick="openProduct(${p.id})">
+                            <div class="h-28 overflow-hidden relative">
+                                <img src="${imgUrl}" 
+                                     class="w-full h-full object-cover" 
+                                     loading="lazy" 
+                                     alt="تصویر محصول ${p.name}"
+                                     onerror="this.onerror=null; this.src='https://via.placeholder.com/150?text=No+Img'; this.onerror=null;">
+                            </div>
+                            <div class="product-info">
+                                <h4 class="product-title">${p.name}</h4>
+                                <div class="product-price">${parseInt(p.price).toLocaleString('en-US')} <span class="text-[10px] text-gray-500 font-normal">تومان</span></div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+                addBotMessage(html);
+            } else if (suggestion) {
+                addBotMessage(`
+                    <div class="flex flex-col gap-3">
+                        <div class="flex items-center gap-2 text-gray-500 text-sm">
+                            <i class="fas fa-search text-gray-400"></i>
+                            <span>متأسفانه محصول دقیقی یافت نشد.</span>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                            <p class="text-sm text-blue-800 mb-2">آیا منظور شما <strong>${suggestion}</strong> بود؟</p>
+                            <button onclick="setInput('${suggestion}')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs py-2 px-4 rounded-lg transition shadow-md">جستجوی "${suggestion}"</button>
+                        </div>
+                    </div>
+                `);
+            } else {
+                addBotMessage(`
+                    <div class="flex flex-col gap-2">
+                        <div class="flex items-center gap-2 text-gray-500 text-sm">
+                            <i class="fas fa-meh text-gray-400"></i>
+                            <span>هیچ نتیجه‌ای یافت نشد.</span>
+                        </div>
+                        <p class="text-xs text-gray-400">پیشنهاد: از کلمات کلیدی ساده‌تر یا نام برند استفاده کنید.</p>
+                    </div>
+                `);
+            }
+        };
+        // --- MODAL FUNCTIONS ---
+        function openProduct(id) {
+            const product = state.products.find(p => p.id === id);
+            if (!product) return;
+
+            const modalBody = document.getElementById('modalBody');
+            const imgUrl = (product.image && product.image.length > 10) ? product.image : `https://picsum.photos/seed/${product.id}/300/300`;
+
+            modalBody.innerHTML = `
+                <div class="relative h-64 w-full overflow-hidden bg-gray-100">
+                    <img src="${imgUrl}" 
+                         class="w-full h-full object-cover" 
+                         alt="تصویر بزرگ ${product.name}"
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/300?text=No+Img'; this.onerror=null;">
+                </div>
+                <div class="p-6">
+                    <span class="bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1 rounded-full text-xs font-bold mb-3 inline-block">${product.category || 'عمومی'}</span>
+                    <h2 class="text-xl font-bold text-gray-800 mb-3 leading-snug tracking-tight">${product.name}</h2>
+                    <p class="text-gray-600 text-sm leading-relaxed mb-6 line-clamp-3">${product.description || 'توضیحات خاصی برای این محصول ثبت نشده است.'}</p>
+                    
+                    <div class="flex items-center justify-between bg-gray-50 p-4 rounded-lg border border-gray-100 mb-6">
+                        <span class="text-gray-700 font-semibold text-sm"><i class="fas fa-tag ml-2 text-gray-400"></i>قیمت:</span>
+                        <span class="text-lg font-bold text-[#10a37f]">${parseInt(product.price).toLocaleString('en-US')} <span class="text-xs font-normal text-gray-500">تومان</span></span>
+                    </div>
+                    
+                    <button onclick="window.location.href='DigiKala.html'" class="w-full bg-[#10a37f] hover:bg-[#0d8c6e] text-white font-bold py-3 rounded-lg shadow-md active:scale-[0.98] transition-transform flex items-center justify-center gap-2 group">
+                        <span>مشاهده در فروشگاه</span>
+                        <i class="fas fa-arrow-left transform rotate-180 group-hover:-translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
+            `;
+            document.getElementById('productModal').style.display = 'flex';
+        }
+
+        function closeModal(e) {
+            if (e.target.id === 'productModal') {
+                document.getElementById('productModal').style.display = 'none';
+            }
+        }
+
+        function closeModalDirect() {
+            document.getElementById('productModal').style.display = 'none';
+        }
+
+        function clearChat() {
+            chatOutput.innerHTML = '';
+            state.history = [];
+            initChat();
+        }
+
+        // --- EVENT LISTENERS ---
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', () => {
+                document.body.style.height = `${window.visualViewport.height}px`;
+                scrollToBottom();
+            });
+        }
+    </script>
+</body>
+</html>
