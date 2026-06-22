@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ورود   ثبت‌نام هوشمند M-SHOP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ef394e;
+            --secondary: #008eb2;
+            --success: #4caf50;
+            --bg-body: #f0f0f1;
+            --white: #ffffff;
+            --text-main: #3f404d;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+
+        
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: var(--bg-body);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: var(--text-main);
+        }
+
+        .auth-container {
+            background: var(--white);
+            width: 100%;
+            max-width: 450px;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .logo-box {
+            font-size: 35px;
+            font-weight: 900;
+            color: var(--primary);
+            text-decoration: none;
+            margin-bottom: 30px;
+            display: block;
+            letter-spacing: -1px;
+        }
+
+        h2 { font-size: 22px; margin-bottom: 10px; font-weight: 700; }
+        .subtitle { font-size: 14px; color: #7e8189; margin-bottom: 30px; line-height: 24px; }
+
+      
+        .form-group {
+            margin-bottom: 20px;
+            text-align: right;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 700;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            right: 15px;
+            color: #aaa;
+            transition: var(--transition);
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 45px 14px 15px;
+            border: 1px solid #e6e6e6;
+            border-radius: 12px;
+            font-family: 'Vazirmatn', sans-serif;
+            font-size: 16px;
+            transition: var(--transition);
+            background: #fafafa;
+        }
+
+        input:focus {
+            border-color: var(--secondary);
+            background: var(--white);
+            box-shadow: 0 0 0 4px rgba(0, 142, 178, 0.1);
+        }
+
+        input:focus + i { color: var(--secondary); }
+
+        .btn-action {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-action:hover {
+            background: #d63041;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(239, 57, 78, 0.3);
+        }
+
+        .btn-back {
+            background: none;
+            border: none;
+            color: var(--secondary);
+            font-family: inherit;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+
+        .step {
+            display: none;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .step.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .user-info-badge {
+            background: #f0f9ff;
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        .password-strength {
+            height: 4px;
+            width: 100%;
+            background: #eee;
+            margin-top: 8px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: var(--transition);
+        }
+
+    
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 14px;
+            z-index: 9999;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="toast" id="loginToast"></div>
+
+    <div class="auth-container">
+        <a href="DigiKala.html" class="logo-box">M-SHOP</a>
+
+        <div id="step-mobile" class="step active">
+            <h2>ورود یا ثبت‌نام</h2>
+            <p class="subtitle">لطفاً شماره موبایل خود را وارد کنید تا وضعیت حساب شما بررسی شود.</p>
+            
+            <div class="form-group">
+                <label>شماره موبایل</label>
+                <div class="input-wrapper">
+                    <input type="text" id="phoneInput" placeholder="09123456789" maxlength="11" oninput="validatePhone(this)">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+            </div>
+            
+            <button class="btn-action" onclick="handleStep1()">
+                ادامه و بررسی <i class="fas fa-arrow-left"></i>
+            </button>
+            <p style="font-size: 11px; color: #999; margin-top: 25px;">
+                با ورود به سایت، <a href="#" style="color: #666;">شرایط خدمات</a> و <a href="#" style="color: #666;">سیاست حریم خصوصی</a> را می‌پذیرید.
+            </p>
+        </div>
+
+        <div id="step-register" class="step">
+            <h2 style="color: var(--success);">خوش آمدید! (ثبت‌نام)</h2>
+            <p class="subtitle">به نظر می‌رسد شما اولین بار است که به جمع ما می‌پیوندید. یک رمز عبور انتخاب کنید.</p>
+            
+            <div class="user-info-badge">
+                <i class="fas fa-user-plus"></i>
+                <span id="displayPhoneReg"></span>
+            </div>
+
+            <div class="form-group">
+                <label>نام و نام‌خانوادگی</label>
+                <div class="input-wrapper">
+                    <input type="text" id="reg-name" placeholder="مثال: علی محمدی">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>تعیین رمز عبور</label>
+                <div class="input-wrapper">
+                    <input type="password" id="reg-pass" placeholder="**" oninput="checkStrength(this.value)">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <div class="password-strength"><div id="strengthBar" class="strength-bar"></div></div>
+            </div>
+
+            <div class="form-group">
+                <label>تکرار رمز عبور</label>
+                <div class="input-wrapper">
+                    <input type="password" id="reg-pass-confirm" placeholder="">
+                    <i class="fas fa-check-double"></i>
+                </div>
+            </div>
+
+            <button class="btn-action" style="background: var(--success);" onclick="handleRegister()">
+                ایجاد حساب و ورود <i class="fas fa-user-check"></i>
+            </button>
+            
+            <button class="btn-back" onclick="goBack()">
+                <i class="fas fa-chevron-right"></i> اصلاح شماره موبایل
+            </button>
+        </div>
+
+        <div id="step-login" class="step">
+            <h2>خوش آمدید! (ورود)</h2>
+            <p class="subtitle">شما قبلاً ثبت‌نام کرده‌اید. برای ورود رمز عبور خود را وارد کنید.</p>
+
+            <div class="user-info-badge" style="color: var(--primary); background: #fff5f6;">
+                <i class="fas fa-user-shield"></i>
+                <span id="displayPhoneLogin"></span>
+            </div>
+
+            <div class="form-group">
+                <label>رمز عبور</label>
+                <div class="input-wrapper">
+                    <input type="password" id="login-pass" placeholder="***">
+                    <i class="fas fa-key"></i>
+                </div>
+            </div>
+
+            <button class="btn-action" onclick="handleLogin()">
+                ورود به پنل کاربری <i class="fas fa-sign-in-alt"></i>
+            </button>
+
+            <div style="margin-top: 15px;">
+                <a href="#" style="font-size: 12px; color: #888; text-decoration: none;">فراموشی رمز عبور؟</a>
+            </div>
+
+            <button class="btn-back" onclick="goBack()">
+                <i class="fas fa-chevron-right"></i> اصلاح شماره موبایل
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const USERSKEY = 'users_database';
+        const CURRENTUSERKEY = 'current_user';
+        let currentPhone = "";
+
+        //  Step 1 Logic: Verification 
+        function handleStep1() {
+            const phone = document.getElementById('phoneInput').value.trim();
+            
+            if (!/^09\d{9}$/.test(phone)) {
+                toast("لطفاً یک شماره موبایل معتبر (۱۱ رقم) وارد کنید");
+                return;
+            }
+
+            currentPhone = phone;
+            const users = JSON.parse(localStorage.getItem(USERSKEY)) || [];
+            const userExists = users.find(u => u.mobile === phone);
+
+            // Hide Step 1
+            document.getElementById('step-mobile').classList.remove('active');
+
+            if (userExists) {
+                // Go to Login
+                document.getElementById('displayPhoneLogin').innerText = phone;
+                document.getElementById('step-login').classList.add('active');
+            } else {
+                // Go to Register
+                document.getElementById('displayPhoneReg').innerText = phone;
+                document.getElementById('step-register').classList.add('active');
+            }
+        }
+
+        //  Register Logic 
+        function handleRegister() {
+            const name = document.getElementById('reg-name').value.trim();
+            const pass = document.getElementById('reg-pass').value;
+            const confirm = document.getElementById('reg-pass-confirm').value;
+
+            if (name.length < 3) return toast("نام خود را به درستی وارد کنید");
+            if (pass.length < 5) return toast("رمز عبور باید حداقل ۵ کاراکتر باشد");
+            if (pass !== confirm) return toast("تکرار رمز عبور همخوانی ندارد");
+
+            let users = JSON.parse(localStorage.getItem(USERSKEY)) || [];
+            
+            const newUser = {
+                id: Date.now(),
+                mobile: currentPhone,
+                password: pass,
+                name: name,
+                wallet: 0,
+                cart: [],
+                wishlist: [],
+                orders: [],
+                joinDate: new Date().toLocaleDateString('fa-IR')
+            };
+
+            users.push(newUser);
+            localStorage.setItem(USERSKEY, JSON.stringify(users));
+            
+            executeLogin(currentPhone);
+        }
+
+        //  Login Logic 
+        function handleLogin() {
+            const pass = document.getElementById('login-pass').value;
+            const users = JSON.parse(localStorage.getItem(USERSKEY)) || [];
+            const user = users.find(u => u.mobile === currentPhone && u.password === pass);
+
+            if (user) {
+                executeLogin(currentPhone);
+            } else {
+                toast("رمز عبور وارد شده صحیح نمی‌باشد");
+            }
+        }
+
+        //  Shared Login Action 
+        function executeLogin(phone) {
+            localStorage.setItem(CURRENTUSERKEY, phone);
+            toast("خوش آمدید! در حال انتقال به فروشگاه...");
+            setTimeout(() => {
+                window.location.href = 'DigiKala.html';
+            }, 1500);
+        }
+
+        //  UI Utilities 
+        function goBack() {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step-mobile').classList.add('active');
+        }
+
+        function toast(msg) {
+            const t = document.getElementById('loginToast');
+            t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 3000);
+        }
+
+        function validatePhone(input) {
+            input.value = input.value.replace(/[^0-9]/g, '');
+        }
+
+        function checkStrength(val) {
+            const bar = document.getElementById('strengthBar');
+            if (val.length < 4) {
+                bar.style.width = '30%';
+                bar.style.background = '#ff5252';
+            } else if (val.length < 8) {
+                bar.style.width = '60%';
+                bar.style.background = '#ffc107';
+            } else {
+                bar.style.width = '100%';
+                bar.style.background = '#4caf50';
+            }
+        }
+    </script>
+</body>
+</html>

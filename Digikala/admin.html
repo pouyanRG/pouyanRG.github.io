@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل ادمین</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="./images/f0909d6eae7ee548665693cfbe823b078cf70ede_1774984328.png">
+    <style>
+        :root { --admin-primary: #736be8;--primary-hover: #6057d8; --admin-success: #00b894; --admin-accent: #0984e3; --info: #0984e3; --warning: #fdcb6e; --danger: #d63031; }
+        body { font-family: 'Vazirmatn', sans-serif; background: #f8f9fa; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* Sidebar */
+        .admin-sidebar { width: 250px; background: #fff; border-left: 1px solid #eee; padding: 20px; display: flex; flex-direction: column; z-index: 10; }
+        .sidebar-header h3 { margin: 0; color: var(--text-main); font-size: 18px; }
+        .admin-menu li { list-style: none; padding: 12px 15px; cursor: pointer; border-radius: 8px; margin-bottom: 5px; transition: 0.3s; display: flex; align-items: center; gap: 10px; color: #555; font-weight: 600; }
+        .admin-menu li:hover, .admin-menu li.active { background: rgba(239, 57, 78, 0.1); color: var(--admin-primary); }
+        
+        /* Main Content */
+        .admin-main { flex: 1; padding: 30px; overflow-y: auto; position: relative; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 15px; }
+        .admin-card { background: #fff; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        .section-title { font-size: 18px; font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: #333; }
+        
+        /* Forms & Inputs */
+        .input-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        label { font-size: 13px; font-weight: 700; color: #666; }
+        input, select, textarea { padding: 10px 15px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; outline: none; transition: 0.3s; }
+        input:focus, select:focus, textarea:focus { border-color: var(--admin-primary); box-shadow: 0 0 0 3px rgba(239, 57, 78, 0.1); }
+        .btn-submit { background: var(--admin-primary); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; width: 100%; font-size: 16px; transition: 0.3s; }
+        .btn-submit:hover { background: #d32f2f; transform: translateY(-2px); }
+        
+        /* Tables */
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px; text-align: right; border-bottom: 1px solid #eee; }
+        th { color: #888; font-size: 13px; font-weight: 700; }
+        .prod-img { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
+        
+        /* Colors Manager */
+        .color-manager { border: 1px dashed #ccc; padding: 15px; border-radius: 10px; background: #fafafa; margin-top: 10px; }
+        .color-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+        .color-tag { display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid #eee; padding: 5px 10px; border-radius: 20px; font-size: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .color-dot { width: 16px; height: 16px; border-radius: 50%; border: 1px solid #ddd; }
+        .remove-color { cursor: pointer; color: #999; font-size: 14px; }
+        .remove-color:hover { color: red; }
+        .color-inputs { display: flex; gap: 10px; margin-top: 10px; }
+        .hidden { display: none !important; }
+        .image-input-type-selector { display: flex; gap: 10px; margin-bottom: 10px; }
+        .type-btn { padding: 8px 16px; border: 1px solid #ddd; background: #fff; border-radius: 6px; cursor: pointer; font-size: 13px; }
+        .type-btn.active { background: var(--admin-primary); color: white; border-color: var(--admin-primary); }
+        .breadcrumb-preview { font-size: 12px; color: var(--admin-primary); font-weight: bold; margin-top: 5px; }
+        
+        /* Toast */
+        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 12px 24px; border-radius: 50px; opacity: 0; transition: 0.3s; pointer-events: none; z-index: 1000; }
+        .toast.show { opacity: 1; bottom: 40px; }
+
+        /* Action Buttons in Orders Table */
+        .action-btn { padding: 6px 10px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; margin-left: 5px; transition: 0.2s; }
+        .edit-btn { background: #e3f2fd; color: #1976d2; }
+        .edit-btn:hover { background: #bbdefb; }
+        .delete-btn { background: #ffebee; color: #c62828; }
+        .delete-btn:hover { background: #ffcdd2; }
+        .deliver-btn { background: #e8f5e9; color: #2e7d32; }
+        .deliver-btn:hover { background: #c8e6c9; }
+        .view-btn { background: #fff3e0; color: #ef6c00; }
+        .view-btn:hover { background: #ffe0b2; }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 2000;
+            display: none; align-items: center; justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal-content {
+            background: #fff; width: 90%; max-width: 800px; max-height: 90vh;
+            border-radius: 16px; padding: 30px; overflow-y: auto;
+            position: relative; animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .close-modal { position: absolute; top: 15px; left: 15px; font-size: 20px; cursor: pointer; color: #888; }
+        .order-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .detail-box { background: #f8f9fa; padding: 15px; border-radius: 8px; }
+        .detail-label { font-size: 12px; color: #888; margin-bottom: 5px; }
+        .detail-value { font-weight: bold; font-size: 14px; }
+        .order-products-list { margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; }
+        .order-product-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dashed #eee; }
+        .order-product-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
+        
+        /* Status Badge */
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .status-paid { background: #e3f2fd; color: #1976d2; }
+        .status-processing { background: #fff3e0; color: #ef6c00; }
+        .status-shipped { background: #e8f5e9; color: #2e7d32; }
+        .status-delivered { background: #f3e5f5; color: #7b1fa2; }
+
+        /* Specs Section */
+        .specs-input-group { display: flex; gap: 10px; margin-bottom: 10px; }
+        .specs-input-group input { flex: 1; }
+        .specs-list { margin-top: 10px; }
+        .spec-item { background: #f5f5f5; padding: 8px 12px; border-radius: 6px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+        .spec-item button { background: transparent; border: none; color: red; cursor: pointer; }
+
+        /* Rating & Reviews */
+        .rating-input-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .hot-checkbox { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .hot-checkbox input { width: auto; }
+
+    </style>
+</head>
+<body>
+
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <h3>SHOP</h3>
+            <small style="color: var(--admin-accent); text-transform: uppercase; letter-spacing: 1px;"> پنل مدیریت</small>
+        </div>
+        <ul class="admin-menu">
+            <li onclick="showTab('products', this)" class="active"><i class="fas fa-layer-group"></i> مدیریت انبار کالا</li>
+            <li onclick="showTab('slider', this)"><i class="fas fa-photo-video"></i> ویترین اسلایدر</li>
+            <li onclick="showTab('orders', this)"><i class="fas fa-shopping-basket"></i> سفارشات کاربران</li>
+            <li onclick="showTab('reports', this)"><i class="fas fa-chart-line"></i> گزارشات مالی</li>
+            <li onclick="location.href='DigiKala.html'" style="margin-top: 50px; background: rgba(255,183,77,0.1); color: #ffb74d;">
+                <i class="fas fa-external-link-alt"></i> بازگشت به فروشگاه
+            </li>
+        </ul>
+    </aside>
+
+    <main class="admin-main">
+        <div class="page-header">
+            <div>
+                <h2 id="tab-title" style="margin: 0; font-size: 24px;"> مدیریت انبار کالا</h2>
+                <span id="current-date" style="font-size: 13px; color: #a0aec0;"></span>
+            </div>
+            <div class="user-info" style="display: flex; align-items: center; gap: 15px;">
+                <div style="text-align: left;">
+                    <div style="font-weight: 700;">Admin</div>
+                    <small style="color:rgb(93, 93, 210);">Online</small>
+                </div>
+                <div style="width: 45px; height: 45px; background: #ddd; border-radius: 50%; display: grid; place-items: center;">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div style="font-size: 35px; color: var(--info);"><i class="fas fa-box-open"></i></div>
+                <div><small> تعداد تنوع محصولات</small><div id="stat-total" style="font-size: 28px; font-weight: 900;">0</div></div>
+            </div>
+            <div class="stat-card">
+                <div style="font-size: 35px; color: var(--warning);"><i class="fas fa-images"></i></div>
+                <div><small> اسلایدهای فعال</small><div id="stat-slides" style="font-size: 28px; font-weight: 900;">0</div></div>
+            </div>
+            <div class="stat-card">
+                <div style="font-size: 35px; color: var(--admin-success);"><i class="fas fa-shopping-cart"></i></div>
+                <div><small> کل سفارشات</small><div id="stat-orders" style="font-size: 28px; font-weight: 900;">0</div></div>
+            </div>
+        </div>
+
+        <!-- Tab: Products -->
+        <div id="tab-products" class="tab-content active">
+            <div class="admin-card">
+                <div class="section-title"><i class="fas fa-plus-circle" style="color: var(--admin-success);"></i> تعریف / ویرایش محصول</div>
+                <form id="productForm">
+                    <input type="hidden" id="p-id"> 
+                    
+                    <div class="input-grid">
+                        <div class="form-group">
+                            <label> نام کالا</label>
+                            <input type="text" id="p-name" placeholder="مثلاً: گوشی سامسونگ S23" required>
+                        </div>
+                        <div class="form-group">
+                            <label> قیمت فروش (تومان)</label>
+                            <input type="number" id="p-price" required>
+                        </div>
+                        <div class="form-group">
+                            <label> موجودی انبار (عدد)</label>
+                            <input type="number" id="p-stock" value="0" min="0" required>
+                        </div>
+                        <div class="form-group">
+                             <label> درصد تخفیف</label>
+                             <input type="number" id="p-discount" value="0" min="0" max="100">
+                        </div>
+                        <div class="form-group">
+                             <label> برند محصول</label>
+                             <input type="text" id="p-brand" placeholder="مثلاً: Apple">
+                        </div>
+
+                        <!-- Rating & Hot Section -->
+                        <div class="form-group">
+                            <label> امتیاز محصول (0-5)</label>
+                            <input type="number" id="p-rating" value="0" min="0" max="5" step="0.1">
+                        </div>
+
+                        <div class="form-group">
+                            <label> تعداد دیدگاه‌ها</label>
+                            <input type="number" id="p-reviews" value="0" min="0">
+                        </div>
+
+                        <div class="form-group hot-checkbox">
+                            <input type="checkbox" id="p-hot">
+                            <label for="p-hot" style="margin: 0;"> این کالا در بخش فروش ویژه است</label>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-sitemap"></i> انتخاب سلسله‌مراتبی دسته‌بندی</label>
+                            <div class="category-cascade">
+                                <select id="cat-main" onchange="updateSubCats()" required>
+                                    <option value=""> دسته اصلی را انتخاب کنید</option>
+                                </select>
+                                <select id="cat-sub" onchange="updateChildCats()">
+                                    <option value=""> منتظر انتخاب دسته اصلی...</option>
+                                </select>
+                                <select id="cat-child" onchange="generateBreadcrumb()">
+                                    <option value=""> منتظر انتخاب زیرمجموعه...</option>
+                                </select>
+                            </div>
+                            <div id="breadcrumb-display" class="breadcrumb-preview">
+                                <i class="fas fa-link"></i> مسیر نهایی: هنوز انتخاب نشده
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width" style="background: #f1f5f9; padding: 20px; border-radius: 15px; border: 1px dashed #cbd5e1;">
+                            <label style="color: var(--admin-primary); font-weight: 900;"> تصویر اصلی محصول</label>
+                            <div class="image-input-type-selector">
+                                <button type="button" class="type-btn active" onclick="toggleInputSource('product', 'file')">File</button>
+                                <button type="button" class="type-btn" onclick="toggleInputSource('product', 'link')">Link</button>
+                            </div>
+                            <div id="product-file-container">
+                                <input type="file" id="p-image-file" accept="image/*">
+                            </div>
+                            <div id="product-link-container" class="hidden">
+                                <input type="url" id="p-image-link" placeholder="https://site.com/main-image.jpg">
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width" style="background: #fff; border: 2px solid #f1f5f9; padding: 20px; border-radius: 15px;">
+                            <label><i class="fas fa-images"></i> گالری تصاویر فرعی (تا 7 عدد)</label>
+                            <div class="image-input-type-selector">
+                                <button type="button" class="type-btn gallery-type active" onclick="toggleGallerySource('file')">File</button>
+                                <button type="button" class="type-btn gallery-type" onclick="toggleGallerySource('link')">Link</button>
+                            </div>
+                            <div id="gallery-file-container">
+                                <input type="file" id="p-gallery-files" accept="image/*" multiple>
+                            </div>
+                            <div id="gallery-link-container" class="hidden">
+                                <div class="gallery-input-group" id="gallery-links-wrapper"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label> رنگ‌های موجود برای این محصول</label>
+                            <div class="color-manager">
+                                <div class="color-list" id="colorListContainer"></div>
+                                <div class="color-inputs">
+                                    <input type="text" id="newColorName" placeholder="نام رنگ (مثلا مشکی)">
+                                    <input type="color" id="newColorCode" value="#000000">
+                                    <button type="button" class="type-btn" onclick="addColor()" style="background:red; color: white;">Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Specifications Section -->
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-cogs"></i> مشخصات فنی محصول</label>
+                            <div style="background: #f9f9f9; padding: 15px; border-radius: 10px;">
+                                <div class="specs-input-group">
+                                    <input type="text" id="spec-key" placeholder="نام مشخصه (مثلا: پردازنده)">
+                                    <input type="text" id="spec-value" placeholder="مقدار (مثلا: Intel Core i7)">
+                                    <button type="button" class="type-btn" onclick="addSpec()" style="background: var(--admin-primary); color: white;">اضافه</button>
+                                </div>
+                                <div class="specs-list" id="specsList"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label> توضیحات فنی و معرفی محصول</label>
+                            <textarea id="p-desc" rows="4" placeholder="جزئیات محصول را وارد کنید..."></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit" id="submitBtn">
+                        <i class="fas fa-cloud-upload-alt"></i>SAVE</button>
+                </form>
+            </div>
+
+            <div class="admin-card">
+                <div class="section-title"><i class="fas fa-list-ul"></i> لیست موجودی انبار</div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th> نمای کالا</th>
+                                <th> مشخصات کالا</th>
+                                <th> دسته و مسیر</th>
+                                <th> قیمت & موجودی</th>
+                                <th> مدیریت</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Slider -->
+        <div id="tab-slider" class="tab-content">
+            <div class="admin-card">
+                <div class="section-title"><i class="fas fa-magic" style="color: var(--info);"></i> افزودن اسلاید جدید</div>
+                <div class="input-grid">
+                    <div class="form-group">
+                        <label> عنوان یا متن اسلاید (اختیاری)</label>
+                        <input type="text" id="s-title" placeholder="متنی که روی اسلاید نمایش داده شود">
+                    </div>
+                    <div class="form-group">
+                        <label> لینک مقصد (URL)</label>
+                        <input type="text" id="s-link" placeholder="https://m-shop.com/sale">
+                    </div>
+                    <div class="form-group full-width" style="background: #f1f5f9; padding: 20px; border-radius: 15px;">
+                         <label> انتخاب منبع تصویر</label>
+                         <div class="image-input-type-selector">
+                            <button type="button" class="type-btn active" onclick="toggleInputSource('slider', 'file')"> آپلود فایل</button>
+                            <button type="button" class="type-btn" onclick="toggleInputSource('slider', 'link')"> لینک مستقیم</button>
+                        </div>
+                        <div id="slider-file-container">
+                            <input type="file" id="s-image-file" accept="image/*">
+                        </div>
+                        <div id="slider-link-container" class="hidden">
+                            <input type="url" id="s-image-link" placeholder="https://site.com/banner.jpg">
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn-submit" onclick="addSingleSlide()" style="background: var(--admin-primary); color: white;">
+                    <i class="fas fa-plus"></i> اضافه کردن به لیست اسلایدها
+                </button>
+            </div>
+
+            <div class="admin-card">
+                <div class="section-title"><i class="fas fa-eye"></i> پیش‌نمایش چیدمان اسلایدر</div>
+                <div id="adminSliderList" class="slider-preview-grid"></div>
+            </div>
+        </div>
+
+        <!-- Tab: Orders -->
+        <div id="tab-orders" class="tab-content">
+            <div class="admin-card">
+                <div class="section-title"><i class="fas fa-receipt" style="color: var(--admin-success);"></i> مدیریت سفارشات پرداخت شده</div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th> شماره سفارش</th>
+                                <th> مشتری</th>
+                                <th> تاریخ</th>
+                                <th> مبلغ کل</th>
+                                <th> وضعیت</th>
+                                <th> عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <!-- Orders will be injected here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Reports -->
+        <div id="tab-reports" class="tab-content">
+            <div class="admin-card">
+                <div class="section-title"><i class="fas fa-chart-pie" style="color: var(--admin-accent);"></i> گزارشات مالی و عملکرد</div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card" style="border-right: 4px solid var(--admin-success);">
+                        <div>
+                            <small> مجموع فروش کل</small>
+                            <div id="report-total-sales" style="font-size: 24px; font-weight: 900; color: var(--admin-success);">0 تومان</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="border-right: 4px solid var(--admin-accent);">
+                        <div>
+                            <small> تعداد سفارشات تحویل شده</small>
+                            <div id="report-delivered-count" style="font-size: 24px; font-weight: 900; color: var(--admin-accent);">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="border-right: 4px solid var(--warning);">
+                        <div>
+                            <small> میانگین مبلغ هر سفارش</small>
+                            <div id="report-average-order" style="font-size: 24px; font-weight: 900; color: var(--warning);">0 تومان</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title" style="margin-top: 30px;"><i class="fas fa-history"></i> تاریخچه سفارشات تحویل داده شده</div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th> شماره سفارش</th>
+                                <th> مشتری</th>
+                                <th> تاریخ تحویل</th>
+                                <th> مبلغ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="deliveredOrdersTableBody">
+                            <!-- Delivered orders list -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Order Details Modal -->
+    <div class="modal-overlay" id="orderModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeOrderModal()">&times;</span>
+            <h2 style="margin-top: 0; color: var(--admin-primary);"> جزئیات سفارش</h2>
+            
+            <div class="order-details-grid">
+                <div class="detail-box">
+                    <div class="detail-label"> شماره سفارش</div>
+                    <div class="detail-value" id="modal-order-id">#000000</div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-label"> تاریخ ثبت سفارش</div>
+                    <div class="detail-value" id="modal-order-date">--/--/----</div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-label"> اطلاعات مشتری</div>
+                    <div class="detail-value" id="modal-user-name"> نام مشتری</div>
+                    <div style="font-size:12px; color:#888;" id="modal-user-mobile">0912...</div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-label"> آدرس و کد پستی</div>
+                    <div class="detail-value" id="modal-address" style="font-size:12px; line-height:1.6;">--</div>
+                    <div style="font-size:12px; color:#888;" id="modal-postal-code"> کد پستی: --</div>
+                </div>
+            </div>
+
+            <div class="section-title" style="font-size:16px;"> محصولات سفارش داده شده:</div>
+            <div class="order-products-list" id="modal-products-list">
+                <!-- Products injected here -->
+            </div>
+
+            <div style="margin-top: 20px; padding-top: 15px; border-top: 2px dashed #eee; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <div style="font-size:12px; color:#888;"> مبلغ قابل پرداخت</div>
+                    <div style="font-size:20px; font-weight:900; color:var(--primary);" id="modal-total-amount">0 تومان</div>
+                </div>
+                
+                <!-- Status Update Section -->
+                <div style="text-align:left;">
+                    <div style="font-size:12px; color:#888; margin-bottom:5px;"> تغییر وضعیت سفارش:</div>
+                    <select id="modal-status-select" onchange="updateOrderStatus(this.value)" style="padding:8px; border-radius:6px; border:1px solid #ddd;">
+                        <option value="paid"> پرداخت شده (آماده پردازش)</option>
+                        <option value="processing"> پردازش انبار</option>
+                        <option value="shipped"> ارسال شده</option>
+                        <option value="delivered"> تحویل داده شده</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+<script>
+    const PRODUCTS_KEY = 'shopshopProducts';
+    const SLIDES_KEY = 'shop_slides';
+    const ORDERS_KEY = 'orders_list';
+    const USERS_KEY = 'users_database';
+
+    let selectedBreadcrumb = "";
+    let currentColors = []; 
+    let currentSpecs = {};
+    let isEditingMode = false; 
+
+    // ==========================================
+    // 1. Category Data Structure
+    // ==========================================
+    const CATEGORY_DATA = {
+        "کالای دیجیتال": {
+            "موبایل": ["اپل", "سامسونگ", "شیائومی", "گوگل", "ناتینگ"],
+            "لپ‌تاپ": ["ایسوس", "لنوو", "اپل", "قطعات کامپیوتر"],
+            "هدفون و ساعت هوشمند": ["اپل واچ", "ایرپاد", "ساعت سامسونگ", "اسپیکر"]
+        },
+        "مد و پوشاک": {
+            "مردانه": ["شلوار مردانه", "کفش مردانه", "پافر مردانه", "کلاه"],
+            "زنانه": ["شلوار زنانه", "کفش زنانه", "پافر زنانه", "کاپشن زنانه"]
+        },
+        "خانه و آشپزخانه": {
+            "لوازم برقی": ["یخچال", "تلویزیون", "ماشین لباسشویی", "ماشین ظرفشویی"],
+            "دکوراسیون": ["فرش", "مبلمان", "لوستر", "مجسمه"]
+        }
+    };
+
+    // --- Functions for Categories ---
+    function initCategories() {
+        const catMain = document.getElementById('cat-main');
+        for (let category in CATEGORY_DATA) {
+            let opt = document.createElement('option');
+            opt.value = category;
+            opt.innerHTML = category;
+            catMain.appendChild(opt);
+        }
+    }
+
+    function updateSubCats() {
+        const mainVal = document.getElementById('cat-main').value;
+        const catSub = document.getElementById('cat-sub');
+        const catChild = document.getElementById('cat-child');
+        
+        catSub.innerHTML = '<option value="">انتخاب زیرمجموعه...</option>';
+        catChild.innerHTML = '<option value="">انتخاب جزئیات...</option>';
+
+        if (mainVal && CATEGORY_DATA[mainVal]) {
+            for (let sub in CATEGORY_DATA[mainVal]) {
+                let opt = document.createElement('option');
+                opt.value = sub;
+                opt.innerHTML = sub;
+                catSub.appendChild(opt);
+            }
+        }
+        generateBreadcrumb();
+    }
+
+    function updateChildCats() {
+        const mainVal = document.getElementById('cat-main').value;
+        const subVal = document.getElementById('cat-sub').value;
+        const catChild = document.getElementById('cat-child');
+
+        catChild.innerHTML = '<option value="">انتخاب جزئیات...</option>';
+
+        if (mainVal && subVal && CATEGORY_DATA[mainVal][subVal]) {
+            CATEGORY_DATA[mainVal][subVal].forEach(child => {
+                let opt = document.createElement('option');
+                opt.value = child;
+                opt.innerHTML = child;
+                catChild.appendChild(opt);
+            });
+        }
+        generateBreadcrumb();
+    }
+
+    function generateBreadcrumb() {
+        const m = document.getElementById('cat-main').value;
+        const s = document.getElementById('cat-sub').value;
+        const c = document.getElementById('cat-child').value;
+        
+        let path = [];
+        if(m) path.push(m);
+        if(s) path.push(s);
+        if(c) path.push(c);
+        
+        selectedBreadcrumb = path.join(' > ');
+        document.getElementById('breadcrumb-display').innerHTML = 
+            path.length > 0 ? `<i class="fas fa-link"></i> مسیر نهایی: ${selectedBreadcrumb}` : "هنوز انتخاب نشده";
+    }
+
+    // --- Specifications Management ---
+    function addSpec() {
+        const key = document.getElementById('spec-key').value.trim();
+        const value = document.getElementById('spec-value').value.trim();
+        
+        if (!key || !value) {
+            showToast('هم نام و هم مقدار مشخصه الزامی است');
+            return;
+        }
+
+        currentSpecs[key] = value;
+        renderSpecsList();
+        document.getElementById('spec-key').value = '';
+        document.getElementById('spec-value').value = '';
+    }
+
+    function removeSpec(key) {
+        delete currentSpecs[key];
+        renderSpecsList();
+    }
+
+    function renderSpecsList() {
+        const container = document.getElementById('specsList');
+        let html = '';
+        for (const [key, value] of Object.entries(currentSpecs)) {
+            html += `
+                <div class="spec-item">
+                    <span><strong>${key}:</strong> ${value}</span>
+                    <button type="button" onclick="removeSpec('${key}')" style="background: none;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+        }
+        container.innerHTML = html;
+    }
+
+    // --- Image Handling ---
+    function initGalleryLinks() {
+        const wrapper = document.getElementById('gallery-links-wrapper');
+        wrapper.innerHTML = '';
+        for(let i=1; i<=7; i++) {
+            wrapper.innerHTML += `<input type="url" class="g-link-input" placeholder="لینک عکس ${i}">`;
+        }
+    }
+
+    function toggleInputSource(section, type) {
+        const prefix = section === 'product' ? 'product' : 'slider';
+        const fileCont = document.getElementById(`${prefix}-file-container`);
+        const linkCont = document.getElementById(`${prefix}-link-container`);
+        const btns = fileCont.parentElement.querySelectorAll('.type-btn');
+        btns.forEach(b => b.classList.remove('active'));
+        if (type === 'file') {
+            fileCont.classList.remove('hidden');
+            linkCont.classList.add('hidden');
+            btns[0].classList.add('active');
+        } else {
+            fileCont.classList.add('hidden');
+            linkCont.classList.remove('hidden');
+            btns[1].classList.add('active');
+        }
+    }
+
+    function toggleGallerySource(type) {
+        const fileCont = document.getElementById('gallery-file-container');
+        const linkCont = document.getElementById('gallery-link-container');
+        const btns = document.querySelectorAll('.gallery-type');
+        btns.forEach(b => b.classList.remove('active'));
+        if (type === 'file') {
+            fileCont.classList.remove('hidden');
+            linkCont.classList.add('hidden');
+            btns[0].classList.add('active');
+        } else {
+            fileCont.classList.add('hidden');
+            linkCont.classList.remove('hidden');
+            btns[1].classList.add('active');
+        }
+    }
+
+    async function processImage(file) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 800;
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    resolve(canvas.toDataURL('image/jpeg', 0.7));
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // --- Tab Switching ---
+    function showTab(tabName, el) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.admin-menu li').forEach(l => l.classList.remove('active'));
+        document.getElementById('tab-' + tabName).classList.add('active');
+        el.classList.add('active');
+        document.getElementById('tab-title').innerText = el.innerText;
+        
+        // If orders or reports tab, render them
+        if(tabName === 'orders') {
+            renderOrders();
+        } else if (tabName === 'reports') {
+            renderReports();
+        }
+    }
+
+    // --- Color Management ---
+    function renderColorList(colors) {
+        const container = document.getElementById('colorListContainer');
+        container.innerHTML = '';
+        colors.forEach((color, index) => {
+            const tag = document.createElement('div');
+            tag.className = 'color-tag';
+            tag.innerHTML = `
+                <div class="color-dot" style="background-color: ${color.code};"></div>
+                <span>${color.name}</span>
+                <i class="fas fa-times remove-color" onclick="removeColor(${index})"></i>
+            `;
+            container.appendChild(tag);
+        });
+    }
+
+    function addColor() {
+        const nameInput = document.getElementById('newColorName');
+        const codeInput = document.getElementById('newColorCode');
+        const name = nameInput.value.trim();
+        const code = codeInput.value;
+
+        if (!name) { showToast("لطفاً نام رنگ را وارد کنید"); return; }
+        if (currentColors.some(c => c.name.toLowerCase() === name.toLowerCase())) {
+            showToast("این رنگ قبلاً اضافه شده است!");
+            return;
+        }
+
+        currentColors.push({ name, code });
+        renderColorList(currentColors);
+        nameInput.value = '';
+    }
+
+    function removeColor(index) {
+        currentColors.splice(index, 1);
+        renderColorList(currentColors);
+    }
+
+    // --- Product CRUD ---
+    document.getElementById('productForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        if(!document.getElementById('cat-main').value) {
+            showToast("لطفاً دسته‌بندی را انتخاب کنید ⚠️");
+            return;
+        }
+        if (currentColors.length === 0) {
+            showToast("لطفاً حداقل یک رنگ برای محصول انتخاب کنید 🎨");
+            return;
+        }
+
+        let mainImage = '';
+        let galleryImages = [];
+        
+        if (!document.getElementById('product-file-container').classList.contains('hidden')) {
+            const fileInput = document.getElementById('p-image-file');
+            if (fileInput.files[0]) mainImage = await processImage(fileInput.files[0]);
+            else { showToast("عکس اصلی الزامی است ⚠️"); return; }
+        } else {
+            const linkInput = document.getElementById('p-image-link');
+            if (linkInput.value) mainImage = linkInput.value;
+            else { showToast("لینک عکس اصلی الزامی است ⚠️"); return; }
+        }
+
+        if (!document.getElementById('gallery-file-container').classList.contains('hidden')) {
+            const gFiles = document.getElementById('p-gallery-files').files;
+            for (let i = 0; i < Math.min(gFiles.length, 7); i++) {
+                galleryImages.push(await processImage(gFiles[i]));
+            }
+        } else {
+            const gLinks = document.querySelectorAll('.g-link-input');
+            gLinks.forEach(input => { if(input.value) galleryImages.push(input.value); });
+        }
+
+        const productData = {
+            id: isEditingMode ? parseInt(document.getElementById('p-id').value) : Date.now(),
+            name: document.getElementById('p-name').value,
+            category: document.getElementById('cat-main').value,
+            breadcrumb: selectedBreadcrumb,
+            price: document.getElementById('p-price').value,
+            discount: document.getElementById('p-discount').value,
+            brand: document.getElementById('p-brand').value,
+            stock: parseInt(document.getElementById('p-stock').value),
+            image: mainImage,
+            gallery: galleryImages,
+            description: document.getElementById('p-desc').value,
+            colors: currentColors,
+            rating: parseFloat(document.getElementById('p-rating').value) || 0,
+            reviews: parseInt(document.getElementById('p-reviews').value) || 0,
+            hot: document.getElementById('p-hot').checked,
+            specs: currentSpecs
+        };
+
+        const products = JSON.parse(localStorage.getItem(PRODUCTS_KEY)) || [];
+        
+        if (isEditingMode) {
+            const index = products.findIndex(p => p.id === productData.id);
+            if (index !== -1) {
+                products[index] = productData;
+                showToast("محصول بروزرسانی شد ✨");
+            }
+        } else {
+            products.push(productData);
+            showToast("محصول ثبت شد ✨");
+        }
+
+        localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+        resetForm();
+        renderProducts();
+        renderSlides();
+    });
+
+    function resetForm() {
+        document.getElementById('productForm').reset();
+        isEditingMode = false;
+        currentColors = [];
+        currentSpecs = {};
+        document.getElementById('submitBtn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i> SAVE';
+        document.getElementById('submitBtn').style.background = 'var(--admin-primary)';
+        document.getElementById('p-id').value = '';
+        document.getElementById('p-image-file').value = '';
+        document.getElementById('p-gallery-files').value = '';
+        document.getElementById('p-image-link').value = '';
+        document.getElementById('p-rating').value = 0;
+        document.getElementById('p-reviews').value = 0;
+        document.getElementById('p-hot').checked = false;
+        document.getElementById('cat-sub').innerHTML = '<option value="">منتظر انتخاب دسته اصلی...</option>';
+        document.getElementById('cat-child').innerHTML = '<option value="">منتظر انتخاب زیرمجموعه...</option>';
+        document.getElementById('breadcrumb-display').innerHTML = '<i class="fas fa-link"></i> مسیر نهایی: هنوز انتخاب نشده';
+        renderColorList([]);
+        renderSpecsList();
+    }
+
+    function renderProducts() {
+        const products = JSON.parse(localStorage.getItem(PRODUCTS_KEY)) || [];
+        const tbody = document.getElementById('productTableBody');
+        document.getElementById('stat-total').innerText = products.length;
+
+        tbody.innerHTML = products.map(p => {
+            const finalPrice = p.price - (p.price * (p.discount || 0) / 100);
+            const stockStatus = p.stock > 0 
+                ? `<span style="color: var(--admin-success); font-weight:bold;">✅ موجود (${p.stock})</span>` 
+                : `<span style="color: var(--danger); font-weight:bold;">❌ ناموجود</span>`;
+            
+            const colorPreview = p.colors && p.colors.length > 0 
+                ? `<div style="display:flex; gap:3px; margin-top:5px;">${p.colors.slice(0,3).map(c => `<span style="width:12px;height:12px;border-radius:50%;background:${c.code};border:1px solid #ddd;"></span>`).join('')}</div>`
+                : '';
+            
+            const hotBadge = p.hot ? '<span style="background: linear-gradient(135deg, #ff6b6b, #ff4757); color: white; padding: 2px 6px; border-radius: 12px; font-size: 10px; font-weight: 900;">🔥 HOT</span>' : '';
+
+            return `
+                <tr class="product-row">
+                    <td>
+                        <img src="${p.image}" class="prod-img" onerror="this.src='https://via.placeholder.com/150?text=Error'">
+                        ${colorPreview}
+                    </td>
+                    <td>
+                        <div style="font-weight:700; font-size:14px;">${p.name}</div>
+                        <small style="color:#718096">برند: ${p.brand || 'متفرقه'}</small>
+                        <div style="margin-top: 4px; font-size: 11px; color: #ff9800;">${p.rating} ⭐ (${p.reviews} نظر)</div>
+                    </td>
+                    <td>
+                        <div style="font-size:11px; color:var(--admin-accent); background:#e1f5fe; padding:4px 8px; border-radius:4px; display:inline-block;">
+                            ${p.breadcrumb || p.category}
+                        </div>
+                        ${hotBadge}
+                    </td>
+                    <td>
+                        <div style="color:var(--admin-success); font-weight:800;">${finalPrice.toLocaleString()} تومان</div>
+                        ${p.discount > 0 ? `<small style="text-decoration:line-through; color:red;">${p.discount}%</small>` : ''}
+                        <div style="margin-top:4px; font-size:12px;">${stockStatus}</div>
+                    </td>
+                    <td>
+                        <button onclick="editProduct(${p.id})" class="action-btn edit-btn" title="ویرایش محصول">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                        <button onclick="deleteProduct(${p.id})" class="action-btn delete-btn" title="حذف محصول">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).reverse().join('');
+    }
+
+    function editProduct(id) {
+        const products = JSON.parse(localStorage.getItem(PRODUCTS_KEY)) || [];
+        const product = products.find(p => p.id === id);
+        
+        if (!product) return;
+
+        document.getElementById('p-id').value = product.id;
+        document.getElementById('p-name').value = product.name;
+        document.getElementById('p-price').value = product.price;
+        document.getElementById('p-stock').value = product.stock;
+        document.getElementById('p-discount').value = product.discount || 0;
+        document.getElementById('p-brand').value = product.brand || '';
+        document.getElementById('p-desc').value = product.description || '';
+        document.getElementById('p-rating').value = product.rating || 0;
+        document.getElementById('p-reviews').value = product.reviews || 0;
+        document.getElementById('p-hot').checked = product.hot || false;
+
+        document.getElementById('cat-main').value = product.category;
+        updateSubCats(); 
+        
+        document.getElementById('breadcrumb-display').innerHTML = `<i class="fas fa-link"></i> مسیر فعلی: ${product.breadcrumb}`;
+        
+        currentColors = product.colors || [];
+        renderColorList(currentColors);
+
+        currentSpecs = product.specs || {};
+        renderSpecsList();
+
+        document.getElementById('product-link-container').classList.remove('hidden');
+        document.getElementById('product-file-container').classList.add('hidden');
+        document.querySelectorAll('.type-btn')[1].classList.add('active');
+        document.querySelectorAll('.type-btn')[0].classList.remove('active');
+        document.getElementById('p-image-link').value = product.image;
+
+        document.getElementById('submitBtn').innerHTML = '<i class="fas fa-sync"></i> بروزرسانی';
+        document.getElementById('submitBtn').style.background = '#0984e3';
+        isEditingMode = true;
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        showToast("وضعیت ویرایش فعال شد 📝");
+    }
+
+    function deleteProduct(id) {
+        if(confirm('آیا از حذف این کالا اطمینان دارید؟')) {
+            let products = JSON.parse(localStorage.getItem(PRODUCTS_KEY)) || [];
+            products = products.filter(p => p.id !== id);
+            localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+            renderProducts();
+            showToast("کالا حذف شد 🗑️");
+        }
+    }
+
+    // ==========================================
+    // 2. مدیریت سفارشات و امتیازدهی (بخش پیشرفته)
+    // ==========================================
+
+    /**
+     * تولید شماره سفارش ۶ رقمی کاملاً تصادفی و بدون تکرار
+     */
+    function generateRandomOrderId() {
+        let digits;
+        do {
+            digits = Math.floor(100000 + Math.random() * 900000);
+        } while (digits.toString().length !== 6);
+        return digits;
+    }
+
+    /**
+     * تابع اصلی برای محاسبه امتیاز باشگاه مشتریان
+     * بر اساس مبلغ کل سفارش
+     */
+    function calculatePoints(totalAmount) {
+        const amount = parseInt(totalAmount);
+
+        if (amount >= 1000000000) { // 1 میلیارد به بالا
+            return 100000;
+        } else if (amount >= 400000000) { // 400 تا 600 میلیون (فرضی برای پر کردن خالی‌ها)
+             return 50000; 
+        } else if (amount >= 300000000) { // 300 تا 400
+             return 40000;
+        } else if (amount >= 200000000) { // 200 تا 300
+             return 30000;
+        } else if (amount >= 100000000) { // 100 تا 200
+             return 20000;
+        } else if (amount >= 80000000) { // 80 تا 100
+             return 10000;
+        } else if (amount >= 60000000) { // 60 تا 80 (فرضی)
+             return 9500;
+        } else if (amount >= 40000000) { // 40 تا 60
+             return 9000;
+        } else if (amount >= 20000000) { // 20 تا 40
+             return 8000;
+        } else if (amount >= 10000000) { // 10 تا 20
+             return 7000;
+        } else if (amount >= 5000000) { // 5 تا 10
+             return 5000;
+        } else if (amount >= 1000000) { // 1 تا 5 میلیون
+             return 150; 
+        } else if (amount >= 0) { // زیر یک میلیون
+             return 50;
+        }
+        
+        return 0;
+    }
+
+    /**
+     * رندر کردن جدول سفارشات در پنل ادمین
+     */
+    function renderOrders() {
+        const orders = JSON.parse(localStorage.getItem(ORDERS_KEY)) || [];
+        const users = JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+        const tbody = document.getElementById('ordersTableBody');
+        
+        // فقط سفارشات پرداخت شده (paid) یا در حال پردازش را نشان بده
+        const pendingOrders = orders.filter(o => o.status !== 'delivered');
+        
+        document.getElementById('stat-orders').innerText = orders.length;
+
+        if (pendingOrders.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px;">سفارشی برای پردازش وجود ندارد.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = pendingOrders.map(order => {
+            // پیدا کردن نام کاربر
+            const user = users.find(u => u.mobile === order.userId);
+            const userName = user ? user.name : order.userId;
+
+            // تعیین کلاس وضعیت
+            let statusClass = 'status-paid';
+            let statusText = 'پرداخت شده';
+            
+            if(order.status === 'processing') { statusClass = 'status-processing'; statusText = 'پردازش انبار'; }
+            else if(order.status === 'shipped') { statusClass = 'status-shipped'; statusText = 'ارسال شده'; }
+            else if(order.status === 'delivered') { statusClass = 'status-delivered'; statusText = 'تحویل داده شده'; }
+
+            return `
+                <tr>
+                    <td>#${order.orderId}</td>
+                    <td>
+                        <div style="font-weight:bold;">${userName}</div>
+                        <small style="color:#888;">${order.userId}</small>
+                    </td>
+                    <td>${order.datePersian}<br><small>${order.timePersian}</small></td>
+                    <td style="color:var(--admin-primary); font-weight:bold;">${order.totalAmount.toLocaleString()}</td>
+                    <td>
+                        <span class="status-badge ${statusClass}">${statusText}</span>
+                    </td>
+                    <td>
+                        <button onclick="openOrderModal(${order.id})" class="action-btn view-btn" title="مشاهده جزئیات">
+                            <i class="fas fa-eye"></i> مشاهده
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // متغیر سراسری برای نگهداری ID سفارش جاری در مودال
+    let currentViewOrderId = null;
+
+    /**
+     * باز کردن مودال جزئیات سفارش
+     */
+    function openOrderModal(orderDbId) {
+        const orders = JSON.parse(localStorage.getItem(ORDERS_KEY)) || [];
+        const users = JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+        const products = JSON.parse(localStorage.getItem(PRODUCTS_KEY)) || [];
+        
+        const order = orders.find(o => o.id === orderDbId);
+        if (!order) return;
+
+        currentViewOrderId = orderDbId;
+
+        // پر کردن اطلاعات کلی
+        document.getElementById('modal-order-id').innerText = '#' + order.orderId;
+        
+        // تبدیل تاریخ میلادی به شمسی
+        const dateObj = new Date(order.createdAt);
+        const datePersian = dateObj.toLocaleDateString('fa-IR');
+        const timePersian = dateObj.toLocaleTimeString('fa-IR');
+        document.getElementById('modal-order-date').innerText = `${datePersian} - ${timePersian}`;
+
+        // اطلاعات کاربر
+        const user = users.find(u => u.mobile === order.userId);
+        const userName = user ? user.name : order.userId;
+        document.getElementById('modal-user-name').innerText = userName;
+        document.getElementById('modal-user-mobile').innerText = `تلفن: ${order.userId}`;
+        
+        // آدرس
+        document.getElementById('modal-address').innerText = order.address;
+        document.getElementById('modal-postal-code').innerText = `کد پستی: ${order.postalCode || '---'}`;
+
+        // لیست محصولات
+        const productsListDiv = document.getElementById('modal-products-list');
+        productsListDiv.innerHTML = '';
+        
+        if(order.items && Array.isArray(order.items)) {
+            order.items.forEach(item => {
+                // پیدا کردن عکس محصول از دیتابیس اصلی
+                const productData = products.find(p => p.id == item.id);
+                const imgUrl = productData ? productData.image : 'https://via.placeholder.com/50';
+                
+                const itemHtml = `
+                    <div class="order-product-item">
+                        <img src="${imgUrl}" alt="${item.name}">
+                        <div style="flex:1;">
+                            <div style="font-weight:bold; font-size:13px;">${item.name}</div>
+                            <div style="font-size:12px; color:#888;">تعداد: ${item.qty} | رنگ: ${item.color || 'مشکی'}</div>
+                        </div>
+                        <div style="font-weight:bold; font-size:13px;">${(item.price * item.qty).toLocaleString()} تومان</div>
+                    </div>
+                `;
+                productsListDiv.innerHTML += itemHtml;
+            });
+        }
+
+        // مبلغ کل
+        document.getElementById('modal-total-amount').innerText = order.totalAmount.toLocaleString() + ' تومان';
+
+        // تنظیم سلکتور وضعیت
+        const statusSelect = document.getElementById('modal-status-select');
+        statusSelect.value = order.status;
+
+        // نمایش مودال
+        document.getElementById('orderModal').classList.add('open');
+    }
+
+    function closeOrderModal() {
+        document.getElementById('orderModal').classList.remove('open');
+        currentViewOrderId = null;
+    }
+
+    /**
+     * به‌روزرسانی وضعیت سفارش
+     */
+    function updateOrderStatus(newStatus) {
+        if (!currentViewOrderId) return;
+
+        const orders = JSON.parse(localStorage.getItem(ORDERS_KEY)) || [];
+        const users = JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+        
+        const orderIndex = orders.findIndex(o => o.id === currentViewOrderId);
+        if (orderIndex === -1) return;
+
+        const oldStatus = orders[orderIndex].status;
+        orders[orderIndex].status = newStatus;
+
+        // اگر وضعیت به "تحویل داده شده" تغییر کرد، امتیاز بده
+        if (newStatus === 'delivered' && oldStatus !== 'delivered') {
+            const pointsToAdd = calculatePoints(orders[orderIndex].totalAmount);
+            
+            const userIndex = users.findIndex(u => u.mobile === orders[orderIndex].userId);
+            if (userIndex !== -1) {
+                if (!users[userIndex].points) users[userIndex].points = 0;
+                users[userIndex].points += pointsToAdd;
+                localStorage.setItem(USERS_KEY, JSON.stringify(users));
+                showToast(`سفارش تأیید شد.\n${pointsToAdd} امتیاز به کیف پول کاربر اضافه گردید.`, "success");
+            } else {
+                showToast("کاربر یافت نشد، اما سفارش تأیید شد.", "warning");
+            }
+        } else {
+            showToast("وضعیت سفارش تغییر کرد.", "info");
+        }
+
+        // ذخیره تغییرات
+        orders[orderIndex] = orders[orderIndex];
+        localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+
+        // رفرش جداول
+        renderOrders();
+        renderReports(); // چون آمار تغییر کرده
+    }
+
+    // ==========================================
+    // 3. گزارشات مالی (بخش جدید)
+    // ==========================================
+
+    function renderReports() {
+        const orders = JSON.parse(localStorage.getItem(ORDERS_KEY)) || [];
+        
+        // فیلتر کردن سفارشات تحویل داده شده
+        const deliveredOrders = orders.filter(o => o.status === 'delivered');
+        
+        let totalSales = 0;
+        deliveredOrders.forEach(o => totalSales += parseInt(o.totalAmount));
+        
+        const count = deliveredOrders.length;
+        const average = count > 0 ? Math.ceil(totalSales / count) : 0;
+
+        document.getElementById('report-total-sales').innerText = totalSales.toLocaleString() + ' تومان';
+        document.getElementById('report-delivered-count').innerText = count;
+        document.getElementById('report-average-order').innerText = average.toLocaleString() + ' تومان';
+
+        // جدول سفارشات تحویل شده
+        const tbody = document.getElementById('deliveredOrdersTableBody');
+        if (deliveredOrders.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">هنوز سفارشی تحویل داده نشده است.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = deliveredOrders.reverse().map(order => {
+            const users = JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+            const user = users.find(u => u.mobile === order.userId);
+            const userName = user ? user.name : order.userId;
+
+            return `
+                <tr>
+                    <td>#${order.orderId}</td>
+                    <td>${userName}</td>
+                    <td>${order.deliveredAt ? new Date(order.deliveredAt).toLocaleDateString('fa-IR') : '--'}</td>
+                    <td>${order.totalAmount.toLocaleString()} تومان</td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // --- اسلایدر (بدون تغییرات اساسی) ---
+    async function addSingleSlide() {
+        let imageUrl = '';
+        const fileInput = document.getElementById('s-image-file');
+        const linkInput = document.getElementById('s-image-link');
+        const title = document.getElementById('s-title').value;
+        const link = document.getElementById('s-link').value;
+
+        if (!document.getElementById('slider-file-container').classList.contains('hidden')) {
+            if (fileInput.files[0]) imageUrl = await processImage(fileInput.files[0]);
+            else { showToast("فایل عکس انتخاب نشده است ❌"); return; }
+        } else {
+            if (linkInput.value) imageUrl = linkInput.value;
+            else { showToast("لینک عکس وارد نشده است ❌"); return; }
+        }
+
+        const newSlide = { image: imageUrl, link: link, title: title };
+        const slides = JSON.parse(localStorage.getItem(SLIDES_KEY)) || [];
+        slides.push(newSlide);
+        localStorage.setItem(SLIDES_KEY, JSON.stringify(slides));
+        
+        fileInput.value = ''; linkInput.value = '';
+        document.getElementById('s-title').value = ''; document.getElementById('s-link').value = '';
+        
+        renderSlides();
+        showToast("اسلاید جدید اضافه شد ✅");
+    }
+
+    function renderSlides() {
+        const slides = JSON.parse(localStorage.getItem(SLIDES_KEY)) || [];
+        const container = document.getElementById('adminSliderList');
+        document.getElementById('stat-slides').innerText = slides.length;
+        
+        container.innerHTML = slides.map((s, index) => `
+            <div class="slide-item" style="position:relative; width:100%; height:200px; overflow:hidden; border-radius:10px; margin-bottom:15px;">
+                <img src="${s.image}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://via.placeholder.com/400x200?text=Invalid+Link'">
+                <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.6); color:white; padding:10px; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <strong>${s.title || 'بدون عنوان'}</strong><br>
+                        <small style="opacity:0.8">${s.link || 'بدون لینک'}</small>
+                    </div>
+                    <button onclick="deleteSlide(${index})" style="background:var(--danger); color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function deleteSlide(index) {
+        let slides = JSON.parse(localStorage.getItem(SLIDES_KEY)) || [];
+        if(confirm('حذف این اسلاید؟')) {
+            slides.splice(index, 1);
+            localStorage.setItem(SLIDES_KEY, JSON.stringify(slides));
+            renderSlides();
+            showToast("اسلاید حذف شد");
+        }
+    }
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerText = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // مقداردهی اولیه
+    document.addEventListener('DOMContentLoaded', () => {
+        initCategories();
+        initGalleryLinks();
+        renderProducts();
+        renderSlides();
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-US', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+    });
+</script>
+<script src="./script.js"></script>
+</body>
+</html>
