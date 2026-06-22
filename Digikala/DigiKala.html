@@ -100,7 +100,7 @@
     /* ===================== SEARCH ===================== */
     .search-container {
         flex: 1; max-width: 500px; margin: 0 20px;
-        position: relative; min-width: 95px;
+        position: relative; min-width: 140px;
     }
 
     .search-box {
@@ -133,6 +133,9 @@
         border-radius: 50%; cursor: pointer; transition: var(--transition);
     }
     #clearSearch:hover { background: var(--border-light); color: var(--accent-danger) !important; }
+    @media screen and (max-width: 768px) {
+        .search-container { max-width: 100px;}
+        
 
     /* ===== SEARCH DROPDOWN ===== */
     .search-results-dropdown {
