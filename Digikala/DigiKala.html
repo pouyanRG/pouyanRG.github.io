@@ -324,6 +324,10 @@ img { max-width: 100%; height: auto; display: block; }
     flex-shrink: 0;
 }
 #clearSearch:hover { background: var(--border-default); color: var(--danger); }
+@media screen and (max-width: 768px) {
+    .logo-btn { display: none; }
+    
+}
 
 /* Search Dropdown */
 .search-dropdown {
@@ -1573,32 +1577,6 @@ img { max-width: 100%; height: auto; display: block; }
 .m-share-btn:hover { color: var(--secondary); }
 
 /* =============================================
-   TOAST
-   ============================================= */
-.toast-bar {
-    position: fixed;
-    bottom: calc(var(--bottom-nav-h) + var(--space-4) + 12px);
-    left: 50%; transform: translateX(-50%) translateY(80px);
-    background: var(--text-primary);
-    color: var(--text-inverse);
-    padding: var(--space-3) var(--space-6);
-    border-radius: var(--radius-full);
-    box-shadow: var(--shadow-xl);
-    z-index: 3000;
-    transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
-    font-size: var(--font-sm);
-    display: flex; align-items: center; gap: var(--space-3);
-    min-width: 260px; justify-content: center;
-    font-weight: 600; white-space: nowrap;
-}
-.toast-bar.show { transform: translateX(-50%) translateY(0); }
-.toast-bar.success { background: var(--success); }
-.toast-bar.error { background: var(--danger); }
-@media (min-width: 769px) {
-    .toast-bar { bottom: var(--space-8); }
-}
-
-/* =============================================
    FOOTER
    ============================================= */
 .site-footer {
@@ -2042,11 +2020,6 @@ img { max-width: 100%; height: auto; display: block; }
     </div>
 </div>
 
-<!-- ===================== TOAST ===================== -->
-<div class="toast-bar" id="toastBar" role="alert" aria-live="polite">
-    <i class="fas fa-check-circle"></i>
-    <span id="toastMsg">پیام</span>
-</div>
 
 <!-- ===================== SCRIPTS ===================== -->
 <script>
@@ -2833,17 +2806,7 @@ function createSRPCard(p) {
         </article>`;
 }
 
-/* ============================================
-   TOAST
-   ============================================ */
-function showToast(msg, type='success') {
-    const t=document.getElementById('toastBar');
-    const m=document.getElementById('toastMsg');
-    t.className=`toast-bar ${type} show`;
-    m.innerText=msg;
-    if (toastTimer) clearTimeout(toastTimer);
-    toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
-}
+
 
 /* ============================================
    TIMER
