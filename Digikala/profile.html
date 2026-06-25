@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" type="image/png" href="img/f0909d6eae7ee548665693cfbe823b078cf70ede_1774984328.png">
+    <link rel="stylesheet" href="style.css">
 
     <script>
         (function() {
@@ -574,61 +575,6 @@ img { max-width: 100%; height: auto; display: block; }
 .final-price { font-size: var(--font-md); font-weight: 900; color: var(--danger); }
 .final-price small { font-size: 10px; font-weight: 400; color: var(--text-muted); }
 
-/* =============================================
-   PIXEL-PERFECT BOTTOM NAV (DIGIKALA REF)
-   ============================================= */
-.mobile-nav {
-    position: fixed;
-    bottom: var(--space-3);
-    left: 50%;
-    transform: translateX(-50%);
-    width: calc(100% - var(--space-8));
-    max-width: 420px;
-    height: var(--bottom-nav-h);
-    background: rgba(255,255,255,0.88);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1.5px solid rgba(255,255,255,0.6);
-    border-radius: var(--radius-2xl);
-    box-shadow: var(--shadow-xl);
-    z-index: 900;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    padding: 0 var(--space-2);
-}
-[data-theme="dark"] .mobile-nav {
-    background: rgba(19,28,46,0.88);
-    border-color: rgba(255,255,255,0.08);
-}
-.mn-item {
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    flex: 1; height: 100%;
-    color: var(--text-muted);
-    font-size: 10px; font-weight: 700;
-    cursor: pointer;
-    transition: var(--transition);
-    gap: 3px;
-    text-decoration: none;
-    border-radius: var(--radius-xl);
-    padding: var(--space-2) var(--space-1);
-    position: relative;
-}
-.mn-item i { font-size: 20px; transition: var(--transition); }
-.mn-item.active, .mn-item:hover { color: var(--primary); }
-.mn-item.active::before {
-    content: ''; position: absolute; inset: 4px;
-    background: var(--primary-soft); border-radius: var(--radius-lg); z-index: -1;
-}
-.mn-cart-wrap { position: relative; }
-.mn-badge {
-    position: absolute; top: -6px; right: -8px;
-    background: var(--danger); color: #fff;
-    font-size: 9px; font-weight: 900;
-    min-width: 16px; height: 16px; border-radius: var(--radius-full);
-    display: flex; align-items: center; justify-content: center; padding: 0 3px; border: 2px solid var(--bg-surface);
-}
 
 .hidden { display: none !important; }
 

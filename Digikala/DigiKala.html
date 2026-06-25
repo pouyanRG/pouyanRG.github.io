@@ -7,7 +7,7 @@
     
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
 
 <style>
@@ -17,7 +17,7 @@
 :root {
     --primary: #6366f1;
     --primary-hover: #4f46e5;
-    --primary-soft: rgba(135, 136, 221, 0.585);
+    --primary-soft: rgba(99,102,241,0.08);
     --primary-soft2: rgba(99,102,241,0.15);
     --secondary: #0d9488;
     --secondary-soft: rgba(13,148,136,0.1);
@@ -52,9 +52,9 @@
     --radius-xs: 4px;
     --radius-sm: 8px;
     --radius-md: 12px;
-    --radius-lg: 40px;
+    --radius-lg: 16px;
     --radius-xl: 20px;
-    --radius-2xl: 40px;
+    --radius-2xl: 36px;
     --radius-full: 9999px;
 
     --space-1: 4px;
@@ -740,36 +740,7 @@ img { max-width: 100%; height: auto; display: block; }
 .ai-fab svg { width: 26px; height: 26px; }
 @media (min-width: 769px) { .ai-fab { bottom: var(--space-8); width: 64px; height: 64px; } }
 
-/* =============================================
-   MOBILE BOTTOM NAV
-   ============================================= */
-.mobile-nav {
-    position: fixed;
-    bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
-    left: 50%;
-    transform: translateX(-50%);
-    width: calc(100% - var(--space-8));
-    max-width: 420px;
-    height: var(--bottom-nav-h);
-    background: rgba(199, 196, 196, 0.518);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1.5px solid rgba(255,255,255,0.6);
-    border-radius: var(--radius-2xl);
-    box-shadow: var(--shadow-xl);
-    z-index: 900;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    padding: 0 var(--space-2);
-}
-[data-theme="dark"] .mobile-nav { background: rgba(19,28,46,0.88); border-color: rgba(255,255,255,0.08); }
-.mn-item { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; height: 100%; color: var(--text-muted); font-size: 10px; font-weight: 700; cursor: pointer; transition: var(--transition); gap: 3px; text-decoration: none; border-radius: var(--radius-xl); padding: var(--space-2) var(--space-1); position: relative; }
-.mn-item i { font-size: 20px; transition: var(--transition); }
-.mn-item.active, .mn-item:hover { color: var(--primary); transform: scale(0.95); }
-.mn-item.active::before { content: ''; position: absolute; inset: 4px; background: var(--primary-soft); border-radius: var(--radius-lg); z-index: -1; }
-.mn-cart-wrap { position: relative; }
-.mn-badge { position: absolute; top: -6px; right: -8px; background: var(--danger); color: #fff; font-size: 9px; font-weight: 900; min-width: 18px; height: 18px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; padding: 0 4px; border: 2px solid var(--bg-surface); }
+
 
 /* =============================================
    DESKTOP OVERRIDES
@@ -1367,7 +1338,7 @@ function seedSlides() {
 
 function seedData() {
     const d = [
-        { id:1, name:'گوشی موبایل آیفون ۱۳', category:'کالای دیجیتال', price:45000000, discount:10, stock:5, colors:[{name:'مشکی',code:'#000000'},{name:'سفید',code:'#ffffff'}], image:'https://picsum.photos/300/300?random=10', description:'گوشی اپل با تراشه A15 بایونیک و دوربین دوگانه.', hot:true, rating:4.5, reviews:234, specs:{'پردازنده':'A15 Bionic','RAM':'6GB','حافظه':'128GB'} },
+        { id:1, name:'گوشی موبایل آیفون ۱۳', category:'کالای دیجیتال', price:45000000, discount:10, stock:5, colors:[{name:'مشکی',code:'#000000'},{name:'سفید',code:'#ffffff'}], image:'data:image/jpeg;base64,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', description:'گوشی اپل با تراشه A15 بایونیک و دوربین دوگانه.', hot:true, rating:4.5, reviews:234, specs:{'پردازنده':'A15 Bionic','RAM':'6GB','حافظه':'128GB'} },
         { id:2, name:'لپ‌تاپ ایسوس VivoBook', category:'کالای دیجیتال', price:32000000, discount:0, stock:2, colors:[{name:'نقره‌ای',code:'#C0C0C0'}], image:'https://picsum.photos/300/300?random=11', description:'لپ‌تاپ فوق سبک مناسب برای کارهای گرافیکی.', hot:false, rating:4, reviews:156, specs:{'CPU':'Intel Core i7','RAM':'16GB','SSD':'512GB'} },
         { id:3, name:'ساعت هوشمند سامسونگ Galaxy Watch', category:'کالای دیجیتال', price:8500000, discount:15, stock:0, colors:[{name:'مشکی',code:'#000000'}], image:'https://picsum.photos/300/300?random=12', description:'ساعت هوشمند با قابلیت اندازه‌گیری ضربان قلب.', hot:false, rating:4.2, reviews:89, specs:{'نمایشگر':'AMOLED','باتری':'3 روز'} },
         { id:4, name:'کت مردانه اسپرت', category:'مد و پوشاک', price:1200000, discount:5, stock:10, colors:[{name:'سرمه‌ای',code:'#000080'},{name:'خاکستری',code:'#808080'}], image:'https://picsum.photos/300/300?random=13', description:'کت مردانه با پارچه نخی و کیفیت بالا.', hot:false, rating:3.8, reviews:45, specs:{'جنس':'100% نخ','سایز':'S-XXL'} },
