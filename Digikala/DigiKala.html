@@ -17,7 +17,7 @@
 :root {
     --primary: #6366f1;
     --primary-hover: #4f46e5;
-    --primary-soft: rgba(99,102,241,0.08);
+    --primary-soft: rgba(135, 136, 221, 0.585);
     --primary-soft2: rgba(99,102,241,0.15);
     --secondary: #0d9488;
     --secondary-soft: rgba(13,148,136,0.1);
@@ -52,9 +52,9 @@
     --radius-xs: 4px;
     --radius-sm: 8px;
     --radius-md: 12px;
-    --radius-lg: 16px;
+    --radius-lg: 40px;
     --radius-xl: 20px;
-    --radius-2xl: 24px;
+    --radius-2xl: 40px;
     --radius-full: 9999px;
 
     --space-1: 4px;
@@ -219,7 +219,7 @@ img { max-width: 100%; height: auto; display: block; }
     position: fixed;
     top: 0; left: 0; right: 0;
     height: var(--header-h);
-    background: rgba(255,255,255,0.92);
+    background: rgba(255,255,255, 0.596);
     backdrop-filter: blur(16px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
     border-bottom: 1px solid var(--border-light);
@@ -228,7 +228,7 @@ img { max-width: 100%; height: auto; display: block; }
     transition: var(--transition);
 }
 [data-theme="dark"] .main-header {
-    background: rgba(19,28,46,0.92);
+    background: rgba(19, 28, 46, 0.596);
     border-color: var(--border-default);
 }
 .main-header.scrolled {
@@ -390,12 +390,12 @@ img { max-width: 100%; height: auto; display: block; }
     border-radius: var(--radius-xl);
     overflow: hidden;
     background: var(--bg-elevated);
-    aspect-ratio: 2 / 1; /* Best optimized wide aspect ratio */
+    aspect-ratio:  6 / 2;
     box-shadow: var(--shadow-lg);
     width: 100%;
 }
 @media (min-width: 992px) {
-    .hero-container { aspect-ratio: 21 / 8; } /* Wider on desktop */
+    .hero-container { aspect-ratio: 7 / 2; }
 }
 
 /* Swiper overrides for Hero */
@@ -461,11 +461,11 @@ img { max-width: 100%; height: auto; display: block; }
 /* =============================================
    CATEGORY GRID
    ============================================= */
-.cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-3); }
+.cat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-3); }
 @media (min-width: 480px) { .cat-grid { grid-template-columns: repeat(5, 1fr); } }
 @media (min-width: 640px) { .cat-grid { grid-template-columns: repeat(7, 1fr); } }
 .cat-card { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); padding: var(--space-3) var(--space-2); border-radius: var(--radius-lg); cursor: pointer; transition: var(--transition); text-align: center; position: relative; }
-.cat-card:hover { background: var(--primary-soft); transform: translateY(-3px); }
+.cat-card:hover { ; transform: translateY(-2px); }
 .cat-card:active { transform: scale(0.96); }
 .cat-img-wrap { width: 56px; height: 56px; border-radius: var(--radius-full); background: var(--bg-elevated); display: flex; align-items: center; justify-content: center; overflow: hidden; transition: var(--transition); border: 2px solid var(--border-light); }
 .cat-card:hover .cat-img-wrap { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
@@ -474,10 +474,10 @@ img { max-width: 100%; height: auto; display: block; }
 .cat-card:hover .cat-name { color: var(--primary); }
 
 /* =============================================
-   AMAZING OFFERS (REFACTORED WITH SWIPER RTL LOOP)
+   AMAZING OFFERS — FIXED FOR DESKTOP & MOBILE
    ============================================= */
 .amazing-section-wrap {
-    background: linear-gradient(135deg, #fde68a 0%, #fef3c7 100%);
+    background: linear-gradient(160deg, #fde68a 0%, #fff8d6 100%,#fff9e1 10%);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-md);
     overflow: hidden;
@@ -485,7 +485,7 @@ img { max-width: 100%; height: auto; display: block; }
     padding-bottom: var(--space-4);
 }
 [data-theme="dark"] .amazing-section-wrap {
-    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    background: linear-gradient(175deg, #504b46 0%, #757270 100%,#87827f 10%);
 }
 .amazing-section-wrap::before {
     content: '';
@@ -550,28 +550,90 @@ img { max-width: 100%; height: auto; display: block; }
 [data-theme="dark"] .ah-btn-all { background: rgba(0,0,0,0.4); color: #fff; }
 .ah-btn-all:hover { transform: scale(0.95); box-shadow: var(--shadow-md); }
 
-/* Swiper specific styles for Amazing Loop */
+/* Amazing Swiper base */
 .amazing-swiper {
     width: 100%;
     padding-top: var(--space-2);
     padding-bottom: var(--space-4);
-}
-.amazing-swiper .swiper-slide {
-    width: 160px; /* Fixed width to allow half-visible neighbors */
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
-}
-@media (min-width: 640px) {
-    .amazing-swiper .swiper-slide { width: 200px; }
+    position: relative;
 }
 
-.amazing-swiper .swiper-slide:not(.swiper-slide-active) {
-    transform: scale(0.90);
-    opacity: 0.6;
+/* Slide base — no fixed width here */
+.amazing-swiper .swiper-slide {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
 }
-.amazing-swiper .swiper-slide-active {
-    transform: scale(1);
-    opacity: 1;
-    z-index: 2;
+
+/* ---- MOBILE: centered carousel with scale/fade drama ---- */
+@media (max-width: 768px) {
+    .amazing-swiper .swiper-slide { width: 155px; }
+    .amazing-swiper .swiper-slide:not(.swiper-slide-active) {
+        transform: scale(0.90);
+        opacity: 0.6;
+    }
+    .amazing-swiper .swiper-slide-active {
+        transform: scale(1);
+        opacity: 1;
+        z-index: 2;
+    }
+}
+@media (min-width: 480px) and (max-width: 768px) {
+    .amazing-swiper .swiper-slide { width: 178px; }
+}
+
+/* ---- DESKTOP: clean grid carousel, all cards equal & fully visible ---- */
+@media (min-width: 769px) {
+    .amazing-swiper {
+        padding-inline: var(--space-4);
+        padding-bottom: var(--space-5);
+    }
+    .amazing-swiper .swiper-slide {
+        transform: none !important;
+        opacity: 1 !important;
+        z-index: auto !important;
+    }
+    .amazing-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-xl);
+        border-color: rgba(217, 119, 6, 0.4);
+    }
+
+    .amazing-card-img {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+/* Amazing section navigation buttons (desktop only) */
+.amazing-nav-next,
+.amazing-nav-prev {
+    display: none;
+}
+@media (min-width: 769px) {
+    .amazing-nav-next,
+    .amazing-nav-prev {
+        display: flex;
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(6px);
+        width: 42px;
+        height: 42px;
+        border-radius: var(--radius-full);
+        color: #92400e;
+        box-shadow: var(--shadow-md);
+        transition: var(--transition);
+    }
+    .amazing-nav-next::after,
+    .amazing-nav-prev::after {
+        font-size: 14px;
+        font-weight: 800;
+        color: #92400e;
+    }
+    .amazing-nav-next:hover,
+    .amazing-nav-prev:hover {
+        background: #ffffff;
+        transform: scale(1.1);
+        box-shadow: var(--shadow-lg);
+        color: #78350f;
+    }
 }
 
 .amazing-card {
@@ -583,6 +645,8 @@ img { max-width: 100%; height: auto; display: block; }
     border: 1px solid var(--border-light);
     height: 100%;
     cursor: pointer;
+    position: relative;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 .amazing-card-img {
     width: 100px; height: 100px;
@@ -590,9 +654,7 @@ img { max-width: 100%; height: auto; display: block; }
     margin-bottom: var(--space-3);
     transition: transform 0.3s ease;
 }
-@media (min-width: 640px) { .amazing-card-img { width: 140px; height: 140px; } }
-
-.amazing-swiper .swiper-slide-active .amazing-card:hover .amazing-card-img { transform: scale(1.08); }
+@media (min-width: 640px) { .amazing-card-img { width: 130px; height: 130px; } }
 
 .ac-badge {
     position: absolute; top: var(--space-2); right: var(--space-2);
@@ -611,10 +673,12 @@ img { max-width: 100%; height: auto; display: block; }
 /* =============================================
    STATIC BANNERS
    ============================================= */
-.banners-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+.banners-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3); }
 @media (min-width: 768px) { .banners-grid { gap: var(--space-4); } }
-.banner-card { border-radius: var(--radius-lg); overflow: hidden; aspect-ratio: 16/9; position: relative; cursor: pointer; box-shadow: var(--shadow-sm); transition: var(--transition); }
-.banner-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-xl); }
+.banner-card { border-radius: var(--radius-lg); overflow: hidden; aspect-ratio: 3/2; position: relative; cursor: pointer; box-shadow: var(--shadow-sm); transition: var(--transition); }
+@media (min-width: 600px) { .banner-card { aspect-ratio: 3/2; } }
+@media (min-width: 1200px) { .banner-card { aspect-ratio: 3/2; } }
+.banner-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-xl); }
 .banner-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
 .banner-card:hover img { transform: scale(1.05); }
 
@@ -687,7 +751,7 @@ img { max-width: 100%; height: auto; display: block; }
     width: calc(100% - var(--space-8));
     max-width: 420px;
     height: var(--bottom-nav-h);
-    background: rgba(255,255,255,0.88);
+    background: rgba(199, 196, 196, 0.518);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border: 1.5px solid rgba(255,255,255,0.6);
@@ -755,13 +819,17 @@ img { max-width: 100%; height: auto; display: block; }
 .srp-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); flex-wrap: wrap; gap: var(--space-3); }
 .srp-count { font-size: var(--font-sm); color: var(--text-secondary); }
 .srp-sort { padding: var(--space-2) var(--space-3); border: 1px solid var(--border-default); border-radius: var(--radius-sm); font-family: inherit; font-size: var(--font-sm); color: var(--text-primary); background: var(--bg-surface); cursor: pointer; }
+.srp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+@media (min-width: 480px) { .srp-grid { gap: var(--space-4); } }
+@media (min-width: 640px) { .srp-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 960px) { .srp-grid { grid-template-columns: repeat(4, 1fr); } }
 .srp-empty { grid-column: 1/-1; text-align: center; padding: var(--space-12) var(--space-4); }
 .srp-suggestions { grid-column: 1/-1; margin-top: var(--space-6); padding-top: var(--space-6); border-top: 2px dashed var(--border-light); }
 
 /* PRODUCT MODAL */
 .modal-overlay { position: fixed; inset: 0; background: var(--bg-overlay); backdrop-filter: blur(6px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: var(--space-4); opacity: 0; transition: opacity 0.3s; }
 .modal-overlay.open { display: flex; opacity: 1; }
-.modal-box { background: var(--bg-surface); width: 100%; max-width: 960px; border-radius: var(--radius-2xl); overflow: hidden; max-height: 95vh; display: flex; flex-direction: column; box-shadow: var(--shadow-xl); transform: scale(0.95); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); position: relative; }
+.modal-box { background: var(--bg-surface); width: 100%; border-radius: var(--radius-2xl); overflow: hidden; max-height: 100vh; display: flex; flex-direction: column; box-shadow: var(--shadow-xl); transform: scale(0.95); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); position: relative; }
 .modal-overlay.open .modal-box { transform: scale(1); }
 .modal-close { position: absolute; top: var(--space-4); right: var(--space-4); width: 44px; height: 44px; background: var(--bg-elevated); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; color: var(--text-secondary); font-size: 18px; transition: var(--transition); }
 .modal-close:hover { background: var(--primary); color: #fff; transform: scale(0.95); }
@@ -807,7 +875,7 @@ img { max-width: 100%; height: auto; display: block; }
 .qty-btn-sm { width: 44px; height: 44px; background: var(--bg-elevated); color: var(--text-primary); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); font-size: 18px; font-weight: 700; }
 .qty-input { width: 48px; height: 44px; text-align: center; border: none; font-family: inherit; font-weight: 800; font-size: 16px; background: transparent; color: var(--text-primary); }
 .btn-cart { flex: 1; background: var(--primary); color: #fff; padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); font-size: var(--font-md); font-weight: 800; display: flex; align-items: center; justify-content: center; gap: var(--space-2); transition: var(--transition); min-height: 48px; border: none; cursor: pointer; font-family: inherit; }
-.btn-cart:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.btn-cart:hover { background: var(--primary-hover); box-shadow: var(--shadow-lg); }
 
 /* FOOTER */
 .site-footer { background: var(--bg-surface); border-top: 1px solid var(--border-light); margin-top: var(--space-12); padding: var(--space-10) var(--space-4) var(--space-6); }
@@ -902,8 +970,7 @@ img { max-width: 100%; height: auto; display: block; }
 <main>
     <section class="hero-section" aria-label="اسلایدر">
         <div class="swiper hero-swiper hero-container" dir="rtl">
-            <div class="swiper-wrapper" id="sliderTrack">
-                </div>
+            <div class="swiper-wrapper" id="sliderTrack"></div>
             <div class="swiper-button-next hero-next"></div>
             <div class="swiper-button-prev hero-prev"></div>
             <div class="swiper-pagination hero-pagination"></div>
@@ -962,8 +1029,9 @@ img { max-width: 100%; height: auto; display: block; }
             </div>
 
             <div class="swiper amazing-swiper" dir="rtl">
-                <div class="swiper-wrapper" id="dealsScroll">
-                    </div>
+                <div class="swiper-wrapper" id="dealsScroll"></div>
+                <div class="swiper-button-next amazing-nav-next"></div>
+                <div class="swiper-button-prev amazing-nav-prev"></div>
             </div>
         </div>
     </section>
@@ -971,7 +1039,6 @@ img { max-width: 100%; height: auto; display: block; }
     <section class="section" aria-label="بنرها">
         <div class="banners-grid">
             <a href="#" class="banner-card"><img src="img/5ede9e03363796a0e0a774569b9d3885a9414214_1775638965.webp" alt="بنر ۱" loading="lazy" onerror="this.src='https://via.placeholder.com/800x450'"></a>
-            <a href="#" class="banner-card"><img src="img/44abb390527a27b15c8e2c820240c4e2a0d1efb2_1775639003.webp" alt="بنر ۲" loading="lazy" onerror="this.src='https://via.placeholder.com/800x450'"></a>
             <a href="#" class="banner-card"><img src="img/8f0e0fa3f05ecdde45a626f1fa3e5cdc7a145971_1775638954.webp" alt="بنر ۳" loading="lazy" onerror="this.src='https://via.placeholder.com/800x450'"></a>
             <a href="#" class="banner-card"><img src="img/6be4bf69a98dfd1687424946b045cf96a4d283ef_1775638956.webp" alt="بنر ۴" loading="lazy" onerror="this.src='https://via.placeholder.com/800x450'"></a>
         </div>
@@ -1185,7 +1252,7 @@ img { max-width: 100%; height: auto; display: block; }
             <button class="btn-cart" id="btnCart" onclick="addToCart()">
                 <i class="fas fa-shopping-cart"></i> افزودن به سبد
             </button>
-            <button class="m-wishlist-btn" id="wishBtn" onclick="toggleWishlist()" aria-label="علاقه‌مندی" style="width:48px; height:48px; border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:20px; transition:var(--transition); cursor:pointer; background:var(--bg-elevated); border:none;">
+            <button class="m-wishlist-btn" id="wishBtn" onclick="toggleWishlist()" aria-label="علاقه‌مندی" style="width:48px; height:48px; border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:20px; transition:var(--transition); cursor:pointer;">
                 <i class="far fa-heart"></i>
             </button>
         </div>
@@ -1198,7 +1265,7 @@ img { max-width: 100%; height: auto; display: block; }
 
 <script>
 /* ============================================
-   CONFIG & STATE (STRICT GLOBAL DATA MATCHING)
+   CONFIG & STATE
    ============================================ */
 const DB = {
     products: 'shopshopProducts',
@@ -1315,12 +1382,12 @@ function seedData() {
    SWIPER CAROUSELS INITIALIZATION
    ============================================ */
 function initSwipers() {
-    // 1. Hero Slider (Wide Aspect Ratio Optimization)
+    // 1. Hero Slider
     const track = document.getElementById('sliderTrack');
     if (state.slides.length > 0) {
         track.innerHTML = state.slides.map(s => `
             <div class="swiper-slide">
-                <img src="${s.image}" alt="${s.title || 'Slide'}" loading="eager" onerror="this.src='https://via.placeholder.com/2800x1400'">
+                <img src="${s.image}" alt="${s.title || 'Slide'}" loading="eager" onerror="this.src='https://via.placeholder.com/1200x400'">
                 ${s.title ? `<div class="slide-overlay"><div class="slide-text"><h2>${s.title}</h2></div></div>` : ''}
             </div>
         `).join('');
@@ -1329,7 +1396,6 @@ function initSwipers() {
     heroSwiperInstance = new Swiper('.hero-swiper', {
         direction: 'horizontal',
         loop: true,
-        rtl: true,
         autoplay: {
             delay: 4500,
             disableOnInteraction: false,
@@ -1342,22 +1408,38 @@ function initSwipers() {
             nextEl: '.hero-next',
             prevEl: '.hero-prev',
         },
-        effect: 'fade', // Optional: provides a premium fade transition
+        effect: 'fade',
         fadeEffect: { crossFade: true }
     });
 
-    // 2. Amazing Offers (Infinite Loop RTL Carousel)
+    // 2. Amazing Offers — mobile: centered carousel | desktop: grid carousel
     amazingSwiperInstance = new Swiper('.amazing-swiper', {
         direction: 'horizontal',
         loop: true,
         rtl: true,
         centeredSlides: true,
-        slidesPerView: 'auto', // CSS handles the fixed width for half-view logic
-        spaceBetween: 16,
+        slidesPerView: 'auto',
+        spaceBetween: 12,
         grabCursor: true,
         autoplay: {
             delay: 3000,
             disableOnInteraction: true,
+        },
+        navigation: {
+            nextEl: '.amazing-nav-next',
+            prevEl: '.amazing-nav-prev',
+        },
+        breakpoints: {
+            769: {
+                centeredSlides: false,
+                slidesPerView: 4,
+                spaceBetween: 20,
+            },
+            1200: {
+                centeredSlides: false,
+                slidesPerView: 5,
+                spaceBetween: 24,
+            }
         },
         observer: true,
         observeParents: true
@@ -1365,7 +1447,7 @@ function initSwipers() {
 }
 
 /* ============================================
-   PRODUCTS RENDER (MAIN GRID & AMAZING OFFERS)
+   PRODUCTS RENDER
    ============================================ */
 function getCatName(cat) {
     const map={'digital':'کالای دیجیتال','fashion':'مد و پوشاک','home':'خانه و آشپزخانه','beauty':'زیبایی و سلامت','toy':'اسباب بازی','sport':'ورزش و سفر'};
@@ -1388,10 +1470,8 @@ function renderProducts() {
     const offers = state.products.filter(p => p.discount > 0);
     
     if (offers.length > 0) {
-        // Need at least 3 items for infinite loop visual integrity, duplicate if needed
         let loopOffers = [...offers];
-        while (loopOffers.length < 5) { loopOffers = [...loopOffers, ...offers]; }
-        
+        while (loopOffers.length < 12) { loopOffers = [...loopOffers, ...offers]; }
         dealsWrapper.innerHTML = loopOffers.map(p => createAmazingSlide(p)).join('');
     } else {
         dealsWrapper.innerHTML = `<div class="swiper-slide" style="width:100%; text-align:center; color:#b45309; padding:20px;">هیچ پیشنهاد شگفت‌انگیزی موجود نیست</div>`;
@@ -1417,7 +1497,7 @@ function createAmazingSlide(p) {
 function createCard(p, idx, wishlist) {
     const fp=p.price-(p.price*(p.discount||0)/100);
     const badge=p.discount>0?`<span class="p-discount-badge">${p.discount}٪</span>`:'';
-    const wlActive=wishlist.includes(p.id)?'active':''
+    const wlActive=wishlist.includes(p.id)?'active':'';
     const wlIcon=wishlist.includes(p.id)?'fas fa-heart':'far fa-heart';
     let stockBadge='';
     if (p.stock===0) stockBadge=`<span class="p-stock stock-out">ناموجود</span>`;
