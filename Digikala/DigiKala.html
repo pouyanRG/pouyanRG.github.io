@@ -212,7 +212,7 @@ img { max-width: 100%; height: auto; display: block; }
 .skeleton-line.w-60 { width: 60%; }
 .skeleton-line.w-40 { width: 40%; }
 
-/* =============================================
+/*=============================================
    HEADER (STRICT PRESERVATION)
    ============================================= */
 .main-header {
@@ -380,6 +380,49 @@ img { max-width: 100%; height: auto; display: block; }
 .mm-link:hover i { opacity: 1; }
 
 /* =============================================
+   MOBILE HEADER GLASSMORPHISM (REFINED ICONS)
+   ============================================= */
+@media screen and (max-width: 768px) {
+    .main-header {
+        position: fixed !important;
+        top: calc(10px + env(safe-area-inset-top, 0px)) !important;
+        left: 0 !important;
+        right: 0 !important;
+        margin: 0 auto !important;
+        width: calc(100% - 24px) !important;
+        max-width: 420px !important;
+        height: 56px !important;
+        background: rgba(255, 255, 255, 0.22) !important;
+        backdrop-filter: blur(48px) saturate(230%) brightness(1.08) !important;
+        -webkit-backdrop-filter: blur(48px) saturate(230%) brightness(1.08) !important;
+        border: 1px solid rgba(255, 255, 255, 0.55) !important;
+        border-radius: 40px !important;
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.14), inset 0 1.5px 1px rgba(255, 255, 255, 0.85), inset 0 -1.5px 1px rgba(255, 255, 255, 0.25) !important;
+        transform: none !important;
+    }
+
+    [data-theme="dark"] .main-header {
+        background: rgba(13, 18, 30, 0.38) !important;
+        border-color: rgba(255, 255, 255, 0.16) !important;
+        backdrop-filter: blur(48px) saturate(220%) brightness(1.04) !important;
+    }
+
+    .header-inner { padding: 0 10px !important; gap: 6px !important; }
+
+    .search-wrap { height: 38px !important; padding: 0 12px !important; }
+
+    .h-action-btn { 
+        width: 40px !important; 
+        height: 40px !important; 
+        font-size: 20px !important; 
+        border-radius: 50% !important; 
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    }
+    .h-action-btn:active { transform: scale(0.85) !important; }
+    
+    .h-user-btn { padding: 0 8px !important; min-height: 40px !important; }
+}
+/* =============================================
    HERO SLIDER (REFACTORED WITH SWIPER)
    ============================================= */
 .hero-section {
@@ -461,8 +504,8 @@ img { max-width: 100%; height: auto; display: block; }
 /* =============================================
    CATEGORY GRID
    ============================================= */
-.cat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-3); }
-@media (min-width: 480px) { .cat-grid { grid-template-columns: repeat(5, 1fr); } }
+.cat-grid { display: grid; grid-template-columns: repeat(6 1fr); gap: var(--space-3); }
+@media (min-width: 480px) { .cat-grid { grid-template-columns: repeat(6, 1fr); } }
 @media (min-width: 640px) { .cat-grid { grid-template-columns: repeat(7, 1fr); } }
 .cat-card { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); padding: var(--space-3) var(--space-2); border-radius: var(--radius-lg); cursor: pointer; transition: var(--transition); text-align: center; position: relative; }
 .cat-card:hover { ; transform: translateY(-2px); }
@@ -500,6 +543,7 @@ img { max-width: 100%; height: auto; display: block; }
     padding: var(--space-4) var(--space-5);
     position: relative;
     z-index: 2;
+    gap: 20px;
 }
 
 .ah-right-title {
@@ -551,19 +595,26 @@ img { max-width: 100%; height: auto; display: block; }
 .ah-btn-all:hover { transform: scale(0.95); box-shadow: var(--shadow-md); }
     
 
-@media (max-width: 769px) {
+@media (max-width: 700px) {
+
+    .ah-timer{
+        gap: 2px;
+    }
     .ah-digit{
         width: 24px; height: 24px;
         font-weight: 500;
         font-size: 11px ;
+        gap: 4px;
+  
     }
     .ah-right-title{
-        font-size:15px;
-
+        font-size:12px;
+        font-weight: 500;
     }
     .ah-btn-all{
         padding: 5px 10px;
         font-size: 8px;
+      
 
     }
 
@@ -1001,10 +1052,10 @@ img { max-width: 100%; height: auto; display: block; }
         <div class="amazing-section-wrap" dir="rtl">
             <div class="amazing-header-bar">
                 <div class="ah-right-title">
-                    <span style="background:var(--bg-surface); padding:4px; border-radius:50%; display:inline-flex;">
+                    <span style=" padding:4px; border-radius:50%; display:inline-flex;">
                         <i class="fas fa-gift" style="color:#d97706;"></i>
                     </span>
-                    قسطی شگفت
+                  مفتی و پشم ریزون 
                 </div>
                 
                 <div class="ah-timer" role="timer" aria-label="تایمر شمارش معکوس">
