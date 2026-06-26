@@ -390,12 +390,12 @@ img { max-width: 100%; height: auto; display: block; }
     border-radius: var(--radius-xl);
     overflow: hidden;
     background: var(--bg-elevated);
-    aspect-ratio:  6 / 2;
+    aspect-ratio:  3 / 1;
     box-shadow: var(--shadow-lg);
     width: 100%;
 }
 @media (min-width: 992px) {
-    .hero-container { aspect-ratio: 7 / 2; }
+    .hero-container { aspect-ratio: 4 / 1; }
 }
 
 /* Swiper overrides for Hero */
@@ -520,7 +520,7 @@ img { max-width: 100%; height: auto; display: block; }
     background: rgba(255,255,255,0.6);
     backdrop-filter: blur(8px);
     color: #b45309;
-    font-size: clamp(14px, 3vw, 18px);
+    font-size: clamp(8px, 3vw, 20px);
     font-weight: 900;
     width: 44px; height: 44px;
     border-radius: 50%;
@@ -549,6 +549,27 @@ img { max-width: 100%; height: auto; display: block; }
 }
 [data-theme="dark"] .ah-btn-all { background: rgba(0,0,0,0.4); color: #fff; }
 .ah-btn-all:hover { transform: scale(0.95); box-shadow: var(--shadow-md); }
+    
+
+@media (max-width: 769px) {
+    .ah-digit{
+        width: 24px; height: 24px;
+        font-weight: 500;
+        font-size: 11px ;
+    }
+    .ah-right-title{
+        font-size:15px;
+
+    }
+    .ah-btn-all{
+        padding: 5px 10px;
+        font-size: 8px;
+
+    }
+
+
+}
+        
 
 /* Amazing Swiper base */
 .amazing-swiper {
