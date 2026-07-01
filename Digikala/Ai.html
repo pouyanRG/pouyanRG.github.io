@@ -1,663 +1,860 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ai SHOP</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Vazirmatn Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="img/f0909d6eae7ee548665693cfbe823b078cf70ede_1774984328.png">
-    <style>
-        :root {
-            /* ChatGPT-inspired Palette */
-            --bg-body: #f6f6f6;
-            --primary-color: #10a37f; /* Classic AI Green-ish */
-            --primary-hover: #1a7f64;
-            --surface-light: #ffffff;
-            --surface-dark: #343541;
-            --text-main: #343541;
-            --text-secondary: #555555;
-            --border-color: #e5e5e5;
-            --shadow-soft: 0 1px 2px rgba(0,0,0,0.05);
-            --radius-lg: 12px;
-            --radius-md: 8px;
-            --input-bg: #ffffff;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>دستیار هوشمند SHOP</title>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="icon" type="image/png" href="img/f0909d6eae7ee548665693cfbe823b078cf70ede_1774984328.png">
+<style>
+:root{
+    --primary:#6366f1;
+    --primary-hover:#4f46e5;
+    --primary-soft:rgba(99,102,241,0.08);
+    --secondary:#0d9488;
+    --danger:#ef4444;
+    --success:#10b981;
+    --text-primary:#0f172a;
+    --text-secondary:#475569;
+    --text-muted:#94a3b8;
+    --bg-body:#f8fafc;
+    --bg-surface:#ffffff;
+    --bg-elevated:#f1f5f9;
+    --border-light:#f1f5f9;
+    --border-default:#e2e8f0;
+    --radius-md:12px;
+    --radius-lg:16px;
+    --radius-xl:20px;
+    --radius-full:9999px;
+    --shadow-sm:0 1px 3px rgba(15,23,42,0.06);
+    --shadow-md:0 4px 12px rgba(15,23,42,0.06);
+    --shadow-lg:0 10px 24px rgba(15,23,42,0.10);
+    --transition:all .25s cubic-bezier(.4,0,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;outline:none;}
+html,body{height:100%;}
+body{
+    font-family:'Vazirmatn',sans-serif;
+    background:var(--bg-body);
+    color:var(--text-primary);
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+}
+a{text-decoration:none;color:inherit;}
+button{cursor:pointer;border:none;background:none;font-family:inherit;}
 
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg-body: #343541;
-                --primary-color: #10a37f;
-                --primary-hover: #1a7f64;
-                --surface-light: #444654;
-                --surface-dark: #202123;
-                --text-main: #ececf1;
-                --text-secondary: #d4d4d4;
-                --border-color: #4d4d4f;
-                --shadow-soft: 0 1px 2px rgba(0,0,0,0.2);
-                --input-bg: #40414f;
-            }
-        }
+/* ---------- HEADER ---------- */
+.ai-header{
+    background:rgba(255,255,255,0.9);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border-light);
+    box-shadow:var(--shadow-sm);
+    padding:14px 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-shrink:0;
+    z-index:20;
+}
+.ai-brand{display:flex;align-items:center;gap:10px;}
+.ai-avatar{
+    width:38px;height:38px;border-radius:50%;
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-size:16px;flex-shrink:0;
+    box-shadow:0 4px 12px rgba(102,126,234,0.4);
+}
+.ai-title{font-size:15px;font-weight:900;}
+.ai-status{font-size:11px;color:var(--success);display:flex;align-items:center;gap:4px;}
+.ai-status i{font-size:7px;}
+.back-btn{
+    display:flex;align-items:center;gap:6px;
+    background:var(--bg-elevated);color:var(--text-secondary);
+    padding:9px 14px;border-radius:var(--radius-md);
+    font-size:12px;font-weight:700;transition:var(--transition);
+}
+.back-btn:hover{background:var(--primary-soft);color:var(--primary);}
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        
-        body {
-            margin: 0; height: 100vh; font-family: 'Vazirmatn', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main); overflow: hidden; display: flex; flex-direction: column;
-        }
+/* ---------- INFO BANNER ---------- */
+.ai-disclaimer{
+    background:#fffbeb;border-bottom:1px solid #fde68a;
+    color:#92400e;font-size:11px;padding:8px 18px;
+    display:flex;align-items:center;gap:8px;flex-shrink:0;
+}
 
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #aaa; }
-        
-        /* Animations */
-        @keyframes slideUpFade { 
-            from { opacity: 0; transform: translateY(10px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
-        @keyframes pulse-glow { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
-        @keyframes ripple { 0% { transform: scale(0.8); opacity: 0.8; } 100% { transform: scale(2); opacity: 0; } }
+/* ---------- CHAT AREA ---------- */
+.chat-wrap{flex:1;overflow-y:auto;padding:18px 14px 10px;display:flex;flex-direction:column;gap:14px;}
+.msg-row{display:flex;gap:10px;max-width:100%;animation:fadeUp .3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.msg-row.user{flex-direction:row-reverse;}
+.msg-avatar{
+    width:32px;height:32px;border-radius:50%;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;font-size:13px;
+}
+.msg-row.bot .msg-avatar{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;}
+.msg-row.user .msg-avatar{background:var(--primary-soft);color:var(--primary);}
+.msg-bubble{
+    max-width:78%;
+    padding:12px 15px;
+    border-radius:var(--radius-lg);
+    font-size:13.5px;
+    line-height:1.9;
+    box-shadow:var(--shadow-sm);
+}
+.msg-row.bot .msg-bubble{background:var(--bg-surface);border:1px solid var(--border-light);border-top-right-radius:4px;}
+.msg-row.user .msg-bubble{background:var(--primary);color:#fff;border-top-left-radius:4px;}
+.msg-bubble p{margin-bottom:6px;}
+.msg-bubble p:last-child{margin-bottom:0;}
 
-        /* Layout */
-        #chat-container { display: flex; flex-direction: column; height: 100%; max-width: 100%; margin: 0 auto; width: 100%; position: relative; background: var(--bg-body); }
-        #chat-output { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 24px; scroll-behavior: smooth; }
-        
-        /* Messages - Minimal Style */
-        .message-row { display: flex; width: 100%; animation: slideUpFade 0.3s ease-out; }
-        .message-row.user { justify-content: flex-end; }
-        .message-row.bot { justify-content: flex-start; }
-        
-        .bubble {
-            max-width: 85%; padding: 14px 18px; border-radius: 18px; 
-            font-size: 0.95rem; line-height: 1.6; position: relative; word-wrap: break-word;
-            box-shadow: var(--shadow-soft);
-        }
-        
-        .user .bubble {
-            background: var(--primary-color); color: white; border-bottom-left-radius: 4px;
-        }
-        
-        .bot .bubble {
-            background: transparent; color: var(--text-main); border-bottom-right-radius: 4px;
-            border: 1px solid var(--border-color);
-        }
+/* action buttons inside bubble */
+.msg-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.msg-action-btn{
+    background:var(--primary-soft);color:var(--primary);
+    padding:7px 13px;border-radius:var(--radius-full);
+    font-size:11.5px;font-weight:800;transition:var(--transition);
+    display:flex;align-items:center;gap:5px;
+}
+.msg-action-btn:hover{background:var(--primary);color:#fff;}
 
-        /* Product Cards - Clean Grid */
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 16px; width: 100%; }
-        .product-card {
-            background: var(--surface-light); border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden;
-            cursor: pointer; transition: all 0.2s ease; position: relative;
-            box-shadow: var(--shadow-soft);
-        }
-        .product-card:hover { transform: translateY(-2px); border-color: var(--primary-color); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .product-card img { width: 100%; height: 140px; object-fit: cover; }
-        .product-info { padding: 12px; }
-        .product-title { font-size: 0.85rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px; height: 35px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-        .product-price { color: var(--primary-color); font-size: 0.9rem; font-weight: 700; }
-        
-        /* Input Area - Modern & Minimal */
-        #input-area {
-            background: var(--bg-body); /* Transparent or matches body */
-            padding: 20px; 
-            padding-bottom: max(20px, env(safe-area-inset-bottom));
-            border-top: 1px solid var(--border-color);
-            display: flex; justify-content: center;
-        }
-        .input-wrapper {
-            background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 12px;
-            padding: 4px; display: flex; align-items: center; width: 100%; max-width: 800px;
-            box-shadow: var(--shadow-soft); transition: all 0.2s;
-        }
-        .input-wrapper:focus-within { border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(16, 163, 127, 0.1); }
-        #userInput { flex: 1; background: transparent; border: none; color: var(--text-main); padding: 12px 16px; font-family: inherit; font-size: 1rem; outline: none; }
-        
-        /* Send Button - Modern Icon */
-        #sendBtn {
-            width: 36px; height: 36px; border-radius: 8px;
-            background: transparent; color: var(--text-secondary);
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s; cursor: pointer; border: none;
-        }
-        #sendBtn:hover { background: rgba(16, 163, 127, 0.1); color: var(--primary-color); }
-        #sendBtn:disabled { opacity: 0.5; cursor: default; }
-        #sendBtn i { font-size: 1.1rem; }
+/* product mini card inside chat */
+.chat-pcard{
+    display:flex;gap:10px;background:var(--bg-elevated);
+    border:1px solid var(--border-light);border-radius:var(--radius-md);
+    padding:10px;margin-top:8px;align-items:center;
+}
+.chat-pcard img{width:52px;height:52px;object-fit:contain;background:#fff;border-radius:8px;flex-shrink:0;padding:4px;border:1px solid var(--border-light);}
+.chat-pcard-info{flex:1;min-width:0;}
+.chat-pcard-name{font-size:12px;font-weight:800;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.chat-pcard-price{font-size:12px;font-weight:900;color:var(--danger);margin-top:3px;}
+.chat-pcard-old{font-size:10px;color:var(--text-muted);text-decoration:line-through;margin-left:4px;}
+.chat-pcard-stock{font-size:10px;color:var(--text-muted);margin-top:2px;}
+.chat-pcard-btn{
+    background:var(--primary);color:#fff;border-radius:8px;
+    padding:6px 10px;font-size:10.5px;font-weight:800;flex-shrink:0;
+    transition:var(--transition);
+}
+.chat-pcard-btn:hover{background:var(--primary-hover);}
+.chat-pcard-btn:disabled{background:var(--text-muted);cursor:not-allowed;}
 
-        /* AI Status */
-        #ai-status { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 15px 0; gap: 8px; }
-        .orb-container { width: 24px; height: 24px; position: relative; display: flex; justify-content: center; align-items: center; }
-        .orb { width: 100%; height: 100%; border-radius: 50%; background: var(--primary-color); filter: blur(4px); animation: pulse-glow 2s infinite ease-in-out; opacity: 0.6; }
-        .wave { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 1px solid var(--primary-color); opacity: 0; animation: ripple 1.5s infinite linear; }
-        .wave:nth-child(2) { animation-delay: 0.5s; }
-        .wave:nth-child(3) { animation-delay: 1s; }
+/* order card */
+.chat-ocard{
+    background:var(--bg-elevated);border:1px solid var(--border-light);
+    border-radius:var(--radius-md);padding:10px 12px;margin-top:8px;
+}
+.chat-ocard-top{display:flex;justify-content:space-between;font-size:11.5px;font-weight:800;margin-bottom:4px;}
+.chat-ocard-status{
+    display:inline-block;font-size:10px;font-weight:800;padding:3px 9px;border-radius:var(--radius-full);
+}
 
-        /* Modal - Simple Sheet */
-        #productModal { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); justify-content: center; align-items: flex-end; }
-        @media(min-width: 768px) { #productModal { align-items: center; } }
-        .modal-content {
-            background: var(--surface-light); width: 100%; max-width: 500px; max-height: 90vh; border-radius: 16px 16px 0 0;
-            overflow-y: auto; box-shadow: 0 -10px 25px rgba(0,0,0,0.2); animation: slideUpFade 0.3s cubic-bezier(0.16, 1, 0.3, 1); position: relative;
-        }
-        @media(min-width: 768px) { .modal-content { border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); } }
-        .close-modal { position: absolute; top: 12px; left: 12px; background: #f3f4f6; border: none; color: var(--text-main); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; z-index: 10; transition: 0.2s; display: flex; align-items: center; justify-content: center;}
-        .close-modal:hover { background: #e5e7eb; color: var(--primary-color); }
-        
-        /* Suggestions Chips */
-        .suggestion-chip {
-            display: inline-block; background: #f3f4f6; color: var(--text-secondary); border: 1px solid transparent;
-            padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; margin: 4px; cursor: pointer; transition: 0.2s; font-weight: 500;
-        }
-        .suggestion-chip:hover { background: #e5e7eb; border-color: #d1d5db; color: var(--text-main); }
-        
-        /* Header - Minimal */
-        header {
-            background: var(--bg-body); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .header-logo { display: flex; align-items: center; gap: 10px; }
-        .logo-icon { width: 32px; height: 32px; background: var(--primary-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; }
-        .header-title h1 { font-size: 1rem; font-weight: 700; margin: 0; }
-        .header-title span { font-size: 0.75rem; color: var(--text-secondary); }
-        .header-actions { display: flex; gap: 8px; }
-        .icon-btn {
-            width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border-color);
-            background: var(--surface-light); color: var(--text-secondary);
-            display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;
-        }
-        .icon-btn:hover { background: #f3f4f6; color: var(--text-main); }
-        .icon-btn.delete:hover { color: #ef4056; border-color: #fecaca; background: #fef2f2; }
-        .icon-btn.home:hover { color: var(--primary-color); border-color: #dcfce7; background: #f0fdf4; }
+/* typing indicator */
+.typing-row{display:flex;gap:10px;}
+.typing-dots{display:flex;gap:4px;align-items:center;padding:14px 16px;background:var(--bg-surface);border:1px solid var(--border-light);border-radius:var(--radius-lg);border-top-right-radius:4px;}
+.typing-dots span{width:6px;height:6px;border-radius:50%;background:var(--text-muted);animation:blink 1.2s infinite ease-in-out;}
+.typing-dots span:nth-child(2){animation-delay:.2s;}
+.typing-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes blink{0%,80%,100%{opacity:.25;}40%{opacity:1;}}
 
-        /* Typing Indicator */
-        .typing-dots span {
-            display: inline-block; width: 6px; height: 6px; background: var(--text-secondary); border-radius: 50%; margin: 0 2px;
-            animation: typing 1.4s infinite ease-in-out both;
-        }
-        .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
-    </style>
+/* ---------- SUGGESTIONS ---------- */
+.suggest-row{
+    display:flex;gap:8px;overflow-x:auto;padding:0 14px 12px;flex-shrink:0;
+    scrollbar-width:none;
+}
+.suggest-row::-webkit-scrollbar{display:none;}
+.suggest-chip{
+    flex-shrink:0;background:var(--bg-surface);border:1.5px solid var(--border-default);
+    color:var(--text-secondary);padding:8px 15px;border-radius:var(--radius-full);
+    font-size:12px;font-weight:700;white-space:nowrap;transition:var(--transition);
+}
+.suggest-chip:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-soft);}
+
+/* ---------- COMPOSER ---------- */
+.composer{
+    flex-shrink:0;padding:12px 14px calc(14px + env(safe-area-inset-bottom));
+    background:var(--bg-surface);border-top:1px solid var(--border-light);
+    display:flex;gap:10px;align-items:center;
+}
+.composer-input{
+    flex:1;background:var(--bg-elevated);border:1.5px solid transparent;
+    border-radius:var(--radius-full);padding:12px 18px;font-size:13.5px;
+    font-family:inherit;color:var(--text-primary);transition:var(--transition);
+}
+.composer-input:focus{background:var(--bg-surface);border-color:var(--primary);}
+.send-btn{
+    width:46px;height:46px;border-radius:50%;background:var(--primary);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;
+    transition:var(--transition);box-shadow:0 4px 12px rgba(99,102,241,0.35);
+}
+.send-btn:hover{background:var(--primary-hover);transform:scale(1.05);}
+.send-btn:active{transform:scale(0.92);}
+
+@media(min-width:768px){
+    body{max-width:480px;margin:0 auto;box-shadow:0 0 40px rgba(0,0,0,0.06);height:100vh;}
+}
+</style>
 </head>
 <body>
-    <div id="chat-container">
-        <!-- Header -->
-        <header>
-            <div class="header-logo">
-                <div class="logo-icon"><i class="fas fa-robot text-sm"></i></div>
-                <div class="header-title">
-                    <h1>دستیار خرید</h1>
-                    <span>هوشمند آپادانا</span>
-                </div>
-            </div>
-            <div class="header-actions">
-                <button onclick="clearChat()" class="icon-btn delete" title="پاک کردن گفتگو" aria-label="پاک کردن تاریخچه">
-                    <i class="fas fa-trash-alt text-xs"></i>
-                </button>
-                <button onclick="window.location.href='DigiKala.html'" class="icon-btn home" title="بازگشت به فروشگاه" aria-label="بازگشت به صفحه اصلی">
-                    <i class="fas fa-home text-xs"></i>
-                </button>
-            </div>
-        </header>
 
-        <!-- Chat Output -->
-        <div id="chat-output"></div>
-
-        <!-- AI Status -->
-        <div id="ai-status">
-            <div class="orb-container">
-                <div class="orb"></div>
-                <div class="wave"></div>
-                <div class="wave"></div>
-                <div class="wave"></div>
-            </div>
-            <span class="text-xs text-gray-500 font-medium animate-pulse">در حال تحلیل...</span>
-        </div>
-
-        <!-- Input Area -->
-        <div id="input-area">
-            <div class="input-wrapper">
-                <input type="text" id="userInput" placeholder="پیام خود را بنویسید..." autocomplete="off" aria-label="ورودی متن پیام">
-                <button id="sendBtn" aria-label="ارسال پیام">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </div>
+<header class="ai-header">
+    <div class="ai-brand">
+        <div class="ai-avatar"><i class="fas fa-robot"></i></div>
+        <div>
+            <div class="ai-title">دستیار هوشمند SHOP</div>
+            <div class="ai-status" id="userStatusLine"><i class="fas fa-circle"></i> در حال بارگذاری...</div>
         </div>
     </div>
+    <a href="DigiKala.html" class="back-btn"><i class="fas fa-arrow-right"></i> فروشگاه</a>
+</header>
 
-    <!-- Product Modal -->
-    <div id="productModal" onclick="closeModal(event)" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="close-modal" onclick="closeModalDirect()" aria-label="بستن پنجره"><i class="fas fa-times"></i></button>
-            <div id="modalBody"></div>
-        </div>
-    </div>
+<div class="ai-disclaimer">
+    <i class="fas fa-info-circle"></i>
+    <span>این دستیار فقط بر اساس اطلاعات واقعی همین فروشگاه (محصولات، سبد، سفارش‌های شما) پاسخ می‌دهد و به هیچ سرویس هوش مصنوعی خارجی وصل نیست.</span>
+</div>
 
-    <!-- Web Worker Script -->
-    <script id="ai-worker" type="javascript/worker">
-        // --- DICTIONARIES & CONFIG ---
-        const STOP_WORDS = new Set(['میخوام', 'بده', 'رو', 'است', 'هست', 'که', 'را', 'به', 'از', 'در', 'این', 'یک', 'خواهم', 'می‌خواهم', 'برام', 'برای', 'با', 'و', 'یا', 'های', 'ها', 'تر', 'ترین', 'استفاده', 'کنید', 'کنم', 'کرد', 'شد', 'شوند', 'می‌شود', 'شود', 'دارم', 'دارد', 'چطور', 'چگونه', 'کجا', 'کدام', 'چند', 'قیمت', 'هزینه', 'ریال', 'تومان', 'تومن', 'میلیون', 'هزار', 'لطف', 'لطفا', 'ممنون', 'تشکر', 'سلام', 'خوبی', 'خوبید', 'چطوری']);
-        
-        const SYNONYMS = {
-            'گوشی': ['موبایل', 'تلفن', 'همراه', 'جیبی'],
-            'لپتاپ': ['لپ‌تاپ', 'نوت‌بوک', 'کامپیوتر', 'لپ تاپ'],
-            'تبلت': ['آیپد', 'تب'],
-            'ساعت': ['واچ', 'ساعت هوشمند'],
-            'هدفون': ['هندزفری', 'ایرفون', 'هدفون'],
-            'تلویزیون': ['تیوی', 'tv'],
-            'ارزان': ['ارزون', 'کم‌قیمت', 'اقتصادی', 'مناسب'],
-            'گران': ['گرون', 'لوکس', 'پرچمدار', 'گران‌قیمت'],
-            'خوب': ['عالی', 'عالی', 'بهترین', 'برتر'],
-            'بد': ['ضعیف', 'بی‌کیفیت'],
-            'جدید': ['۲۰۲۴', '2024', 'مدل جدید', 'تازه'],
-            'قدیمی': ['کارکرده', 'دست دوم', 'قدیمی']
-        };
+<div class="chat-wrap" id="chatWrap"></div>
 
-        const INTENTS = {
-            GAMING: ['گیم', 'بازی', 'gaming', 'game', 'ps5', 'ps4', 'xbox', 'استیم'],
-            PHOTOGRAPHY: ['عکس', 'دوربین', 'عکاسی', 'فیلمبرداری', 'سلفی'],
-            WORK: ['کار', 'ادیت', 'طراحی', 'برنامه‌نویسی', 'دفتر', 'اداری'],
-            GIFT: ['هدیه', 'کادو', 'ولنتاین', 'سالگرد', 'تولد'],
-            STUDY: ['درس', 'دانشگاه', 'مدرسه', 'کلاس', 'تحصیل']
-        };
+<div class="suggest-row" id="suggestRow"></div>
 
-        // --- UTILITIES ---
-        function toEnglishDigits(str) {
-            return str.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+<div class="composer">
+    <input type="text" class="composer-input" id="chatInput" placeholder="پیام خود را بنویسید..." autocomplete="off">
+    <button class="send-btn" id="sendBtn" aria-label="ارسال"><i class="fas fa-paper-plane"></i></button>
+</div>
+
+<script>
+/* =====================================================================
+   MODULE: CONFIG
+   ===================================================================== */
+const DB = {
+    products: 'shopshopProducts',
+    users: 'users_database',
+    session: 'current_user',
+    orders: 'orders_list',
+    wishlist: 'shop_wishlist',
+    history: 'shop_search_history'
+};
+
+const CATEGORY_DATA = {
+    "کالای دیجیتال": {
+        "موبایل": ["اپل", "سامسونگ", "شیائومی", "گوگل", "ناتینگ"],
+        "لپ‌تاپ": ["ایسوس", "لنوو", "اپل", "قطعات کامپیوتر"],
+        "هدفون و ساعت هوشمند": ["اپل واچ", "ایرپاد", "ساعت سامسونگ", "اسپیکر"],
+        "لوازم جانبی": ["قاب", "گلس", "شارژر"]
+    },
+    "مد و پوشاک": {
+        "مردانه": ["شلوار مردانه", "کفش مردانه", "پافر مردانه", "کلاه"],
+        "زنانه": ["شلوار زنانه", "کفش زنانه", "پافر زنانه", "کاپشن زنانه"],
+        "بچگانه": ["نوزادی", "پوشاک پسرانه", "پوشاک دخترانه"]
+    },
+    "خانه و آشپزخانه": {
+        "لوازم برقی": ["یخچال", "تلویزیون", "ماشین لباسشویی", "ماشین ظرفشویی"],
+        "دکوراسیون": ["فرش", "مبلمان", "لوستر", "مجسمه"],
+        "پذیرایی": ["سرویس غذاخوری", "قاشق و چنگال"]
+    },
+    "آرایشی و بهداشتی": {
+        "آرایشی": ["لوازم آرایش چشم", "آرایش لب", "لاک ناخن"],
+        "بهداشتی": ["مراقبت پوست", "شامپو و مو", "ضد آفتاب"],
+        "عطر و ادکلن": ["مردانه", "زنانه", "اسپری"]
+    }
+};
+
+const SHIPPING_INFO = [
+    { name: 'پست پیشتاز', cost: 35000, time: '۲ تا ۴ روز' },
+    { name: 'تیپاکس', cost: 45000, time: '۱ تا ۲ روز' },
+    { name: 'ارسال رایگان', cost: 0, time: 'برای سفارش‌های بالای ۱,۰۰۰,۰۰۰ تومان' }
+];
+
+const PAYMENT_GATEWAYS = ['زرین‌پال', 'بانک ملت', 'پی‌پینگ'];
+
+const STATUS_LABELS = {
+    pending_payment: { text: 'در انتظار پرداخت', color: '#92400e', bg: '#fff3e0' },
+    paid: { text: 'پرداخت شده - آماده پردازش', color: '#1976d2', bg: '#e3f2fd' },
+    processing: { text: 'در حال پردازش انبار', color: '#ef6c00', bg: '#fff3e0' },
+    shipped: { text: 'ارسال شده', color: '#2e7d32', bg: '#e8f5e9' },
+    delivered: { text: 'تحویل داده شده', color: '#7b1fa2', bg: '#f3e5f5' },
+    failed_payment: { text: 'پرداخت ناموفق', color: '#c62828', bg: '#ffebee' }
+};
+
+/* =====================================================================
+   MODULE: STORAGE MANAGER (خواندن ایمن از localStorage با بازیابی خطا)
+   ===================================================================== */
+const StorageManager = {
+    safeGet(key, fallback) {
+        try {
+            const raw = localStorage.getItem(key);
+            if (raw === null || raw === undefined) return fallback;
+            const parsed = JSON.parse(raw);
+            return parsed === null ? fallback : parsed;
+        } catch (e) {
+            console.warn('[AI][Storage] خطا در خواندن کلید', key, e);
+            return fallback;
+        }
+    },
+    safeSet(key, value) {
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+            return true;
+        } catch (e) {
+            console.warn('[AI][Storage] خطا در نوشتن کلید', key, e);
+            return false;
+        }
+    }
+};
+
+/* =====================================================================
+   MODULE: CONTEXT MANAGER (وضعیت فعلی کاربر و سایت)
+   ===================================================================== */
+const ContextManager = {
+    getSessionMobile() {
+        try { return localStorage.getItem(DB.session); } catch (e) { return null; }
+    },
+    getUsers() { return StorageManager.safeGet(DB.users, []); },
+    getProducts() { return StorageManager.safeGet(DB.products, []); },
+    getAllOrders() { return StorageManager.safeGet(DB.orders, []); },
+    getWishlistIds() { return StorageManager.safeGet(DB.wishlist, []); },
+
+    isLoggedIn() { return !!this.getSessionMobile(); },
+
+    getCurrentUser() {
+        const mobile = this.getSessionMobile();
+        if (!mobile) return null;
+        const users = this.getUsers();
+        const found = users.find(u => u.mobile === mobile);
+        if (!found) return null;
+        // امنیت: رمز عبور هرگز نباید در context دستیار ظاهر شود
+        const { password, ...safeUser } = found;
+        return safeUser;
+    },
+
+    getCartRaw() {
+        const user = this.getCurrentUser();
+        return (user && Array.isArray(user.cart)) ? user.cart : [];
+    },
+
+    getCartDetailed() {
+        const cart = this.getCartRaw();
+        const products = this.getProducts();
+        return cart.map(item => {
+            const p = products.find(pr => pr.id == item.id);
+            if (!p) return null;
+            const unitPrice = p.price - (p.price * (p.discount || 0) / 100);
+            return { ...item, product: p, unitPrice, lineTotal: unitPrice * item.qty };
+        }).filter(Boolean);
+    },
+
+    getMyOrders() {
+        const mobile = this.getSessionMobile();
+        if (!mobile) return [];
+        return this.getAllOrders()
+            .filter(o => o.userId === mobile)
+            .sort((a, b) => (b.id || 0) - (a.id || 0));
+    }
+};
+
+/* =====================================================================
+   MODULE: PRODUCT ENGINE (جستجو و امتیازدهی — هم‌سو با منطق DigiKala.html)
+   ===================================================================== */
+function norm(s) {
+    return (s || '').replace(/[يى]/g, 'ی').replace(/[كک]/g, 'ک')
+        .replace(/[\u064B-\u065F]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+}
+function levenshtein(a, b) {
+    const m = [], la = a.length, lb = b.length;
+    for (let i = 0; i <= lb; i++) m[i] = [i];
+    for (let j = 0; j <= la; j++) m[0][j] = j;
+    for (let i = 1; i <= lb; i++)
+        for (let j = 1; j <= la; j++)
+            m[i][j] = b[i - 1] === a[j - 1] ? m[i - 1][j - 1] : Math.min(m[i - 1][j - 1] + 1, m[i][j - 1] + 1, m[i - 1][j] + 1);
+    return m[lb][la];
+}
+function fuzzyMatch(q, text) {
+    const qn = norm(q), tn = norm(text);
+    if (!qn) return false;
+    if (tn.includes(qn)) return true;
+    return tn.split(' ').some(w => w.length >= 3 && levenshtein(qn, w) <= Math.floor(qn.length / 4));
+}
+
+const ProductEngine = {
+    search(query, limit) {
+        limit = limit || 4;
+        const products = ContextManager.getProducts();
+        const qn = norm(query);
+        if (!qn) return [];
+        const scored = products.map(p => {
+            const name = norm(p.name || '');
+            const cat = norm(p.breadcrumb || p.category || '');
+            let score = 0;
+            if (name === qn) score += 200;
+            else if (name.startsWith(qn)) score += 150;
+            else if (name.includes(qn)) score += 100;
+            else if (cat.includes(qn)) score += 60;
+            else if (fuzzyMatch(query, p.name)) score += 30;
+            if (!score) return null;
+            if (p.stock > 0) score += 30; else score -= 60;
+            score += (p.rating || 0) * 3;
+            return { p, score };
+        }).filter(Boolean).sort((a, b) => b.score - a.score);
+        return scored.slice(0, limit).map(s => s.p);
+    },
+
+    recommend(limit) {
+        limit = limit || 4;
+        const products = ContextManager.getProducts();
+        return products
+            .filter(p => p.stock > 0)
+            .sort((a, b) => (b.discount || 0) - (a.discount || 0) || (b.rating || 0) - (a.rating || 0))
+            .slice(0, limit);
+    },
+
+    findById(id) {
+        return ContextManager.getProducts().find(p => p.id == id) || null;
+    }
+};
+
+/* =====================================================================
+   MODULE: ACTION LAYER (افزودن به سبد از داخل چت — هم‌سو با منطق موجود سایت)
+   ===================================================================== */
+const ActionLayer = {
+    addToCart(productId) {
+        const mobile = ContextManager.getSessionMobile();
+        if (!mobile) return { ok: false, reason: 'guest' };
+
+        const product = ProductEngine.findById(productId);
+        if (!product) return { ok: false, reason: 'not_found' };
+        if (!product.stock || product.stock <= 0) return { ok: false, reason: 'out_of_stock' };
+
+        const users = ContextManager.getUsers();
+        const idx = users.findIndex(u => u.mobile === mobile);
+        if (idx === -1) return { ok: false, reason: 'user_missing' };
+
+        if (!Array.isArray(users[idx].cart)) users[idx].cart = [];
+        const defaultColor = (product.colors && product.colors[0] && product.colors[0].name) || 'مشکی';
+        const existing = users[idx].cart.find(x => x.id == productId);
+
+        if (existing) {
+            if (existing.qty + 1 > product.stock) return { ok: false, reason: 'stock_limit' };
+            existing.qty += 1;
+        } else {
+            users[idx].cart.push({ id: product.id, qty: 1, color: defaultColor });
         }
 
-        function tokenize(text) {
-            let clean = text.replace(/[\u200c]/g, ' ').toLowerCase();
-            clean = toEnglishDigits(clean);
-            let tokens = clean.split(/\s+/).filter(t => t.length > 1 && !STOP_WORDS.has(t));
-            
-            let expandedTokens = [...tokens];
-            tokens.forEach(t => {
-                for (let key in SYNONYMS) {
-                    if (SYNONYMS[key].includes(t) || t.includes(key)) {
-                        expandedTokens.push(key);
-                        expandedTokens.push(...SYNONYMS[key]);
-                    }
-                }
-            });
-            return [...new Set(expandedTokens)];
+        const saved = StorageManager.safeSet(DB.users, users);
+        if (!saved) return { ok: false, reason: 'storage_error' };
+
+        updateCartBadgeEverywhere(users[idx].cart);
+        return { ok: true };
+    }
+};
+
+function updateCartBadgeEverywhere(cart) {
+    // فقط برای هماهنگی وضعیت داخل همین صفحه؛ صفحات دیگر با لود مجدد خودشان همگام می‌شوند
+    const count = cart.reduce((a, i) => a + i.qty, 0);
+    document.title = count > 0 ? `(${count}) دستیار هوشمند SHOP` : 'دستیار هوشمند SHOP';
+}
+
+/* =====================================================================
+   MODULE: INTENT DETECTION ENGINE
+   ===================================================================== */
+const INTENT_RULES = [
+    { name: 'greeting', keywords: ['سلام', 'درود', 'وقت بخیر', 'hi', 'hello'] },
+    { name: 'help', keywords: ['کمک', 'راهنما', 'چیکار میتونی', 'چه کاری بلدی', 'چه کارهایی'] },
+    { name: 'cart_status', keywords: ['سبد خرید', 'سبدم', 'تو سبدم', 'سبد من', 'چی خریدم'] },
+    { name: 'order_status', keywords: ['سفارشاتم', 'سفارش هام', 'پیگیری سفارش', 'وضعیت سفارش', 'سفارشم'] },
+    { name: 'wishlist_status', keywords: ['علاقه مندی', 'لیست دلخواه', 'ویشلیست', 'مورد علاقه'] },
+    { name: 'shipping_info', keywords: ['هزینه ارسال', 'روش ارسال', 'ارسال چقدر', 'تیپاکس', 'پست پیشتاز'] },
+    { name: 'payment_info', keywords: ['روش پرداخت', 'درگاه پرداخت', 'چطور پرداخت'] },
+    { name: 'category_info', keywords: ['دسته بندی', 'دسته‌بندی', 'چه محصولاتی دارید', 'چی دارید'] },
+    { name: 'login_help', keywords: ['چطور ثبت نام', 'چطور وارد شوم', 'ورود به حساب', 'رمز عبور'] },
+    { name: 'checkout_help', keywords: ['چطور خرید کنم', 'تسویه حساب', 'تکمیل خرید', 'نحوه خرید'] },
+    { name: 'recommend', keywords: ['پیشنهاد بده', 'معرفی کن', 'چی بخرم', 'پیشنهاد میدی'] },
+    { name: 'search_product', keywords: ['دنبال', 'میخوام', 'می خواهم', 'جستجو', 'پیدا کن', 'دارید'] }
+];
+
+function detectIntent(rawText) {
+    const t = norm(rawText);
+    if (!t) return { name: 'empty' };
+
+    for (const rule of INTENT_RULES) {
+        for (const kw of rule.keywords) {
+            if (t.includes(norm(kw))) {
+                return { name: rule.name, raw: rawText };
+            }
         }
+    }
+    // اگر هیچ الگویی مچ نشد ولی حداقل ۲ کاراکتر معنادار دارد، فرض می‌کنیم قصد جستجوی محصول دارد
+    if (t.length >= 2) return { name: 'search_product', raw: rawText, implicit: true };
+    return { name: 'unknown', raw: rawText };
+}
 
-        function levenshtein(a, b) {
-            const matrix = [];
-            for(let i=0; i<=b.length; i++){ matrix[i] = [i]; }
-            for(let j=0; j<=a.length; j++){ matrix[0][j] = j; }
-            for(let i=1; i<=b.length; i++){
-                for(let j=1; j<=a.length; j++){
-                    if(b.charAt(i-1) == a.charAt(j-1)){
-                        matrix[i][j] = matrix[i-1][j-1];
-                    } else {
-                        matrix[i][j] = Math.min(matrix[i-1][j-1] + 1, Math.min(matrix[i][j-1] + 1, matrix[i-1][j] + 1));
-                    }
-                }
-            }
-            return matrix[b.length][a.length];
-        }
+function extractSearchQuery(text) {
+    let t = norm(text);
+    const stripWords = ['دنبال', 'میخوام', 'می خواهم', 'جستجو', 'پیدا کن', 'دارید', 'یک', 'یه', 'برای من'];
+    stripWords.forEach(w => { t = t.replace(norm(w), ''); });
+    return t.trim();
+}
 
-        function parsePrice(text) {
-            let min = 0, max = Infinity;
-            const normalized = toEnglishDigits(text);
-            const regex = /(\d{1,3}(?:,\d{3})*(?:\.\d+)?|\d+(?:\.\d+)?)(?:\s*(میلیون|تومن|تومان|هزار))?/g;
-            let matches = [...normalized.matchAll(regex)];
-            
-            if (matches.length === 0) return { min, max };
+/* =====================================================================
+   MODULE: RESPONSE GENERATOR (تولید پاسخ بر اساس Intent)
+   ===================================================================== */
+function escapeHtml(s) {
+    return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function fmtPrice(n) { return Math.round(n).toLocaleString('en-US'); }
 
-            let values = matches.map(m => {
-                let valStr = m[1].replace(/,/g, '');
-                let val = parseFloat(valStr);
-                if (m[2]) {
-                    if (m[2].includes('میلیون')) val *= 1000000;
-                    else if (m[2].includes('هزار')) val *= 1000;
-                }
-                return val;
-            });
+function renderProductCard(p) {
+    const finalPrice = p.price - (p.price * (p.discount || 0) / 100);
+    const oldPriceHtml = p.discount > 0 ? `<span class="chat-pcard-old">${fmtPrice(p.price)}</span>` : '';
+    const stockText = p.stock > 0 ? `موجودی: ${p.stock} عدد` : 'ناموجود';
+    const disabled = p.stock > 0 ? '' : 'disabled';
+    return `
+        <div class="chat-pcard">
+            <img src="${p.image}" onerror="this.src='https://via.placeholder.com/52?text=%20'" alt="${escapeHtml(p.name)}">
+            <div class="chat-pcard-info">
+                <div class="chat-pcard-name">${escapeHtml(p.name)}</div>
+                <div class="chat-pcard-price">${fmtPrice(finalPrice)} تومان ${oldPriceHtml}</div>
+                <div class="chat-pcard-stock">${stockText}</div>
+            </div>
+            <button class="chat-pcard-btn" ${disabled} onclick="handleAddToCartClick(${p.id}, this)">افزودن</button>
+        </div>`;
+}
 
-            if (normalized.includes('بین') || normalized.includes('تا')) {
-                if (values.length >= 2) {
-                    min = Math.min(...values);
-                    max = Math.max(...values);
-                }
-            } else if (normalized.includes('زیر') || normalized.includes('کمتر') || (normalized.includes('تا') && values.length === 1)) {
-                max = Math.min(...values);
-            } else if (normalized.includes('بالای') || normalized.includes('بیشتر')) {
-                min = Math.max(...values);
-            } else {
-                max = values[0]; 
-            }
-            return { min, max };
-        }
+function renderOrderCard(o) {
+    const st = STATUS_LABELS[o.status] || { text: o.status || 'نامشخص', color: '#555', bg: '#eee' };
+    const dateStr = o.createdAt ? new Date(o.createdAt).toLocaleDateString('fa-IR') : (o.datePersian || '—');
+    return `
+        <div class="chat-ocard">
+            <div class="chat-ocard-top">
+                <span>سفارش #${o.id}</span>
+                <span style="color:var(--text-muted);font-weight:600;">${dateStr}</span>
+            </div>
+            <span class="chat-ocard-status" style="color:${st.color};background:${st.bg};">${st.text}</span>
+            <div style="margin-top:6px;font-size:11.5px;color:var(--text-secondary);">
+                مبلغ کل: <strong>${fmtPrice(o.totalAmount || 0)} تومان</strong>
+            </div>
+        </div>`;
+}
 
-        self.onmessage = function(e) {
-            const { query, products, history } = e.data;
-            
-            const tokens = tokenize(query);
-            const priceRange = parsePrice(query);
-            
-            let detectedIntents = [];
-            for (let key in INTENTS) {
-                if (INTENTS[key].some(intent => query.includes(intent))) {
-                    detectedIntents.push(key);
-                }
-            }
+function actionButton(label, jsCall, icon) {
+    return `<button class="msg-action-btn" onclick="${jsCall}">${icon ? `<i class="fas ${icon}"></i>` : ''}${escapeHtml(label)}</button>`;
+}
 
-            let scoredProducts = products.map(p => {
-                let score = 0;
-                const pText = `${p.name} ${p.category || ''} ${p.description || ''} ${p.breadcrumb || ''}`.toLowerCase();
-                const pTokens = tokenize(pText);
-
-                tokens.forEach(t => {
-                    if (pText.includes(t)) score += 20;
-                    if (p.name.toLowerCase().includes(t)) score += 50;
-                });
-
-                tokens.forEach(t => {
-                    pTokens.forEach(pt => {
-                        if (t.length > 3 && pt.length > 3) {
-                            const dist = levenshtein(t, pt);
-                            if (dist <= 2) score += 15;
-                        }
-                    });
-                });
-
-                if (detectedIntents.length > 0) {
-                    detectedIntents.forEach(intent => {
-                        if (INTENTS[intent].some(k => pText.includes(k))) score += 30;
-                    });
-                }
-
-                if (query.includes('ارزان') || query.includes('ارزون')) {
-                    score += (100000000 / (p.price + 1)); 
-                }
-                if (query.includes('گران') || query.includes('لوکس')) {
-                    score += (p.price / 1000000);
-                }
-
-                return { ...p, score };
-            });
-
-            let results = scoredProducts
-                .filter(p => p.score > 5)
-                .filter(p => p.price >= priceRange.min && p.price <= priceRange.max)
-                .sort((a, b) => b.score - a.score)
-                .slice(0, 6);
-
-            let suggestion = null;
-            if (results.length === 0 && tokens.length > 0) {
-                let bestMatch = null;
-                let minDistance = 100;
-                
-                products.forEach(p => {
-                    const pNameTokens = tokenize(p.name);
-                    tokens.forEach(t => {
-                        pNameTokens.forEach(pt => {
-                            const d = levenshtein(t, pt);
-                            if (d < minDistance && d < 4) {
-                                minDistance = d;
-                                bestMatch = p.name;
-                            }
-                        });
-                    });
-                });
-                if (bestMatch) suggestion = bestMatch;
-            }
-
-            self.postMessage({ results, suggestion });
+const ResponseGenerator = {
+    greeting() {
+        const user = ContextManager.getCurrentUser();
+        const name = user && user.name ? user.name.split(' ')[0] : null;
+        const hello = name ? `سلام ${name} عزیز 👋` : 'سلام! خوش اومدی 👋';
+        return {
+            html: `<p>${hello}</p><p>من دستیار فروشگاهت هستم. می‌تونم درباره‌ی سبد خریدت، سفارش‌هات، پیشنهاد محصول و راهنمای خرید کمکت کنم.</p>`
         };
-    </script>
+    },
 
-    <!-- Main Application Script -->
-    <script>
-        // --- CONFIG & STATE ---
-        const DB_KEY = 'shopshopProducts';
-        const state = {
-            products: [],
-            history: [],
-            isTyping: false
+    help() {
+        return {
+            html: `<p>این کارها از دستم برمیاد:</p>
+                <p>🛒 وضعیت سبد خرید و مبلغ کل</p>
+                <p>📦 پیگیری سفارش‌های ثبت‌شده</p>
+                <p>🔍 جستجو و پیشنهاد محصول</p>
+                <p>🚚 اطلاعات هزینه و روش ارسال</p>
+                <p>💳 راهنمای روش‌های پرداخت</p>
+                <p>👤 راهنمای ورود و ثبت‌نام</p>
+                <p>کافیه بپرسی!</p>`
         };
+    },
 
-        // --- DOM ELEMENTS ---
-        const chatOutput = document.getElementById('chat-output');
-        const userInput = document.getElementById('userInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const aiStatus = document.getElementById('ai-status');
+    cart_status() {
+        if (!ContextManager.isLoggedIn()) {
+            return {
+                html: `<p>برای دیدن سبد خریدت باید اول وارد حسابت بشی.</p>`,
+                actions: [actionButton('ورود به حساب', "goTo('login.html')", 'fa-sign-in-alt')]
+            };
+        }
+        const items = ContextManager.getCartDetailed();
+        if (items.length === 0) {
+            return {
+                html: `<p>سبد خریدت فعلاً خالیه. می‌خوای چند تا پیشنهاد ببینی؟</p>`,
+                actions: [actionButton('پیشنهاد بده', "sendQuick('پیشنهاد بده')", 'fa-lightbulb')]
+            };
+        }
+        const total = items.reduce((a, i) => a + i.lineTotal, 0);
+        const count = items.reduce((a, i) => a + i.qty, 0);
+        let html = `<p>سبد خریدت الان <strong>${count}</strong> کالا داره:</p>`;
+        items.slice(0, 5).forEach(i => { html += renderProductCard(i.product); });
+        html += `<p style="margin-top:8px;">جمع کل: <strong>${fmtPrice(total)} تومان</strong></p>`;
+        return { html, actions: [actionButton('رفتن به سبد خرید', "goTo('sabad.html')", 'fa-shopping-cart')] };
+    },
 
-        // --- WORKER SETUP ---
-        const workerBlob = new Blob([document.getElementById('ai-worker').textContent], { type: "text/javascript" });
-        const worker = new Worker(window.URL.createObjectURL(workerBlob));
+    order_status() {
+        if (!ContextManager.isLoggedIn()) {
+            return {
+                html: `<p>برای دیدن سفارش‌هات باید وارد حسابت بشی.</p>`,
+                actions: [actionButton('ورود به حساب', "goTo('login.html')", 'fa-sign-in-alt')]
+            };
+        }
+        const orders = ContextManager.getMyOrders();
+        if (orders.length === 0) {
+            return { html: `<p>هنوز هیچ سفارشی ثبت نکردی.</p>` };
+        }
+        let html = `<p>آخرین سفارش‌هات:</p>`;
+        orders.slice(0, 3).forEach(o => { html += renderOrderCard(o); });
+        return { html, actions: [actionButton('مشاهده همه در پروفایل', "goTo('profile.html')", 'fa-user')] };
+    },
 
-        // --- INITIALIZATION ---
-        document.addEventListener('DOMContentLoaded', () => {
-            loadDatabase();
-            initChat();
+    wishlist_status() {
+        const ids = ContextManager.getWishlistIds();
+        if (ids.length === 0) {
+            return { html: `<p>لیست علاقه‌مندی‌ات فعلاً خالیه.</p>` };
+        }
+        const products = ContextManager.getProducts().filter(p => ids.includes(p.id));
+        let html = `<p>این‌ها تو لیست علاقه‌مندی‌هاته:</p>`;
+        products.slice(0, 4).forEach(p => { html += renderProductCard(p); });
+        return { html, actions: [actionButton('مشاهده کامل در پروفایل', "goTo('profile.html')", 'fa-heart')] };
+    },
+
+    shipping_info() {
+        let html = `<p>روش‌های ارسال فعلی فروشگاه:</p>`;
+        SHIPPING_INFO.forEach(s => {
+            const costText = s.cost === 0 ? 'رایگان' : `${fmtPrice(s.cost)} تومان`;
+            html += `<p>📦 <strong>${s.name}</strong> — ${costText} (${s.time})</p>`;
         });
+        return { html };
+    },
 
-        function loadDatabase() {
-            try {
-                const stored = localStorage.getItem(DB_KEY);
-                if (stored) {
-                    state.products = JSON.parse(stored);
-                }
-            } catch (e) {
-                console.error("DB Error", e);
-                state.products = [];
-            }
-        }
-
-        function initChat() {
-            const count = state.products.length;
-            let statusHtml = count > 0 
-                ? `<span class="text-green-600 text-xs block mt-2 font-medium"><i class="fas fa-check-circle ml-1"></i> پایگاه داده متصل (${count.toLocaleString('en-US')} محصول)</span>`
-                : `<span class="text-orange-500 text-xs block mt-2 font-medium"><i class="fas fa-exclamation-triangle ml-1"></i> دیتابیس خالی است.</span>`;
-
-            addBotMessage(`
-                <div class="flex flex-col gap-3">
-                    <ul class="text-sm text-gray-600 list-disc pr-4 space-y-1">
-                        <li>جستجوی نام محصول (مثل: سامسونگ S21)</li>
-                        <li>فیلتر قیمت (مثل: زیر ۵ میلیون)</li>
-                        <li>دسته‌بندی خاص (مثل: لپتاپ گیمینگ)</li>
-                    </ul>
-                    ${statusHtml}
-                    <div class="flex flex-wrap gap-2 mt-2">
-                        <span class="suggestion-chip" onclick="setInput('موبایل')">موبایل</span>
-                        <span class="suggestion-chip" onclick="setInput('لپتاپ')">لپتاپ</span>
-                        <span class="suggestion-chip" onclick="setInput('هدفون بلوتوثی')">هدفون بلوتوثی</span>
-                    </div>
-                </div>
-            `);
-        }
-
-        function setInput(text) {
-            userInput.value = text;
-            sendMessage();
-        }
-
-        function addUserMessage(text) {
-            const div = document.createElement('div');
-            div.className = 'message-row user';
-            div.innerHTML = `<div class="bubble">${text}</div>`;
-            chatOutput.appendChild(div);
-            scrollToBottom();
-        }
-
-        function addBotMessage(htmlContent) {
-            const div = document.createElement('div');
-            div.className = 'message-row bot';
-            div.innerHTML = `<div class="bubble">${htmlContent}</div>`;
-            chatOutput.appendChild(div);
-            scrollToBottom();
-        }
-
-        function scrollToBottom() {
-            chatOutput.scrollTop = chatOutput.scrollHeight;
-        }
-
-        function showLoading() {
-            aiStatus.style.display = 'flex';
-            scrollToBottom();
-        }
-
-        function hideLoading() {
-            aiStatus.style.display = 'none';
-        }
-
-        function sendMessage() {
-            const text = userInput.value.trim();
-            if (!text || state.isTyping) return;
-
-            addUserMessage(text);
-            userInput.value = '';
-            
-            // UI State Management
-            sendBtn.disabled = true;
-            sendBtn.querySelector('i').classList.add('fa-spin');
-            sendBtn.querySelector('i').classList.remove('fa-paper-plane');
-            sendBtn.querySelector('i').classList.add('fa-spinner');
-            
-            showLoading();
-            state.isTyping = true;
-
-            loadDatabase();
-
-            worker.postMessage({
-                query: text,
-                products: state.products,
-                history: state.history
-            });
-            state.history.push({ role: 'user', content: text });
-        }
-
-        // --- WORKER RESPONSE HANDLER ---
-        worker.onmessage = function(e) {
-            hideLoading();
-            state.isTyping = false;
-            
-            // Reset UI State
-            sendBtn.disabled = false;
-            sendBtn.querySelector('i').classList.remove('fa-spinner');
-            sendBtn.querySelector('i').classList.add('fa-paper-plane');
-
-            const { results, suggestion } = e.data;
-
-            if (results.length > 0) {
-                let html = `<p class="mb-4 text-sm text-gray-600 font-medium">نتایج جستجو برای شما:</p>`;
-                html += `<div class="product-grid">`;
-                results.forEach(p => {
-                    const imgUrl = (p.image && p.image.length > 10) ? p.image : `https://picsum.photos/seed/${p.id}/300/300`;
-                    
-                    html += `
-                        <div class="product-card" onclick="openProduct(${p.id})">
-                            <div class="h-28 overflow-hidden relative">
-                                <img src="${imgUrl}" 
-                                     class="w-full h-full object-cover" 
-                                     loading="lazy" 
-                                     alt="تصویر محصول ${p.name}"
-                                     onerror="this.onerror=null; this.src='https://via.placeholder.com/150?text=No+Img'; this.onerror=null;">
-                            </div>
-                            <div class="product-info">
-                                <h4 class="product-title">${p.name}</h4>
-                                <div class="product-price">${parseInt(p.price).toLocaleString('en-US')} <span class="text-[10px] text-gray-500 font-normal">تومان</span></div>
-                            </div>
-                        </div>
-                    `;
-                });
-                html += `</div>`;
-                addBotMessage(html);
-            } else if (suggestion) {
-                addBotMessage(`
-                    <div class="flex flex-col gap-3">
-                        <div class="flex items-center gap-2 text-gray-500 text-sm">
-                            <i class="fas fa-search text-gray-400"></i>
-                            <span>متأسفانه محصول دقیقی یافت نشد.</span>
-                        </div>
-                        <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
-                            <p class="text-sm text-blue-800 mb-2">آیا منظور شما <strong>${suggestion}</strong> بود؟</p>
-                            <button onclick="setInput('${suggestion}')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs py-2 px-4 rounded-lg transition shadow-md">جستجوی "${suggestion}"</button>
-                        </div>
-                    </div>
-                `);
-            } else {
-                addBotMessage(`
-                    <div class="flex flex-col gap-2">
-                        <div class="flex items-center gap-2 text-gray-500 text-sm">
-                            <i class="fas fa-meh text-gray-400"></i>
-                            <span>هیچ نتیجه‌ای یافت نشد.</span>
-                        </div>
-                        <p class="text-xs text-gray-400">پیشنهاد: از کلمات کلیدی ساده‌تر یا نام برند استفاده کنید.</p>
-                    </div>
-                `);
-            }
+    payment_info() {
+        return {
+            html: `<p>در مرحله‌ی تسویه حساب می‌تونی از این درگاه‌ها انتخاب کنی:</p>
+                <p>${PAYMENT_GATEWAYS.map(g => '💳 ' + g).join('<br>')}</p>
+                <p>پرداخت از داخل صفحه‌ی تسویه‌حساب انجام می‌شه.</p>`
         };
-        // --- MODAL FUNCTIONS ---
-        function openProduct(id) {
-            const product = state.products.find(p => p.id === id);
-            if (!product) return;
+    },
 
-            const modalBody = document.getElementById('modalBody');
-            const imgUrl = (product.image && product.image.length > 10) ? product.image : `https://picsum.photos/seed/${product.id}/300/300`;
+    category_info() {
+        let html = `<p>دسته‌بندی‌های اصلی فروشگاه:</p>`;
+        Object.keys(CATEGORY_DATA).forEach(cat => { html += `<p>🗂 ${cat}</p>`; });
+        return { html, actions: [actionButton('مشاهده همه محصولات', "goTo('DigiKala.html')", 'fa-store')] };
+    },
 
-            modalBody.innerHTML = `
-                <div class="relative h-64 w-full overflow-hidden bg-gray-100">
-                    <img src="${imgUrl}" 
-                         class="w-full h-full object-cover" 
-                         alt="تصویر بزرگ ${product.name}"
-                         onerror="this.onerror=null; this.src='https://via.placeholder.com/300?text=No+Img'; this.onerror=null;">
-                </div>
-                <div class="p-6">
-                    <span class="bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1 rounded-full text-xs font-bold mb-3 inline-block">${product.category || 'عمومی'}</span>
-                    <h2 class="text-xl font-bold text-gray-800 mb-3 leading-snug tracking-tight">${product.name}</h2>
-                    <p class="text-gray-600 text-sm leading-relaxed mb-6 line-clamp-3">${product.description || 'توضیحات خاصی برای این محصول ثبت نشده است.'}</p>
-                    
-                    <div class="flex items-center justify-between bg-gray-50 p-4 rounded-lg border border-gray-100 mb-6">
-                        <span class="text-gray-700 font-semibold text-sm"><i class="fas fa-tag ml-2 text-gray-400"></i>قیمت:</span>
-                        <span class="text-lg font-bold text-[#10a37f]">${parseInt(product.price).toLocaleString('en-US')} <span class="text-xs font-normal text-gray-500">تومان</span></span>
-                    </div>
-                    
-                    <button onclick="window.location.href='DigiKala.html'" class="w-full bg-[#10a37f] hover:bg-[#0d8c6e] text-white font-bold py-3 rounded-lg shadow-md active:scale-[0.98] transition-transform flex items-center justify-center gap-2 group">
-                        <span>مشاهده در فروشگاه</span>
-                        <i class="fas fa-arrow-left transform rotate-180 group-hover:-translate-x-1 transition-transform"></i>
-                    </button>
-                </div>
-            `;
-            document.getElementById('productModal').style.display = 'flex';
+    login_help() {
+        return {
+            html: `<p>ورود خیلی ساده‌ست:</p>
+                <p>۱️⃣ شماره موبایلت رو وارد کن</p>
+                <p>۲️⃣ اگه قبلاً ثبت‌نام کرده باشی، رمز عبورت رو وارد می‌کنی</p>
+                <p>۳️⃣ اگه کاربر جدیدی، یک نام و رمز عبور جدید انتخاب می‌کنی</p>
+                <p>⚠️ من نمی‌تونم رمز عبورت رو اینجا داخل چت بگیرم؛ برای امنیت باید مستقیم داخل صفحه‌ی ورود وارد کنی.</p>`,
+            actions: [actionButton('رفتن به صفحه ورود', "goTo('login.html')", 'fa-sign-in-alt')]
+        };
+    },
+
+    checkout_help() {
+        if (!ContextManager.isLoggedIn()) {
+            return {
+                html: `<p>برای خرید اول باید وارد حسابت بشی، بعد از سبد خرید وارد تسویه حساب می‌شی.</p>`,
+                actions: [actionButton('ورود به حساب', "goTo('login.html')", 'fa-sign-in-alt')]
+            };
         }
-
-        function closeModal(e) {
-            if (e.target.id === 'productModal') {
-                document.getElementById('productModal').style.display = 'none';
-            }
+        const items = ContextManager.getCartDetailed();
+        if (items.length === 0) {
+            return {
+                html: `<p>سبدت خالیه، اول باید چیزی به سبد اضافه کنی.</p>`,
+                actions: [actionButton('پیشنهاد بده', "sendQuick('پیشنهاد بده')", 'fa-lightbulb')]
+            };
         }
+        return {
+            html: `<p>مراحل تکمیل خرید:</p>
+                <p>۱️⃣ از سبد خرید وارد تسویه‌حساب شو</p>
+                <p>۲️⃣ آدرس و روش ارسال رو انتخاب کن</p>
+                <p>۳️⃣ درگاه پرداخت مورد نظرت رو انتخاب کن و پرداخت رو تکمیل کن</p>`,
+            actions: [actionButton('رفتن به سبد خرید', "goTo('sabad.html')", 'fa-shopping-cart')]
+        };
+    },
 
-        function closeModalDirect() {
-            document.getElementById('productModal').style.display = 'none';
+    recommend() {
+        const items = ProductEngine.recommend(4);
+        if (items.length === 0) {
+            return { html: `<p>در حال حاضر محصولی برای پیشنهاد موجود نیست.</p>` };
         }
+        let html = `<p>این‌ها رو پیشنهاد می‌کنم:</p>`;
+        items.forEach(p => { html += renderProductCard(p); });
+        return { html };
+    },
 
-        function clearChat() {
-            chatOutput.innerHTML = '';
-            state.history = [];
-            initChat();
+    search_product(intent) {
+        const q = extractSearchQuery(intent.raw);
+        if (!q || q.length < 2) {
+            return { html: `<p>چی می‌خوای پیدا کنی؟ یه کم دقیق‌تر بگو 🙂</p>` };
         }
+        const results = ProductEngine.search(q, 4);
+        if (results.length === 0) {
+            return {
+                html: `<p>چیزی برای «${escapeHtml(q)}» پیدا نکردم. می‌خوای چند تا پیشنهاد کلی ببینی؟</p>`,
+                actions: [actionButton('پیشنهاد بده', "sendQuick('پیشنهاد بده')", 'fa-lightbulb')]
+            };
+        }
+        let html = `<p>این نتایج رو برای «${escapeHtml(q)}» پیدا کردم:</p>`;
+        results.forEach(p => { html += renderProductCard(p); });
+        return { html, actions: [actionButton('دیدن همه نتایج در فروشگاه', "goTo('DigiKala.html')", 'fa-search')] };
+    },
 
-        // --- EVENT LISTENERS ---
-        sendBtn.addEventListener('click', sendMessage);
-        userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
+    unknown() {
+        return {
+            html: `<p>متوجه نشدم دقیقاً چی می‌خوای. می‌تونی درباره‌ی سبد خرید، سفارش‌ها، پیشنهاد محصول یا نحوه‌ی خرید ازم بپرسی.</p>`
+        };
+    },
 
-        if (window.visualViewport) {
-            window.visualViewport.addEventListener('resize', () => {
-                document.body.style.height = `${window.visualViewport.height}px`;
-                scrollToBottom();
+    empty() {
+        return { html: `<p>پیامت خالی بود، دوباره بنویس 🙂</p>` };
+    }
+};
+
+/* =====================================================================
+   MODULE: UI CONTROLLER
+   ===================================================================== */
+const chatWrap = document.getElementById('chatWrap');
+const chatInput = document.getElementById('chatInput');
+const sendBtn = document.getElementById('sendBtn');
+const suggestRow = document.getElementById('suggestRow');
+
+function scrollToBottom() {
+    chatWrap.scrollTop = chatWrap.scrollHeight;
+}
+
+function appendMessage(role, innerHtml) {
+    const row = document.createElement('div');
+    row.className = `msg-row ${role}`;
+    const avatarIcon = role === 'bot' ? 'fa-robot' : 'fa-user';
+    row.innerHTML = `
+        <div class="msg-avatar"><i class="fas ${avatarIcon}"></i></div>
+        <div class="msg-bubble">${innerHtml}</div>`;
+    chatWrap.appendChild(row);
+    scrollToBottom();
+}
+
+function appendUserText(text) {
+    appendMessage('user', `<p>${escapeHtml(text)}</p>`);
+}
+
+function appendBotResponse(resp) {
+    let html = resp.html || '';
+    if (resp.actions && resp.actions.length) {
+        html += `<div class="msg-actions">${resp.actions.join('')}</div>`;
+    }
+    appendMessage('bot', html);
+}
+
+function showTyping() {
+    const row = document.createElement('div');
+    row.className = 'msg-row bot typing-row';
+    row.id = 'typingRow';
+    row.innerHTML = `
+        <div class="msg-avatar"><i class="fas fa-robot"></i></div>
+        <div class="typing-dots"><span></span><span></span><span></span></div>`;
+    chatWrap.appendChild(row);
+    scrollToBottom();
+}
+function hideTyping() {
+    const el = document.getElementById('typingRow');
+    if (el) el.remove();
+}
+
+/* =====================================================================
+   MODULE: ERROR RECOVERY (اجرای امن هر پردازش پیام)
+   ===================================================================== */
+function processMessage(text) {
+    try {
+        const intent = detectIntent(text);
+        const handler = ResponseGenerator[intent.name] || ResponseGenerator.unknown;
+        return handler(intent);
+    } catch (err) {
+        console.error('[AI] خطای پردازش پیام:', err);
+        return { html: `<p>یه مشکل کوچیک پیش اومد، دوباره امتحان کن 🙏</p>` };
+    }
+}
+
+function handleSend() {
+    const text = chatInput.value.trim();
+    if (!text) return;
+    appendUserText(text);
+    chatInput.value = '';
+    showTyping();
+    setTimeout(() => {
+        hideTyping();
+        const resp = processMessage(text);
+        appendBotResponse(resp);
+    }, 450 + Math.random() * 350);
+}
+
+function sendQuick(text) {
+    chatInput.value = text;
+    handleSend();
+}
+
+function goTo(page) {
+    window.location.href = page;
+}
+
+function handleAddToCartClick(productId, btnEl) {
+    const result = ActionLayer.addToCart(productId);
+    if (result.ok) {
+        btnEl.innerText = 'اضافه شد ✓';
+        btnEl.disabled = true;
+        showTyping();
+        setTimeout(() => {
+            hideTyping();
+            appendBotResponse({
+                html: `<p>به سبد خریدت اضافه شد ✅</p>`,
+                actions: [actionButton('رفتن به سبد خرید', "goTo('sabad.html')", 'fa-shopping-cart')]
             });
-        }
-    </script>
+        }, 350);
+        return;
+    }
+    const reasons = {
+        guest: 'برای افزودن به سبد باید اول وارد حسابت بشی.',
+        not_found: 'این محصول دیگه در دسترس نیست.',
+        out_of_stock: 'متأسفانه این کالا ناموجوده.',
+        stock_limit: 'موجودی انبار برای این تعداد کافی نیست.',
+        user_missing: 'مشکلی در حساب کاربری پیش اومد.',
+        storage_error: 'مشکلی در ذخیره‌سازی پیش اومد.'
+    };
+    showTyping();
+    setTimeout(() => {
+        hideTyping();
+        const actions = result.reason === 'guest' ? [actionButton('ورود به حساب', "goTo('login.html')", 'fa-sign-in-alt')] : [];
+        appendBotResponse({ html: `<p>⚠️ ${reasons[result.reason] || 'افزودن به سبد ممکن نشد.'}</p>`, actions });
+    }, 300);
+}
+
+/* =====================================================================
+   INIT
+   ===================================================================== */
+function renderStatusLine() {
+    const el = document.getElementById('userStatusLine');
+    const user = ContextManager.getCurrentUser();
+    if (user) {
+        el.innerHTML = `<i class="fas fa-circle"></i> وارد شده به‌عنوان ${escapeHtml(user.name || user.mobile)}`;
+    } else {
+        el.innerHTML = `<i class="fas fa-circle" style="color:var(--text-muted);"></i> مهمان — وارد نشده‌اید`;
+    }
+}
+
+function renderSuggestions() {
+    const chips = [
+        'وضعیت سبد خریدم',
+        'سفارش‌های من',
+        'پیشنهاد بده',
+        'هزینه ارسال چقدره؟',
+        'چطور خرید کنم؟'
+    ];
+    suggestRow.innerHTML = chips.map(c => `<button class="suggest-chip" onclick="sendQuick('${c}')">${c}</button>`).join('');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    renderStatusLine();
+    renderSuggestions();
+    const initial = ResponseGenerator.greeting();
+    appendBotResponse(initial);
+});
+
+sendBtn.addEventListener('click', handleSend);
+chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleSend(); });
+</script>
 </body>
 </html>
