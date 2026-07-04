@@ -568,7 +568,7 @@ img { max-width: 100%; height: auto; display: block; }
     width: 100%;
 }
 @media (min-width: 992px) {
-    .hero-container { aspect-ratio: 16 / 9; }
+    .hero-container { aspect-ratio: 21 / 6; max-height: 380px; }
 }
 
 /* Swiper overrides for Hero */
@@ -825,7 +825,7 @@ img { max-width: 100%; height: auto; display: block; }
 
 /* ---- MOBILE: centered carousel with scale/fade drama ---- */
 @media (max-width: 768px) {
-    .amazing-swiper .swiper-slide { width: 168px; }
+    .amazing-swiper .swiper-slide { width: 180px; }
     .amazing-swiper .swiper-slide:not(.swiper-slide-active) {
         transform: scale(0.92);
         opacity: 0.7;
@@ -837,10 +837,10 @@ img { max-width: 100%; height: auto; display: block; }
     }
 }
 @media (min-width: 480px) and (max-width: 768px) {
-    .amazing-swiper .swiper-slide { width: 190px; }
+    .amazing-swiper .swiper-slide { width: 205px; }
 }
 
-/* ---- DESKTOP: clean grid carousel, all cards equal & fully visible ---- */
+/* ---- DESKTOP: normal, fixed-width scrollable row (no stretch/scale drama) ---- */
 @media (min-width: 769px) {
     .amazing-swiper {
         padding-inline: var(--space-4);
@@ -850,8 +850,15 @@ img { max-width: 100%; height: auto; display: block; }
         transform: none !important;
         opacity: 1 !important;
         z-index: auto !important;
+        width: 200px !important;
     }
-
+    .amazing-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 14px 28px rgba(0,0,0,0.22);
+    }
+}
+@media (min-width: 1200px) {
+    .amazing-swiper .swiper-slide { width: 212px !important; }
 }
 
 /* Amazing section navigation buttons (desktop only) */
@@ -995,7 +1002,7 @@ img { max-width: 100%; height: auto; display: block; }
     line-height: 1.1;
 
     /* این خط دایره رو به سمت راست می‌بره */
-    transform: translateX(10px); 
+    transform: translateX(8px); 
 }
 .amazing-installment-badge b { font-size: calc(var(--badge) * 0.38); font-weight: 900; }
 .amazing-installment-badge span { font-size: calc(var(--badge) * 0.24); font-weight: 600; }
@@ -1373,9 +1380,6 @@ img { max-width: 100%; height: auto; display: block; }
     </section>
 
     <section class="section" aria-label="دسته‌بندی‌ها">
-        <div class="section-head">
-            <h2 class="section-title">سایر خدمات</h2>
-        </div>
         <div class="cat-grid" id="catGrid">
             <div class="cat-card" onclick="openSRP('سوپرمارکت فوری','')">
                 <div class="cat-img-wrap"><img src="img/856d2daf9782a77d34755204955c745d401582f2_1772457881.png" alt="سوپرمارکت" loading="lazy" onerror="this.src='https://via.placeholder.com/40'"></div>
@@ -1671,6 +1675,69 @@ const DB = {
     theme: 'theme'
 };
 
+/* ============================================
+   DATA ACCESS LAYER (Store)
+   -------------------------------------------
+   تمام خواندن/نوشتن داده‌ها فقط از این لایه عبور می‌کند.
+   وقتی بک‌اند واقعی (Firebase/API) اضافه شود، فقط کافیست
+   بدنه‌ی متدهای همین آبجکت به fetch/Firestore متصل شود؛
+   هیچ تغییری در بقیه‌ی کدهای برنامه لازم نیست.
+   ============================================ */
+const Store = {
+    getProducts() {
+        const raw = localStorage.getItem(DB.products);
+        if (raw === null) return null;
+        try { return JSON.parse(raw); } catch(e) { return null; }
+    },
+    setProducts(list) {
+        localStorage.setItem(DB.products, JSON.stringify(list));
+    },
+    getSlides() {
+        const raw = localStorage.getItem(DB.slides);
+        if (raw === null) return null;
+        try { return JSON.parse(raw); } catch(e) { return null; }
+    },
+    setSlides(list) {
+        localStorage.setItem(DB.slides, JSON.stringify(list));
+    },
+    getUsers() {
+        try { return JSON.parse(localStorage.getItem(DB.users)) || []; }
+        catch(e) { return []; }
+    },
+    setUsers(list) {
+        localStorage.setItem(DB.users, JSON.stringify(list));
+    },
+    getSession() {
+        return localStorage.getItem(DB.session);
+    },
+    setSession(mobile) {
+        localStorage.setItem(DB.session, mobile);
+    },
+    clearSession() {
+        localStorage.removeItem(DB.session);
+    },
+    getHistory() {
+        try { return JSON.parse(localStorage.getItem(DB.history)) || []; }
+        catch(e) { return []; }
+    },
+    setHistory(list) {
+        localStorage.setItem(DB.history, JSON.stringify(list));
+    },
+    getWishlist() {
+        try { return JSON.parse(localStorage.getItem(DB.wishlist)) || []; }
+        catch(e) { return []; }
+    },
+    setWishlist(list) {
+        localStorage.setItem(DB.wishlist, JSON.stringify(list));
+    },
+    getTheme() {
+        return localStorage.getItem(DB.theme);
+    },
+    setTheme(t) {
+        localStorage.setItem(DB.theme, t);
+    }
+};
+
 const CATEGORY_DATA = {
     "کالای دیجیتال": {
         "موبایل": ["اپل", "سامسونگ", "شیائومی", "گوگل", "ناتینگ"],
@@ -1698,7 +1765,7 @@ const CATEGORY_DATA = {
 const state = {
     products: [],
     slides: [],
-    theme: localStorage.getItem(DB.theme) || 'light',
+    theme: Store.getTheme() || 'light',
     activeProduct: null,
     activeStock: 0,
     selectedColor: 'مشکی',
@@ -1728,7 +1795,7 @@ function applyTheme(t) {
 
 function toggleTheme() {
     state.theme = state.theme === 'light' ? 'dark' : 'light';
-    localStorage.setItem(DB.theme, state.theme);
+    Store.setTheme(state.theme);
     applyTheme(state.theme);
 }
 
@@ -1736,15 +1803,15 @@ function toggleTheme() {
    DATA LOADING & SEEDING
    ============================================ */
 function loadData() {
-    const sp = localStorage.getItem(DB.products);
-    if (sp) {
-        try { state.products = JSON.parse(sp); } catch(e) { seedData(); }
+    const sp = Store.getProducts();
+    if (sp !== null) {
+        state.products = sp;
     } else {
         seedData();
     }
-    const ss = localStorage.getItem(DB.slides);
-    if (ss) {
-        try { state.slides = JSON.parse(ss); } catch(e) { seedSlides(); }
+    const ss = Store.getSlides();
+    if (ss !== null) {
+        state.slides = ss;
     } else {
         seedSlides();
     }
@@ -1756,7 +1823,7 @@ function seedSlides() {
         { image: 'https://dkstatics-public.digikala.com/digikala-adservice-banners/9187933a6a5d160c4dd53aa11d2ed21e3864fda1_1781700091.gif?x-oss-process=image?x-oss-process=image/format,webp'},
         { image: 'https://dkstatics-public.digikala.com/digikala-adservice-banners/106a9545642ec0528d7bcb59f56625689ccac627_1781703061.jpg?x-oss-process=image/quality,q_95/format,webp'}
     ];
-    localStorage.setItem(DB.slides, JSON.stringify(state.slides));
+    Store.setSlides(state.slides);
 }
 
 function seedData() {
@@ -1768,7 +1835,7 @@ function seedData() {
         { id:5, name:'جاروبرقی رباتیک شیائومی', category:'خانه و آشپزخانه', price:9500000, discount:20, stock:1, colors:[{name:'سفید',code:'#ffffff'}], image:'https://picsum.photos/300/300?random=14', description:'جاروبرقی هوشمند با نقشه‌برداری لیزری.', hot:true, rating:4.7, reviews:312, specs:{'ظرفیت آب':'200ml','مدت اجرا':'120 دقیقه'} },
         { id:6, name:'ست لوازم آرایشی', category:'آرایشی و بهداشتی', price:2300000, discount:50, stock:8, colors:[], image:'https://picsum.photos/300/300?random=15', description:'شامل رژلب، کرم پودر و ریمل.', hot:false, rating:4.3, reviews:78, specs:{'محتویات':'12 عدد','منشاء':'کره جنوبی'} }
     ];
-    localStorage.setItem(DB.products, JSON.stringify(d));
+    Store.setProducts(d);
     state.products = d;
 }
 
@@ -1806,7 +1873,7 @@ function initSwipers() {
         fadeEffect: { crossFade: true }
     });
 
-    // 2. Amazing Offers — mobile: centered carousel | desktop: grid carousel
+    // 2. Amazing Offers — mobile: centered carousel | desktop: normal fixed-width row
     amazingSwiperInstance = new Swiper('.amazing-swiper', {
         direction: 'horizontal',
         loop: true,
@@ -1826,13 +1893,13 @@ function initSwipers() {
         breakpoints: {
             769: {
                 centeredSlides: false,
-                slidesPerView: 4,
-                spaceBetween: 20,
+                slidesPerView: 'auto',
+                spaceBetween: 18,
             },
             1200: {
                 centeredSlides: false,
-                slidesPerView: 5,
-                spaceBetween: 24,
+                slidesPerView: 'auto',
+                spaceBetween: 20,
             }
         },
         observer: true,
@@ -2017,17 +2084,17 @@ function searchProds(q) {
     return state.products.map(p=>({...p,_s:scoreProduct(q,p)})).filter(p=>p._s>0).sort((a,b)=>b._s-a._s);
 }
 
-function getHistory() { try { return JSON.parse(localStorage.getItem(DB.history))||[]; } catch(e) { return []; } }
+function getHistory() { return Store.getHistory(); }
 function addHistory(q) {
     if (!q||q.trim().length<2) return;
     let h=getHistory().filter(x=>x.toLowerCase()!==q.toLowerCase());
     h.unshift(q.trim());
     if (h.length>MAX_HIST) h=h.slice(0,MAX_HIST);
-    localStorage.setItem(DB.history, JSON.stringify(h));
+    Store.setHistory(h);
 }
 function removeHistory(q) {
     const h=getHistory().filter(x=>x!==q);
-    localStorage.setItem(DB.history, JSON.stringify(h));
+    Store.setHistory(h);
     showDropdown(document.getElementById('mainSearch').value);
 }
 
@@ -2242,7 +2309,7 @@ function createSRPCard(p) {
         </article>`;
 }
 
-function getWishlist() { try { return JSON.parse(localStorage.getItem(DB.wishlist))||[]; } catch(e) { return []; } }
+function getWishlist() { return Store.getWishlist(); }
 function quickWishlist(id, btn) {
     let wl=getWishlist(); const icon=btn.querySelector('i');
     if (wl.includes(id)) {
@@ -2250,7 +2317,7 @@ function quickWishlist(id, btn) {
     } else {
         wl.push(id); btn.classList.add('active','pop'); icon.className='fas fa-heart'; setTimeout(()=>btn.classList.remove('pop'),300); showToast('به لیست علاقه‌مندی اضافه شد');
     }
-    localStorage.setItem(DB.wishlist, JSON.stringify(wl));
+    Store.setWishlist(wl);
 }
 function toggleWishlist() {
     if (!state.activeProduct) return;
@@ -2261,7 +2328,7 @@ function toggleWishlist() {
     } else {
         wl.push(id); btn.classList.add('active','pop'); icon.className='fas fa-heart'; setTimeout(()=>btn.classList.remove('pop'),300); showToast('به لیست علاقه‌مندی اضافه شد');
     }
-    localStorage.setItem(DB.wishlist, JSON.stringify(wl));
+    Store.setWishlist(wl);
 }
 function updateWishlistUI() {
     if (!state.activeProduct) return;
@@ -2328,10 +2395,10 @@ function changeQty(d) {
 }
 
 function addToCart() {
-    const session=localStorage.getItem(DB.session);
+    const session=Store.getSession();
     if (!session) { showToast('لطفاً ابتدا وارد شوید'); setTimeout(()=>window.location.href='login.html',1500); return; }
     if (state.activeStock===0) { showToast('ناموجود است'); return; }
-    let users=JSON.parse(localStorage.getItem(DB.users))||[];
+    let users=Store.getUsers();
     const ui=users.findIndex(u=>u.mobile===session);
     if (ui!==-1) {
         if (!users[ui].cart) users[ui].cart=[];
@@ -2342,7 +2409,7 @@ function addToCart() {
             if (ex.qty+qty>state.activeStock) { showToast('موجودی کافی نیست'); return; }
             ex.qty+=qty;
         } else { users[ui].cart.push({id:state.activeProduct.id,qty,color:state.selectedColor}); }
-        localStorage.setItem(DB.users, JSON.stringify(users)); updateCartUI(users[ui].cart);
+        Store.setUsers(users); updateCartUI(users[ui].cart);
         showToast(`با رنگ ${state.selectedColor} به سبد اضافه شد`); closeModal();
     }
 }
@@ -2381,9 +2448,9 @@ function showToast(msg) {
 }
 
 function updateAuthUI() {
-    const session=localStorage.getItem(DB.session), authLink=document.getElementById('authLink'), label=document.getElementById('userLabel');
+    const session=Store.getSession(), authLink=document.getElementById('authLink'), label=document.getElementById('userLabel');
     if (session) {
-        const users=JSON.parse(localStorage.getItem(DB.users))||[], user=users.find(u=>u.mobile===session);
+        const users=Store.getUsers(), user=users.find(u=>u.mobile===session);
         if (user) {
             if (authLink) authLink.href='profile.html'; if (label) label.innerText=user.name||'پنل کاربری';
             if (user.cart) updateCartUI(user.cart);
