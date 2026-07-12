@@ -48,9 +48,9 @@
     #particles-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.8; }
 
     /* Navigation */
-    .main-navigation { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height); padding: 0 20px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; background: rgba(5, 5, 7, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border); transition: var(--transition-smooth); }
+    .main-navigation { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height); padding: 0 20px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; background: rgba(0, 0, 0, 0.498); backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border); transition: var(--transition-smooth);  }
     .nav-left { display: flex; align-items: center; gap: 15px; }
-    .project-btn { padding: 8px 18px; background: transparent; border: 1px solid var(--accent-color); color: var(--accent-color); border-radius: 20px; font-weight: 600; font-size: 0.85rem; text-decoration: none; transition: var(--transition-smooth); white-space: nowrap; }
+    .project-btn { padding: 10px 30px; background: transparent; border: 1px solid var(--accent-color); color: var(--accent-color); border-radius: 20px; font-weight: 600; font-size: 0.85rem; text-decoration: none; transition: var(--transition-smooth); white-space: nowrap; }
     .project-btn:hover { background: var(--accent-color); color: #fff; box-shadow: 0 0 15px var(--accent-glow); }
     .logo { font-weight: 800; font-size: 1.5rem; letter-spacing: 2px; color: #fff; text-transform: uppercase; position: relative; text-decoration: none; }
     .logo span { color: var(--accent-color); }
@@ -61,12 +61,12 @@
     .nav-link:hover::after { width: 100%; }
     .mobile-menu-btn { display: none; flex-direction: column; gap: 6px; background: none; border: none; z-index: 1002; padding: 5px; }
     .bar { width: 28px; height: 2px; background-color: white; transition: var(--transition-smooth); }
-    @media (max-width: 900px) {
+    @media (max-width: 768px) {
         .nav-links { position: fixed; top: 0; right: -100%; width: 100%; height: 100vh; background: rgba(5, 5, 7, 0.98); backdrop-filter: blur(30px); flex-direction: column; justify-content: center; align-items: center; transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1); z-index: 1001; gap: 35px; }
         .nav-links.active { right: 0; }
         .mobile-menu-btn { display: flex; }
         .nav-link { font-size: 1.6rem; }
-        .project-btn { font-size: 1.1rem; padding: 12px 30px; }
+        .project-btn { font-size: 1rem; padding: 10px 25px; }
         .mobile-menu-btn.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
         .mobile-menu-btn.active .bar:nth-child(2) { opacity: 0; }
         .mobile-menu-btn.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
@@ -131,7 +131,7 @@
     .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
     .reveal.active { opacity: 1; transform: translateY(0); }
 
-    @media (max-width: 480px) {
+    @media (max-width: 768px) {
         :root { --nav-height: 60px; }
         .logo { font-size: 1.2rem; }
         .project-btn { padding: 6px 12px; font-size: 0.75rem; }
@@ -148,8 +148,8 @@
     
     <nav class="main-navigation">
         <div class="nav-left">
-            <a href="./project.html" class="project-btn hover-trigger">Projects</a>
-            <a href="#" class="logo">POUYAN<span>.</span></a>
+            <a href="./project.html" class="project-btn hover-trigger">My Projects</a>
+  
         </div>
         <ul class="nav-links">
             <li><a href="#hero" class="nav-link hover-trigger">Home</a></li>
@@ -187,7 +187,7 @@
             <div class="service-card reveal hover-trigger">
                 <div class="service-icon">🧊</div>
                 <h3 class="service-title">3D Modeling</h3>
-                <p class="service-desc">خلق مدل‌های سه بعدی با جزئیات بالا.</p>
+                <p class="service-desc">خلق بهترین فرانت اند و طرح های مدرن</p>
             </div>
             <div class="service-card reveal hover-trigger">
                 <div class="service-icon">✨</div>
@@ -202,39 +202,46 @@
         </div>
     </section>
 
+
+    <!-- گالری -->
     <section id="gallery" class="gallery-section">
+        <!-- افکت اسکرول مارکئو -->
         <div class="marquee-container">
+            <!-- افکت مارکیو -->
             <div class="marquee-content">
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D8%B9%DA%A9%D8%B3-%D9%BE%D8%B1%D9%88%D9%81%D8%A7%DB%8C%D9%84-%D8%AE%D9%84%D8%A8%D8%A7%D9%86-%D8%AC%D8%AA-%D8%AC%D9%86%DA%AF%D9%86%D8%AF%D9%87-768x432.jpg?v=1772821181" alt="Work 1"></div>
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D9%88%D8%A7%D9%84%D9%BE%DB%8C%D9%BE%D8%B1-%D9%87%D9%88%D8%A7%D9%BE%DB%8C%D9%85%D8%A7%DB%8C-%D8%B4%DA%A9%D8%A7%D8%B1%DB%8C-F-22-768x512.jpg?v=1757542283" alt="Work 2"></div>
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D9%87%D9%88%D8%A7%D9%BE%DB%8C%D9%85%D8%A7%DB%8C-%D8%AC%D9%86%DA%AF%D9%86%D8%AF%D9%87-%D8%B3%D9%88%D8%AE%D9%88-34-%D8%B1%D9%88%D8%B3%DB%8C-768x512.jpg?v=1772821187" alt="Work 3"></div>
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/Lockheed-Martin-F16-768x432.jpg?v=1772821189" alt="Work 4"></div>
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D8%AC%D9%86%DA%AF%D9%86%D8%AF%D9%87-%D9%87%D8%A7%DB%8C-f16-%D8%A8%D8%B1-%D9%81%D8%B1%D8%A7%D8%B2-%D8%A7%D8%A8%D8%B1%D9%87%D8%A7-768x480.jpg?v=1714755775" alt="Work 5"></div>
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D8%AC%D9%86%DA%AF%D9%86%D8%AF%D9%87-f16-768x432.jpg?v=1714755770" alt="Work 6"></div>
-                <!-- Tkrar -->
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D8%B9%DA%A9%D8%B3-%D9%BE%D8%B1%D9%88%D9%81%D8%A7%DB%8C%D9%84-%D8%AE%D9%84%D8%A8%D8%A7%D9%86-%D8%AC%D8%AA-%D8%AC%D9%86%DA%AF%D9%86%D8%AF%D9%87-768x432.jpg?v=1772821181" alt="Work 1"></div>
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D9%88%D8%A7%D9%84%D9%BE%DB%8C%D9%BE%D8%B1-%D9%87%D9%88%D8%A7%D9%BE%DB%8C%D9%85%D8%A7%DB%8C-%D8%B4%DA%A9%D8%A7%D8%B1%DB%8C-F-22-768x512.jpg?v=1757542283" alt="Work 2"></div>
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D9%87%D9%88%D8%A7%D9%BE%DB%8C%D9%85%D8%A7%DB%8C-%D8%AC%D9%86%DA%AF%D9%86%D8%AF%D9%87-%D8%B3%D9%88%D8%AE%D9%88-34-%D8%B1%D9%88%D8%B3%DB%8C-768x512.jpg?v=1772821187" alt="Work 3"></div>
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/Lockheed-Martin-F16-768x432.jpg?v=1772821189" alt="Work 4"></div>
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D8%AC%D9%86%DA%AF%D9%86%D8%AF%D9%87-%D9%87%D8%A7%DB%8C-f16-%D8%A8%D8%B1-%D9%81%D8%B1%D8%A7%D8%B2-%D8%A7%D8%A8%D8%B1%D9%87%D8%A7-768x480.jpg?v=1714755775" alt="Work 5"></div>
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2017/02/%D8%AC%D9%86%DA%AF%D9%86%D8%AF%D9%87-f16-768x432.jpg?v=1714755770" alt="Work 6"></div>
+                <div class="marquee-item hover-trigger"><img src="" alt="1"></div>
+                <div class="marquee-item hover-trigger"><img src="" alt="2"></div>
+                <div class="marquee-item hover-trigger"><img src="" alt="3"></div>
+                <div class="marquee-item hover-trigger"><img src="" alt="4"></div>
+                <div class="marquee-item hover-trigger"><img src="" alt="5"></div>
+                <div class="marquee-item hover-trigger"><img src="" alt="6"></div>
+                <!-- تکرار -->
+                <div class="marquee-item hover-trigger"><img src="" alt="1"></div>
+                <div class="marquee-item hover-trigger"><img src="" alt="2"></div>
+                <div class="marquee-item hover-trigger"><img src="" alt="3"></div>
+                <div class="marquee-item hover-trigger"><img src="" alt="4"></div>
+                <div class="marquee-item hover-trigger"><img src="" alt="5"></div>
+                <div class="marquee-item hover-trigger"><img src="" alt="6"></div>
             </div>
         </div>
+        <!-- افکت اسکرول مارکئو معکوس -->
         <div class="marquee-container">
+            <!-- افکت مارکیو سه بعدی -->
             <div class="marquee-content reverse">
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2024/10/%D8%AC%D9%86%D8%B3%DB%8C%D8%B3-X-Gran-Berlinetta-%D9%86%D8%A7%D8%B1%D9%86%D8%AC%DB%8C-768x432.jpg?v=1729021739" alt="3D 1"></div>
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2023/01/%D9%88%D8%A7%D9%84%D9%BE%DB%8C%D9%BE%D8%B1-%D9%84%D8%A7%D9%85%D8%A8%D9%88%D8%B1%DA%AF%DB%8C%D9%86%DB%8C-%D8%A8%D8%A7-%DA%A9%DB%8C%D9%81%DB%8C%D8%AA-4K-1536x864.jpg?v=1674508029" alt="3D 2"></div>
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2023/01/%D8%B9%DA%A9%D8%B3-%D8%A8%D8%A7%DA%A9%DB%8C%D9%81%DB%8C%D8%AA-%D9%84%D8%A7%D9%85%D8%A8%D9%88%D8%B1%DA%AF%DB%8C%D9%86%DB%8C-%D8%A8%D8%A7-%D8%AA%D9%85-%D8%B5%D9%88%D8%B1%D8%AA%DB%8C-1536x864.jpg?v=1674507674" alt="3D 3"></div>
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2022/01/%D8%A8%DA%A9-%DA%AF%D8%B1%D8%A7%D9%86%D8%AF-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%85%D8%A7%D8%B4%DB%8C%D9%86-740Li-1536x960.jpeg?v=1642542440" alt="3D 4"></div>
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2022/04/%D8%B9%DA%A9%D8%B3-%D9%85%D8%A7%D8%B4%DB%8C%D9%86-%D9%85%D8%B1%D8%B3%D8%AF%D8%B3-%D8%A8%D9%86%D8%B2-%D8%B2%D8%B1%D8%AF-%D8%B1%D9%86%DA%AF-%D8%A8%D8%A7-%DA%A9%DB%8C%D9%81%DB%8C%D8%AA-4K-768x432.jpg?v=1649099065" alt="3D 5"></div>
-                <!-- Tkrar -->
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2024/10/%D8%AC%D9%86%D8%B3%DB%8C%D8%B3-X-Gran-Berlinetta-%D9%86%D8%A7%D8%B1%D9%86%D8%AC%DB%8C-768x432.jpg?v=1729021739" alt="3D 1"></div>
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2023/01/%D9%88%D8%A7%D9%84%D9%BE%DB%8C%D9%BE%D8%B1-%D9%84%D8%A7%D9%85%D8%A8%D9%88%D8%B1%DA%AF%DB%8C%D9%86%DB%8C-%D8%A8%D8%A7-%DA%A9%DB%8C%D9%81%DB%8C%D8%AA-4K-1536x864.jpg?v=1674508029" alt="3D 2"></div>
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2023/01/%D8%B9%DA%A9%D8%B3-%D8%A8%D8%A7%DA%A9%DB%8C%D9%81%DB%8C%D8%AA-%D9%84%D8%A7%D9%85%D8%A8%D9%88%D8%B1%DA%AF%DB%8C%D9%86%DB%8C-%D8%A8%D8%A7-%D8%AA%D9%85-%D8%B5%D9%88%D8%B1%D8%AA%DB%8C-1536x864.jpg?v=1674507674" alt="3D 3"></div>
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2022/01/%D8%A8%DA%A9-%DA%AF%D8%B1%D8%A7%D9%86%D8%AF-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%85%D8%A7%D8%B4%DB%8C%D9%86-740Li-1536x960.jpeg?v=1642542440" alt="3D 4"></div>
-                <div class="marquee-item hover-trigger"><img src="https://mwallpaper.ir/wp-content/uploads/2022/04/%D8%B9%DA%A9%D8%B3-%D9%85%D8%A7%D8%B4%DB%8C%D9%86-%D9%85%D8%B1%D8%B3%D8%AF%D8%B3-%D8%A8%D9%86%D8%B2-%D8%B2%D8%B1%D8%AF-%D8%B1%D9%86%DA%AF-%D8%A8%D8%A7-%DA%A9%DB%8C%D9%81%DB%8C%D8%AA-4K-768x432.jpg?v=1649099065" alt="3D 5"></div>
-          
-  </div>
+                <div class="marquee-item hover-trigger"><img src="" alt="1"></div>
+                <div class="marquee-item hover-trigger"><img src="" alt="2"></div>
+                <div class="marquee-item hover-trigger"><img src="" alt="3"></div>
+                <div class="marquee-item hover-trigger"><img src="" alt="4"></div>
+                <div class="marquee-item hover-trigger"><img src="" alt="5"></div>
+                <div class="marquee-item hover-trigger"><img src="" alt="6"></div>
+                <!-- تکرار -->
+                <div class="marquee-item hover-trigger"><img src="" alt="1"></div>
+                <div class="marquee-item hover-trigger"><img src="" alt="2"></div>
+                <div class="marquee-item hover-trigger"><img src="" alt="3"></div>
+                <div class="marquee-item hover-trigger"><img src="" alt="4"></div>
+                <div class="marquee-item hover-trigger"><img src="" alt="5"></div>
+                <div class="marquee-item hover-trigger"><img src="" alt="6"></div>
+            </div>
         </div>
     </section>
 
@@ -248,24 +255,24 @@
             <form id="messageForm" onsubmit="event.preventDefault(); validateAndSend();">
                 
                 <div class="form-group">
-                    <label for="fullName" style="display:block; margin-bottom:5px; color:var(--text-muted); font-size:0.85rem;">Full Name / نام و نام خانوادگی *</label>
+                    <label for="fullName" style="display:block; margin-bottom:5px; color:var(--text-muted); font-size:0.85rem;">Full Name</label>
                     <input type="text" id="fullName" name="fullName" class="form-input hover-trigger" placeholder="Your Full Name" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="email" style="display:block; margin-bottom:5px; color:var(--text-muted); font-size:0.85rem;">Email / ایمیل (اختیاری)</label>
+                    <label for="email" style="display:block; margin-bottom:5px; color:var(--text-muted); font-size:0.85rem;">Email</label>
                     <input type="email" id="email" name="email" class="form-input hover-trigger" placeholder="example@email.com">
                 </div>
 
                 <div class="form-group">
-                    <label for="phone" style="display:block; margin-bottom:5px; color:var(--text-muted); font-size:0.85rem;">Phone Number / شماره تلفن *</label>
+                    <label for="phone" style="display:block; margin-bottom:5px; color:var(--text-muted); font-size:0.85rem;">Phone Number</label>
                     <input type="tel" id="phone" name="phone" class="form-input hover-trigger" placeholder="+98 912 ..." required pattern="[0-9+ -]{10,}">
                 </div>
 
                 <div class="form-group">
-                    <label for="messageText" style="display:block; margin-bottom:5px; color:var(--text-muted); font-size:0.85rem;">Your Message / متن پیام * (حداقل ۱۵۰ حرف)</label>
-                    <textarea id="messageText" name="messageText" class="form-input hover-trigger" rows="5" placeholder="Write your message here..." required minlength="150"></textarea>
-                    <small id="charCount" class="char-count">0 / 150</small>
+                    <label for="messageText" style="display:block; margin-bottom:5px; color:var(--text-muted); font-size:0.85rem;">Your Message</label>
+                    <textarea id="messageText" name="messageText" class="form-input hover-trigger" rows="5" placeholder="Write your message here..." required minlength="75"></textarea>
+                    <small id="charCount" class="char-count">0 / 75</small>
                 </div>
 
                 <button type="submit" class="submit-btn hover-trigger">Send Message</button>
@@ -276,7 +283,10 @@
     <footer>
         <p>&copy; 2026 Pouyan. All Rights Reserved.</p>
     </footer>
-
+<script type="module">
+    import { auth, db } from "./firebase-config.js";
+    console.log("✅ Firebase متصل شد به پروژه:", auth.app.options.projectId);
+</script>
     <script>
         // -----------------------------------------------------------
         // 1. نشانگر موس سفارشی
@@ -346,7 +356,7 @@
         const revealElements = document.querySelectorAll('.reveal');
         const revealOnScroll = () => {
             const windowHeight = window.innerHeight;
-            const elementVisible = 150;
+            const elementVisible = 75;
             revealElements.forEach((reveal) => {
                 const elementTop = reveal.getBoundingClientRect().top;
                 if (elementTop < windowHeight - elementVisible) {
@@ -426,8 +436,8 @@
             // شمارنده کاراکتر
             messageInput.addEventListener('input', function() {
                 const length = this.value.length;
-                charCountDisplay.textContent = `${length} / 150`;
-                charCountDisplay.className = length < 150 ? 'char-count error' : 'char-count success';
+                charCountDisplay.textContent = `${length} / 75`;
+                charCountDisplay.className = length < 75 ? 'char-count error' : 'char-count success';
             });
 
             function validateAndSend() {
@@ -439,8 +449,8 @@
                 // بررسی‌ها
                 if (!fullName) { alert('لطفاً نام و نام خانوادگی را وارد کنید.'); return; }
                 if (!phone) { alert('لطفاً شماره تلفن را وارد کنید.'); return; }
-                if (message.length < 150) { 
-                    alert('متن پیام باید حداقل شامل ۱۵۰ کاراکتر باشد.'); 
+                if (message.length < 75) { 
+                    alert('متن پیام باید حداقل شامل ۷۵ کاراکتر باشد.'); 
                     messageInput.focus(); 
                     return; 
                 }
@@ -467,7 +477,7 @@
 
                 // پاک کردن فرم (اختیاری)
                 form.reset();
-                charCountDisplay.textContent = "0 / 150";
+                charCountDisplay.textContent = "0 / 75";
                 charCountDisplay.className = 'char-count';
                 
                 // کاربر در همین صفحه می‌ماند و می‌تواند دوباره پیام بدهد
