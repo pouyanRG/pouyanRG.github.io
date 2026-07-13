@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ورود   ثبت‌نام هوشمند M-SHOP</title>
+    <title>ورود / ثبت‌نام SHOP</title>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -17,8 +17,6 @@
             --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-
-        
         body {
             font-family: 'Vazirmatn', sans-serif;
             background-color: var(--bg-body);
@@ -47,17 +45,43 @@
             font-weight: 900;
             color: var(--primary);
             text-decoration: none;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             display: block;
             letter-spacing: -1px;
         }
 
         h2 { font-size: 22px; margin-bottom: 10px; font-weight: 700; }
-        .subtitle { font-size: 14px; color: #7e8189; margin-bottom: 30px; line-height: 24px; }
+        .subtitle { font-size: 14px; color: #7e8189; margin-bottom: 25px; line-height: 24px; }
 
-      
+        /* --- Tabs --- */
+        .auth-tabs {
+            display: flex;
+            background: #f4f4f5;
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 25px;
+        }
+        .auth-tab-btn {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 12px;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            color: #888;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .auth-tab-btn.active {
+            background: var(--white);
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             text-align: right;
             position: relative;
         }
@@ -113,56 +137,63 @@
             font-weight: 700;
             cursor: pointer;
             transition: var(--transition);
-            margin-top: 10px;
+            margin-top: 6px;
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 10px;
         }
 
-        .btn-action:hover {
+        .btn-action:hover:not(:disabled) {
             background: #d63041;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(239, 57, 78, 0.3);
         }
 
-        .btn-back {
-            background: none;
-            border: none;
-            color: var(--secondary);
-            font-family: inherit;
-            cursor: pointer;
-            margin-top: 20px;
-            font-size: 13px;
-            display: inline-flex;
+        .btn-action:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        .divider {
+            display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 12px;
+            margin: 22px 0;
+            color: #aaa;
+            font-size: 12px;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e6e6e6;
         }
 
-
-        .step {
-            display: none;
-            animation: fadeIn 0.5s ease forwards;
-        }
-
-        .step.active { display: block; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateX(20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .user-info-badge {
-            background: #f0f9ff;
-            padding: 10px;
-            border-radius: 10px;
-            display: inline-flex;
+        .btn-social {
+            width: 100%;
+            border: 1.5px solid #e6e6e6;
+            background: var(--white);
+            padding: 13px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
             align-items: center;
             gap: 10px;
-            margin-bottom: 20px;
-            color: var(--secondary);
-            font-weight: 700;
+            margin-bottom: 12px;
+            font-family: inherit;
+            color: var(--text-main);
         }
+        .btn-social:hover:not(:disabled) {
+            border-color: #ccc;
+            background: #fafafa;
+        }
+        .btn-social img { width: 20px; height: 20px; }
+        .btn-social.apple-btn { display: none; } /* آماده برای آینده، فعلاً مخفی */
 
         .password-strength {
             height: 4px;
@@ -179,7 +210,14 @@
             transition: var(--transition);
         }
 
-    
+        .form-panel { display: none; animation: fadeIn 0.4s ease forwards; }
+        .form-panel.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .toast {
             position: fixed;
             top: 20px;
@@ -192,7 +230,20 @@
             font-size: 14px;
             z-index: 9999;
             display: none;
+            max-width: 90%;
+            text-align: center;
         }
+        .toast.error { background: var(--primary); }
+        .toast.success { background: var(--success); }
+
+        .spinner-inline {
+            width: 16px; height: 16px;
+            border: 2px solid rgba(255,255,255,0.4);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -200,36 +251,50 @@
     <div class="toast" id="loginToast"></div>
 
     <div class="auth-container">
-        <a href="DigiKala.html" class="logo-box">M-SHOP</a>
+        <a href="DigiKala.html" class="logo-box">SHOP</a>
 
-        <div id="step-mobile" class="step active">
-            <h2>ورود یا ثبت‌نام</h2>
-            <p class="subtitle">لطفاً شماره موبایل خود را وارد کنید تا وضعیت حساب شما بررسی شود.</p>
-            
-            <div class="form-group">
-                <label>شماره موبایل</label>
-                <div class="input-wrapper">
-                    <input type="text" id="phoneInput" placeholder="09123456789" maxlength="11" oninput="validatePhone(this)">
-                    <i class="fas fa-mobile-alt"></i>
-                </div>
-            </div>
-            
-            <button class="btn-action" onclick="handleStep1()">
-                ادامه و بررسی <i class="fas fa-arrow-left"></i>
-            </button>
-            <p style="font-size: 11px; color: #999; margin-top: 25px;">
-                با ورود به سایت، <a href="#" style="color: #666;">شرایط خدمات</a> و <a href="#" style="color: #666;">سیاست حریم خصوصی</a> را می‌پذیرید.
-            </p>
+        <div class="auth-tabs">
+            <button class="auth-tab-btn active" id="tabLoginBtn" onclick="switchTab('login')">ورود</button>
+            <button class="auth-tab-btn" id="tabRegisterBtn" onclick="switchTab('register')">ثبت‌نام</button>
         </div>
 
-        <div id="step-register" class="step">
-            <h2 style="color: var(--success);">خوش آمدید! (ثبت‌نام)</h2>
-            <p class="subtitle">به نظر می‌رسد شما اولین بار است که به جمع ما می‌پیوندید. یک رمز عبور انتخاب کنید.</p>
-            
-            <div class="user-info-badge">
-                <i class="fas fa-user-plus"></i>
-                <span id="displayPhoneReg"></span>
+        <!-- ===== LOGIN PANEL ===== -->
+        <div id="panel-login" class="form-panel active">
+            <p class="subtitle">با ایمیل و رمز عبورت وارد حساب کاربری شو.</p>
+
+            <div class="form-group">
+                <label>ایمیل</label>
+                <div class="input-wrapper">
+                    <input type="email" id="login-email" placeholder="example@mail.com" autocomplete="username">
+                    <i class="fas fa-envelope"></i>
+                </div>
             </div>
+            <div class="form-group">
+                <label>رمز عبور</label>
+                <div class="input-wrapper">
+                    <input type="password" id="login-pass" placeholder="******" autocomplete="current-password">
+                    <i class="fas fa-lock"></i>
+                </div>
+            </div>
+
+            <button class="btn-action" id="loginBtn" onclick="handleEmailLogin()">
+                <span class="btn-label">ورود به حساب</span> <i class="fas fa-sign-in-alt"></i>
+            </button>
+
+            <div class="divider">یا</div>
+
+            <button class="btn-social" id="googleLoginBtn" onclick="handleGoogleAuth()">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                ورود / ثبت‌نام با گوگل
+            </button>
+            <button class="btn-social apple-btn" id="appleLoginBtn" onclick="handleAppleAuth()">
+                <i class="fab fa-apple"></i> ورود با اپل
+            </button>
+        </div>
+
+        <!-- ===== REGISTER PANEL ===== -->
+        <div id="panel-register" class="form-panel">
+            <p class="subtitle">یک حساب کاربری جدید در SHOP بساز.</p>
 
             <div class="form-group">
                 <label>نام و نام‌خانوادگی</label>
@@ -238,177 +303,206 @@
                     <i class="fas fa-user"></i>
                 </div>
             </div>
-
+            <div class="form-group">
+                <label>ایمیل</label>
+                <div class="input-wrapper">
+                    <input type="email" id="reg-email" placeholder="example@mail.com" autocomplete="username">
+                    <i class="fas fa-envelope"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>شماره موبایل (اختیاری)</label>
+                <div class="input-wrapper">
+                    <input type="text" id="reg-mobile" placeholder="09123456789" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+            </div>
             <div class="form-group">
                 <label>تعیین رمز عبور</label>
                 <div class="input-wrapper">
-                    <input type="password" id="reg-pass" placeholder="**" oninput="checkStrength(this.value)">
+                    <input type="password" id="reg-pass" placeholder="حداقل ۶ کاراکتر" oninput="checkStrength(this.value)" autocomplete="new-password">
                     <i class="fas fa-lock"></i>
                 </div>
                 <div class="password-strength"><div id="strengthBar" class="strength-bar"></div></div>
             </div>
-
             <div class="form-group">
                 <label>تکرار رمز عبور</label>
                 <div class="input-wrapper">
-                    <input type="password" id="reg-pass-confirm" placeholder="">
+                    <input type="password" id="reg-pass-confirm" placeholder="" autocomplete="new-password">
                     <i class="fas fa-check-double"></i>
                 </div>
             </div>
 
-            <button class="btn-action" style="background: var(--success);" onclick="handleRegister()">
-                ایجاد حساب و ورود <i class="fas fa-user-check"></i>
-            </button>
-            
-            <button class="btn-back" onclick="goBack()">
-                <i class="fas fa-chevron-right"></i> اصلاح شماره موبایل
-            </button>
-        </div>
-
-        <div id="step-login" class="step">
-            <h2>خوش آمدید! (ورود)</h2>
-            <p class="subtitle">شما قبلاً ثبت‌نام کرده‌اید. برای ورود رمز عبور خود را وارد کنید.</p>
-
-            <div class="user-info-badge" style="color: var(--primary); background: #fff5f6;">
-                <i class="fas fa-user-shield"></i>
-                <span id="displayPhoneLogin"></span>
-            </div>
-
-            <div class="form-group">
-                <label>رمز عبور</label>
-                <div class="input-wrapper">
-                    <input type="password" id="login-pass" placeholder="***">
-                    <i class="fas fa-key"></i>
-                </div>
-            </div>
-
-            <button class="btn-action" onclick="handleLogin()">
-                ورود به پنل کاربری <i class="fas fa-sign-in-alt"></i>
+            <button class="btn-action" id="registerBtn" style="background: var(--success);" onclick="handleEmailRegister()">
+                <span class="btn-label">ایجاد حساب و ورود</span> <i class="fas fa-user-check"></i>
             </button>
 
-            <div style="margin-top: 15px;">
-                <a href="#" style="font-size: 12px; color: #888; text-decoration: none;">فراموشی رمز عبور؟</a>
-            </div>
+            <div class="divider">یا</div>
 
-            <button class="btn-back" onclick="goBack()">
-                <i class="fas fa-chevron-right"></i> اصلاح شماره موبایل
+            <button class="btn-social" id="googleRegisterBtn" onclick="handleGoogleAuth()">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                ثبت‌نام سریع با گوگل
+            </button>
+            <button class="btn-social apple-btn" onclick="handleAppleAuth()">
+                <i class="fab fa-apple"></i> ثبت‌نام با اپل
             </button>
         </div>
+
+        <p style="font-size: 11px; color: #999; margin-top: 20px;">
+            با ورود به سایت، <a href="#" style="color: #666;">شرایط خدمات</a> و <a href="#" style="color: #666;">سیاست حریم خصوصی</a> را می‌پذیرید.
+        </p>
     </div>
 
-    <script>
-        const USERSKEY = 'users_database';
-        const CURRENTUSERKEY = 'current_user';
-        let currentPhone = "";
+    <script type="module">
+        import { auth, db } from "./firebase-config.js";
+        import {
+            signInWithEmailAndPassword,
+            createUserWithEmailAndPassword,
+            updateProfile,
+            GoogleAuthProvider,
+            OAuthProvider,
+            signInWithPopup
+        } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+        import {
+            doc, setDoc, getDoc, serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
-        //  Step 1 Logic: Verification 
-        function handleStep1() {
-            const phone = document.getElementById('phoneInput').value.trim();
-            
-            if (!/^09\d{9}$/.test(phone)) {
-                toast("لطفاً یک شماره موبایل معتبر (۱۱ رقم) وارد کنید");
-                return;
-            }
+        // ===== Persian error mapping =====
+        function mapAuthError(code) {
+            const map = {
+                'auth/invalid-email': 'فرمت ایمیل وارد شده صحیح نیست',
+                'auth/user-not-found': 'حسابی با این ایمیل یافت نشد',
+                'auth/wrong-password': 'رمز عبور اشتباه است',
+                'auth/invalid-credential': 'ایمیل یا رمز عبور اشتباه است',
+                'auth/email-already-in-use': 'این ایمیل قبلاً ثبت‌نام کرده است. وارد شوید.',
+                'auth/weak-password': 'رمز عبور باید حداقل ۶ کاراکتر باشد',
+                'auth/too-many-requests': 'تعداد تلاش‌های ناموفق زیاد بود. کمی صبر کنید.',
+                'auth/popup-closed-by-user': 'پنجره ورود بسته شد',
+                'auth/network-request-failed': 'خطا در اتصال به شبکه. اتصال اینترنت را بررسی کنید.'
+            };
+            return map[code] || 'خطایی رخ داد. دوباره تلاش کنید.';
+        }
 
-            currentPhone = phone;
-            const users = JSON.parse(localStorage.getItem(USERSKEY)) || [];
-            const userExists = users.find(u => u.mobile === phone);
-
-            // Hide Step 1
-            document.getElementById('step-mobile').classList.remove('active');
-
-            if (userExists) {
-                // Go to Login
-                document.getElementById('displayPhoneLogin').innerText = phone;
-                document.getElementById('step-login').classList.add('active');
-            } else {
-                // Go to Register
-                document.getElementById('displayPhoneReg').innerText = phone;
-                document.getElementById('step-register').classList.add('active');
+        // ===== ایجاد/به‌روزرسانی پروفایل کاربر در Firestore =====
+        async function ensureUserProfile(user, extra = {}) {
+            const ref = doc(db, 'users', user.uid);
+            const snap = await getDoc(ref);
+            if (!snap.exists()) {
+                await setDoc(ref, {
+                    uid: user.uid,
+                    email: user.email || '',
+                    name: extra.name || user.displayName || '',
+                    mobile: extra.mobile || '',
+                    melli: '', address: '', post: '',
+                    wallet: 0, points: 0,
+                    cart: [], wishlist: [], orders: [],
+                    createdAt: serverTimestamp()
+                });
             }
         }
 
-        //  Register Logic 
-        function handleRegister() {
+        // ===== پل موقت با سیستم قدیمی مبتنی بر localStorage =====
+        // صفحات دیگر (DigiKala.html, checkout.html, ...) هنوز به این کلید وابسته‌اند
+        // و در فاز بعدی به‌طور کامل به Firestore/Auth State متصل می‌شوند.
+        function bridgeSession(user) {
+            localStorage.setItem('current_user', user.uid);
+        }
+
+        function finishAuth(user, extra = {}) {
+            ensureUserProfile(user, extra).finally(() => {
+                bridgeSession(user);
+                toast('خوش آمدید! در حال انتقال...', 'success');
+                setTimeout(() => window.location.href = 'DigiKala.html', 1200);
+            });
+        }
+
+        function setLoading(btnId, loading, label) {
+            const btn = document.getElementById(btnId);
+            if (!btn) return;
+            btn.disabled = loading;
+            const span = btn.querySelector('.btn-label');
+            if (span) span.innerText = loading ? 'در حال پردازش...' : label;
+        }
+
+        // ===== ورود با ایمیل =====
+        window.handleEmailLogin = function () {
+            const email = document.getElementById('login-email').value.trim();
+            const pass = document.getElementById('login-pass').value;
+
+            if (!email || !pass) return toast('ایمیل و رمز عبور را وارد کنید', 'error');
+
+            setLoading('loginBtn', true);
+            signInWithEmailAndPassword(auth, email, pass)
+                .then(cred => finishAuth(cred.user))
+                .catch(err => {
+                    setLoading('loginBtn', false, 'ورود به حساب');
+                    toast(mapAuthError(err.code), 'error');
+                });
+        };
+
+        // ===== ثبت‌نام با ایمیل =====
+        window.handleEmailRegister = function () {
             const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const mobile = document.getElementById('reg-mobile').value.trim();
             const pass = document.getElementById('reg-pass').value;
             const confirm = document.getElementById('reg-pass-confirm').value;
 
-            if (name.length < 3) return toast("نام خود را به درستی وارد کنید");
-            if (pass.length < 5) return toast("رمز عبور باید حداقل ۵ کاراکتر باشد");
-            if (pass !== confirm) return toast("تکرار رمز عبور همخوانی ندارد");
+            if (name.length < 3) return toast('نام خود را به‌درستی وارد کنید', 'error');
+            if (!email) return toast('ایمیل را وارد کنید', 'error');
+            if (mobile && !/^09\d{9}$/.test(mobile)) return toast('شماره موبایل معتبر نیست', 'error');
+            if (pass.length < 6) return toast('رمز عبور باید حداقل ۶ کاراکتر باشد', 'error');
+            if (pass !== confirm) return toast('تکرار رمز عبور همخوانی ندارد', 'error');
 
-            let users = JSON.parse(localStorage.getItem(USERSKEY)) || [];
-            
-            const newUser = {
-                id: Date.now(),
-                mobile: currentPhone,
-                password: pass,
-                name: name,
-                wallet: 0,
-                cart: [],
-                wishlist: [],
-                orders: [],
-                joinDate: new Date().toLocaleDateString('fa-IR')
-            };
+            setLoading('registerBtn', true);
+            createUserWithEmailAndPassword(auth, email, pass)
+                .then(cred => {
+                    return updateProfile(cred.user, { displayName: name }).then(() => cred.user);
+                })
+                .then(user => finishAuth(user, { name, mobile }))
+                .catch(err => {
+                    setLoading('registerBtn', false, 'ایجاد حساب و ورود');
+                    toast(mapAuthError(err.code), 'error');
+                });
+        };
 
-            users.push(newUser);
-            localStorage.setItem(USERSKEY, JSON.stringify(users));
-            
-            executeLogin(currentPhone);
-        }
+        // ===== ورود با گوگل =====
+        window.handleGoogleAuth = function () {
+            const provider = new GoogleAuthProvider();
+            signInWithPopup(auth, provider)
+                .then(cred => finishAuth(cred.user))
+                .catch(err => toast(mapAuthError(err.code), 'error'));
+        };
 
-        //  Login Logic 
-        function handleLogin() {
-            const pass = document.getElementById('login-pass').value;
-            const users = JSON.parse(localStorage.getItem(USERSKEY)) || [];
-            const user = users.find(u => u.mobile === currentPhone && u.password === pass);
+        // ===== ورود با اپل (آماده برای فعال‌سازی بعدی) =====
+        window.handleAppleAuth = function () {
+            const provider = new OAuthProvider('apple.com');
+            signInWithPopup(auth, provider)
+                .then(cred => finishAuth(cred.user))
+                .catch(err => toast(mapAuthError(err.code), 'error'));
+        };
 
-            if (user) {
-                executeLogin(currentPhone);
-            } else {
-                toast("رمز عبور وارد شده صحیح نمی‌باشد");
-            }
-        }
+        // ===== UI Utilities =====
+        window.switchTab = function (tab) {
+            document.getElementById('panel-login').classList.toggle('active', tab === 'login');
+            document.getElementById('panel-register').classList.toggle('active', tab === 'register');
+            document.getElementById('tabLoginBtn').classList.toggle('active', tab === 'login');
+            document.getElementById('tabRegisterBtn').classList.toggle('active', tab === 'register');
+        };
 
-        //  Shared Login Action 
-        function executeLogin(phone) {
-            localStorage.setItem(CURRENTUSERKEY, phone);
-            toast("خوش آمدید! در حال انتقال به فروشگاه...");
-            setTimeout(() => {
-                window.location.href = 'DigiKala.html';
-            }, 1500);
-        }
+        window.checkStrength = function (val) {
+            const bar = document.getElementById('strengthBar');
+            if (val.length < 4) { bar.style.width = '30%'; bar.style.background = '#ff5252'; }
+            else if (val.length < 8) { bar.style.width = '60%'; bar.style.background = '#ffc107'; }
+            else { bar.style.width = '100%'; bar.style.background = '#4caf50'; }
+        };
 
-        //  UI Utilities 
-        function goBack() {
-            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-            document.getElementById('step-mobile').classList.add('active');
-        }
-
-        function toast(msg) {
+        function toast(msg, type = 'success') {
             const t = document.getElementById('loginToast');
             t.innerText = msg;
+            t.className = 'toast ' + type;
             t.style.display = 'block';
-            setTimeout(() => t.style.display = 'none', 3000);
-        }
-
-        function validatePhone(input) {
-            input.value = input.value.replace(/[^0-9]/g, '');
-        }
-
-        function checkStrength(val) {
-            const bar = document.getElementById('strengthBar');
-            if (val.length < 4) {
-                bar.style.width = '30%';
-                bar.style.background = '#ff5252';
-            } else if (val.length < 8) {
-                bar.style.width = '60%';
-                bar.style.background = '#ffc107';
-            } else {
-                bar.style.width = '100%';
-                bar.style.background = '#4caf50';
-            }
+            setTimeout(() => t.style.display = 'none', 3500);
         }
     </script>
 </body>
